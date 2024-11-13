@@ -7,4 +7,12 @@ def main_spa(request: HttpRequest) -> HttpResponse:
 
 def signup_spa(request: HttpRequest) -> HttpResponse:
     """View for user signup (using ssr)"""
+    
     return render(request, 'api/spa/signup.html', {})
+
+def create_account(request: HttpRequest): # TODO Add return type when known
+    """View for creating user account from form details"""
+    
+    if request.method == "POST":
+        POST = request.POST
+        return HttpResponse("Wait until User has been made - try user creation form?")

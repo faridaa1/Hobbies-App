@@ -1,7 +1,26 @@
 {% extends "api/spa/index.html" %}
 {% block content %}
-<form>
-    <label for="email">Email:</label>
-    <input id="email" type="text" name="email">
-</form>
+<div class="mt-5 container p-5 border">
+    <h1 class="text-center mb-4">Signup</h1>
+    <form method="post" action="/create-account/ ">
+        {% csrf_token %}
+        <div class="mb-3 form-floating">
+            <input type="text" id="name" name="name" class="form-control" placeholder="name" required>
+            <label for="name" class="form-label">Name:</label>
+        </div>
+        <div class="mb-3 form-floating">
+            <input id="email" type="email" name="email" class="form-control" placeholder="email" required>
+            <label for="email" class="form-label">Email:</label>
+        </div>
+        <div class="mb-3 form-floating">
+            <input type="password" id="password" name="password" class="form-control" placeholder="password" required>
+            <label for="password" class="form-label">Password:</label>
+        </div>
+        <div class="mb-3 form-floating">
+            <input type="date" id="dob" name="dob" class="form-control" required>
+            <label for="dob" class="form-label">Date of Birth:</label>
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Signup</button>
+    </form>
+</div>
 {% endblock %}

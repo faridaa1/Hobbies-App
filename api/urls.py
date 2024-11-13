@@ -18,9 +18,10 @@ from django.contrib import admin
 from django.urls import include, path
 from django.http import HttpResponse
 
-from .views import main_spa, signup_spa
+from .views import main_spa, signup_spa, create_account
 
 urlpatterns = [
     path('', main_spa),
-    path('signup/', signup_spa, name='signup')
+    path('signup/', signup_spa, name='signup'), # Signup user
+    path('create-account/', create_account, name='create_account') # Create account in db - should this be in api?
 ]
