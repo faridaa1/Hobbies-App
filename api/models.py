@@ -11,7 +11,7 @@ class PageView(models.Model):
 
 
 class Hobby(models.Model):
-    """Defines Hobby model with name attribute."""
+    """Defines Hobby model with relevant attributes and methods."""
     name = models.CharField(blank=False, null=False, unique=True, max_length=255)
     description = models.TextField(blank=False, null=False)
 
