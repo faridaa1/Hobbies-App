@@ -18,6 +18,15 @@ class Hobby(models.Model):
     def __str__(self):
         """String representation of Hobby object."""
         return f"{self.name}: {self.description}"
+    
+    def as_dict(self):
+        """Dictionary representation of Hobby object."""
+        return {
+            'hobby_id': self.id,
+            'hobby_name': self.name,
+            'hobby_description': self.description
+        }
+
 
 
 # I forgot I didn't need to add this so you can use this for the M:M or change/delete it
