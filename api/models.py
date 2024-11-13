@@ -9,6 +9,7 @@ class PageView(models.Model):
     def __str__(self):
         return f"Page view count: {self.count}"
 
+
 class Hobby(models.Model):
     """Defines Hobby model with name attribute."""
     name = models.CharField(blank=False, null=False, unique=True, max_length=255)
