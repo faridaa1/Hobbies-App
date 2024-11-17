@@ -1,5 +1,6 @@
 from django.db import models
-from django.db import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.utils.timezone import now
 
 # Create your models here.
 
@@ -34,8 +35,18 @@ class CustomUser(AbstractUser):
     name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    hobbies = models.ManyToManyField(Hobby, blank=True, related_name="users")
+    hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
+
+    """ resolve clashes with the default reverse relations """
+    groups = models.ManyToManyField(
+        Group, 
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        Permission, 
+        blank=True
+    )
     
     """Returns the username as a string"""
     def __str__(self):
@@ -54,11 +65,20 @@ class CustomUser(AbstractUser):
         }
 
 
+class UserHobby(models.Model):
+    """ The through model to represent ManyToMany relationship between user and hobby """
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    hobby = models.ForeignKey(Hobby, on_delete=models.CASCADE)
 
-# I forgot I didn't need to add this so you can use this for the M:M or change/delete it
-# HOBBY_LEVEL = [
-#     ('Beginner', 'Beginner'),
-#     ('Intermediate', 'Intermediate'),
-#     ('Advanced', 'Advanced')
-# ]
-# level = models.CharField(blank=False, null=False, choices=HOBBY_LEVEL, default='Beginner', max_length=12)
+    """ Choice field representing the user's skill level in the hobby """
+    HOBBY_LEVEL = [
+        ('Beginner', 'Beginner'),
+        ('Intermediate', 'Intermediate'),
+        ('Advanced', 'Advanced')
+    ]
+    level = models.CharField(blank=False, null=False, choices=HOBBY_LEVEL, default='Beginner', max_length=12)
+    startDate = models.DateField(null=False, blank=False, default=now)
+
+    """ return a string repsentation for user hobbies """
+    def __str__(self):
+        return f"{self.user.username} - {self.hobby.name}({self.level})"
