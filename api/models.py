@@ -80,3 +80,12 @@ class UserHobby(models.Model):
     """ return a string repsentation for user hobbies """
     def __str__(self):
         return f"{self.user.username} - {self.hobby.name}({self.level})"
+    
+    def as_dict(self):
+        """Defining dictionary representation of UserHobby."""
+        return {
+            "user" : self.user.id,
+            "hobby" : self.hobby.id,
+            "level" : self.level,
+            "startDate" : self.startDate
+        }
