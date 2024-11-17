@@ -75,7 +75,7 @@ class UserHobby(models.Model):
         ('Advanced', 'Advanced')
     ]
     level = models.CharField(blank=False, null=False, choices=HOBBY_LEVEL, default='Beginner', max_length=12)
-    startDate = models.DateField(null=False, blank=False, default=now)
+    start_date = models.DateField(null=False, blank=False, default=now)
 
     """ return a string repsentation for user hobbies """
     def __str__(self):
@@ -87,5 +87,5 @@ class UserHobby(models.Model):
             "user" : self.user.id,
             "hobby" : self.hobby.id,
             "level" : self.level,
-            "startDate" : self.startDate
+            "start_date" : self.start_date
         }
