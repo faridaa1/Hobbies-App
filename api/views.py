@@ -24,7 +24,8 @@ def signup(request: HttpRequest) -> HttpResponse:
                     username=data['username'],
                     password=data['password'],
                     email=data['email'],
-                    name=data['name']
+                    name=data['name'],
+                    date_of_birth=data['date_of_birth']
                     )
                 # TODO - auth (and context?) stuff for response
                 return HttpResponseRedirect("/")
