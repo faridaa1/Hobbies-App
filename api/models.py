@@ -28,6 +28,31 @@ class Hobby(models.Model):
         }
 
 
+class CustomUser(AbstractUser):
+    """Defines the custom user model"""
+    name = models.CharField(max_length=150, blank=False)
+    email = models.EmailField(unique=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    hobbies = models.ManyToManyField(Hobby, blank=True, related_name="users")
+    profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
+    
+    """Returns the username as a string"""
+    def __str__(self):
+        return self.username
+    
+    def as_dict(self):
+        """ dictionary representation of the CustomUser object. """
+        return {
+            "id": self.id,
+            "username": self.username,
+            "name": self.name,
+            "email": self.email,
+            "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
+            "hobbies": [hobby.name for hobby in self.hobbies.all()],
+            "profile_picture": self.profile_picture.url if self.profile_picture else None,
+        }
+
+
 
 # I forgot I didn't need to add this so you can use this for the M:M or change/delete it
 # HOBBY_LEVEL = [
