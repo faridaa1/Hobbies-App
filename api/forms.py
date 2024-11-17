@@ -1,4 +1,6 @@
 from django import forms
+# Same validator used by Django for User usernames
+from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 class PasswordField(forms.CharField):
@@ -11,8 +13,15 @@ class DatePickerField(forms.DateField):
 
 class SignupForm(forms.Form):
     """Django form used to sign up a user"""
+    # This shows an errror on the form itself it the username isn't valid
+    # TODO get this to show as popup
+    username = forms.CharField(
+        label="username",
+        max_length=150,
+        validators=[UnicodeUsernameValidator()]
+        )
     name = forms.CharField(label="name", max_length=150)
     email = forms.EmailField(label="email")
-    passowrd = PasswordField(label="password")
+    password = PasswordField(label="password")
     date_of_birth = DatePickerField(label="Date of birth")
     
