@@ -29,14 +29,14 @@ class Hobby(models.Model):
 
 
 class CustomUser(AbstractUser):
-    """Defines the custom user model"""
+    """Defines the custom user model."""
     name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
     hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
 
-    """ resolve clashes with the default reverse relations """
+    """Resolve clashes with the default reverse relations."""
     groups = models.ManyToManyField(
         Group, 
         blank=True
@@ -46,8 +46,8 @@ class CustomUser(AbstractUser):
         blank=True
     )
     
-    """Returns the username as a string"""
     def __str__(self):
+        """Returns the username as a string."""
         return self.username
     
     def as_dict(self):
@@ -64,11 +64,11 @@ class CustomUser(AbstractUser):
 
 
 class UserHobby(models.Model):
-    """ The through model to represent ManyToMany relationship between user and hobby """
+    """The through model to represent ManyToMany relationship between user and hobby."""
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     hobby = models.ForeignKey(Hobby, on_delete=models.CASCADE)
 
-    """ Choice field representing the user's skill level in the hobby """
+    """Choice field representing the user's skill level in the hobby."""
     HOBBY_LEVEL = [
         ('Beginner', 'Beginner'),
         ('Intermediate', 'Intermediate'),
@@ -77,8 +77,8 @@ class UserHobby(models.Model):
     level = models.CharField(blank=False, null=False, choices=HOBBY_LEVEL, default='Beginner', max_length=12)
     start_date = models.DateField(null=False, blank=False, default=now)
 
-    """ return a string repsentation for user hobbies """
     def __str__(self):
+        """Return a string repsentation for user hobbies."""
         return f"{self.user.username} - {self.hobby.name}({self.level})"
     
     def as_dict(self):
