@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.timezone import now
 
-# Create your models here.
-
 
 class PageView(models.Model):
     count = models.IntegerField(default=0)
