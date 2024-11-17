@@ -51,7 +51,7 @@ class CustomUser(AbstractUser):
         return self.username
     
     def as_dict(self):
-        """ dictionary representation of the CustomUser object. """
+        """Dictionary representation of the CustomUser object."""
         return {
             "id": self.id,
             "username": self.username,
