@@ -88,6 +88,11 @@ DATABASES = {
     'default': database.config()
 }
 
+# Model used to represent a User
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-user-model
+
+AUTH_USER_MODEL = "api.CustomUser"
+
 
 # Password validation
 # https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
