@@ -10,6 +10,7 @@ class UserHobbyInline(admin.TabularInline):
 class FriendshipInline(admin.TabularInline):
     """Display Friendship table inline another model"""
     model = Friendship
+    fk_name = 'user2'
 
 
 @admin.register(Hobby)
@@ -25,4 +26,4 @@ class CustomUserView(admin.ModelAdmin):
     list_display = ('username', 'name', 'email', 'date_of_birth', 'is_staff', 'is_active')
     list_filter = ('date_of_birth', 'is_staff', 'is_active')
     search_fields = ('username', 'name', 'email')
-    inlines = (UserHobbyInline,)
+    inlines = (UserHobbyInline, FriendshipInline)
