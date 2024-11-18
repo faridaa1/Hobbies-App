@@ -1,9 +1,16 @@
 from django.contrib import admin
-from .models import UserHobby, CustomUser, Hobby
+from .models import UserHobby, CustomUser, Hobby, Friendship
+
 
 class UserHobbyInline(admin.TabularInline):
     """Display Hobby table inline another model"""
     model = UserHobby
+
+
+class FriendshipInline(admin.TabularInline):
+    """Display Friendship table inline another model"""
+    model = Friendship
+
 
 @admin.register(Hobby)
 class HobbyAdmin(admin.ModelAdmin):
