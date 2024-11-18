@@ -15,6 +15,7 @@ class FriendshipAdmin(admin.ModelAdmin):
     list_filter = ('user1', 'user2', 'status')
     search_fields = ('user1', 'user2', 'status')
 
+
 @admin.register(Hobby)
 class HobbyAdmin(admin.ModelAdmin):
     """Display hobby name and desription and make them searchable"""
