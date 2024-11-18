@@ -65,7 +65,7 @@ class Friendship(models.Model):
         ('Pending', 'Pending'),
         ('Accepted', 'Accepted'),
     ]
-    status = models.CharField(blank=False, null=False, choices=STATUS, default='Beginner', max_length=12)
+    status = models.CharField(blank=False, null=False, choices=STATUS, default='Pending', max_length=12)
 
 
 class UserHobby(models.Model):
