@@ -3,13 +3,6 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.timezone import now
 
 
-class PageView(models.Model):
-    count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return f"Page view count: {self.count}"
-
-
 class Hobby(models.Model):
     """Defines Hobby model with relevant attributes and methods."""
     name = models.CharField(blank=False, null=False, unique=True, max_length=255)
