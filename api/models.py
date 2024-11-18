@@ -55,6 +55,8 @@ class CustomUser(AbstractUser):
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
         }
 
+class Friendship(models.Model):
+    """The through model to represent ManyToMany relationship between User and User."""
 
 class UserHobby(models.Model):
     """The through model to represent ManyToMany relationship between user and hobby."""
