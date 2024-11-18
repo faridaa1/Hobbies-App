@@ -18,7 +18,7 @@ class DatePickerField(forms.DateField):
 class SignupForm(ModelForm):
     """Django form used to sign up a user."""
     class Meta:
-        """Form is based on CustomUser model and has following fields"""
+        """Form is based on CustomUser model and has following fields from that model"""
         model = CustomUser
         fields = ['username', 'name', 'email', 'password', 'date_of_birth']
         field_classes = {
@@ -33,6 +33,13 @@ class SignupForm(ModelForm):
             raise ValidationError(
                 "An account with that username already exists")
         return username
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        email_exists = CustomUser.objects.filter(email=email).exists()
+        if email_exists:
+            raise ValidationError('An account with that email already exists')
+        return email
 
     def clean_password(self):
         password = self.cleaned_data['password']
