@@ -67,7 +67,7 @@ class Friendship(models.Model):
         """Preventing self-friendships and reverse friendships (duplicate)."""
         if self.user1 == self.user2:
             raise ValidationError("You cannot be friends with yourself")
-        if Friendship.objects.filter(user1=self.user2, user2=self.user1).exists() or Friendship.objects.filter(user1=self.user1, user2=self.user2).exists():
+        if Friendship.objects.filter(user1=self.user2, user2=self.user1).exists():
             raise ValidationError("This friendship already exists")
         
     """Choice field representing the user's skill level in the hobby."""
@@ -88,6 +88,11 @@ class Friendship(models.Model):
             "user2" : self.user2.id,
             "status" : self.status
         }
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user1','user2'], name='unqiue_friendship')
+        ]
 
 
 class UserHobby(models.Model):
