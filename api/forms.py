@@ -24,9 +24,4 @@ class SignupForm(ModelForm):
             "password": PasswordField,
             "date_of_birth": DatePickerField
         }
-    # password = PasswordField(label="Password")
-    # date_of_birth = DatePickerField(label="Date of birth")
-
-    # This shows an errror on the form itself it the username isn't valid
-    # TODO get this to show as popup
     
