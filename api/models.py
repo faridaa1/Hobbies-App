@@ -90,6 +90,7 @@ class Friendship(models.Model):
         }
 
     class Meta:
+        """Preventing duplicate friendships."""
         constraints = [
             models.UniqueConstraint(fields=['user1','user2'], name='unqiue_friendship')
         ]
