@@ -13,7 +13,7 @@ class HobbyAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
 
 @admin.register(CustomUser)
-class CustomUser(admin.ModelAdmin):
+class CustomUserView(admin.ModelAdmin):
     """Display user fields and allow some to be filtered or searched"""
     list_display = ('username', 'name', 'email', 'date_of_birth', 'is_staff', 'is_active')
     list_filter = ('date_of_birth', 'is_staff', 'is_active')
