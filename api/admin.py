@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import UserHobby, CustomUser, Hobby
 
-# Register your models here.
 class UserHobbyInline(admin.TabularInline):
     """Display Hobby table inline another model"""
     model = UserHobby
