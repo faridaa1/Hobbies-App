@@ -18,6 +18,7 @@ class HobbyAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
     search_fields = ('name', 'description')
 
+
 @admin.register(CustomUser)
 class CustomUserView(admin.ModelAdmin):
     """Display user fields and allow some to be filtered or searched"""
