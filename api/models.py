@@ -59,7 +59,7 @@ class Friendship(models.Model):
     """The through model to represent ManyToMany relationship between User and User."""
 
 class UserHobby(models.Model):
-    """The through model to represent ManyToMany relationship between user and hobby."""
+    """The through model to represent ManyToMany relationship between User and Hobby."""
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     hobby = models.ForeignKey(Hobby, on_delete=models.CASCADE)
 
