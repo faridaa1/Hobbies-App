@@ -70,7 +70,6 @@ class Friendship(models.Model):
         if Friendship.objects.filter(user1=self.user2, user2=self.user1).exists():
             raise ValidationError("This friendship already exists")
         
-    """Choice field representing the user's skill level in the hobby."""
     STATUS = [
         ('Pending', 'Pending'),
         ('Accepted', 'Accepted'),
