@@ -26,8 +26,9 @@ class CustomUser(AbstractUser):
     name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
+    hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
+    friends = models.ManyToManyField(to='self', through='Friendship', blank=True, related_name="friends")
 
     """Resolve clashes with the default reverse relations."""
     groups = models.ManyToManyField(
@@ -57,8 +58,8 @@ class CustomUser(AbstractUser):
 
 class Friendship(models.Model):
     """The through model to represent ManyToMany relationship between User and User."""
-    user1 = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    user2 = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user1 = models.ForeignKey(CustomUser, related_name="sent_friend_requests", on_delete=models.CASCADE)
+    user2 = models.ForeignKey(CustomUser, related_name="received_friend_requests", on_delete=models.CASCADE)
 
     """Choice field representing the user's skill level in the hobby."""
     STATUS = [
