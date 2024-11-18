@@ -28,7 +28,7 @@ class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
     hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
-    friends = models.ManyToManyField(to='self', through='Friendship', blank=True, related_name="friends")
+    friends = models.ManyToManyField(to='self', through='Friendship', blank=True)
 
     """Resolve clashes with the default reverse relations."""
     groups = models.ManyToManyField(
