@@ -1,13 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.forms import ValidationError
 from django.utils.timezone import now
-
-
-class PageView(models.Model):
-    count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return f"Page view count: {self.count}"
 
 
 class Hobby(models.Model):
@@ -29,14 +23,15 @@ class Hobby(models.Model):
 
 
 class CustomUser(AbstractUser):
-    """Defines the custom user model"""
+    """Defines the custom user model."""
     name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
+    hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
+    friends = models.ManyToManyField(to='self', symmetrical=True, through='Friendship', blank=True)
 
-    """ resolve clashes with the default reverse relations """
+    """Resolve clashes with the default reverse relations."""
     groups = models.ManyToManyField(
         Group, 
         blank=True
@@ -46,12 +41,12 @@ class CustomUser(AbstractUser):
         blank=True
     )
     
-    """Returns the username as a string"""
     def __str__(self):
+        """Returns the username as a string."""
         return self.username
     
     def as_dict(self):
-        """ dictionary representation of the CustomUser object. """
+        """Dictionary representation of the CustomUser object."""
         return {
             "id": self.id,
             "username": self.username,
@@ -63,20 +58,66 @@ class CustomUser(AbstractUser):
         }
 
 
+class Friendship(models.Model):
+    """The through model to represent ManyToMany relationship between User and User."""
+    user1 = models.ForeignKey(CustomUser, related_name="sent_requests", on_delete=models.CASCADE)
+    user2 = models.ForeignKey(CustomUser, related_name="received_requests", on_delete=models.CASCADE)
+
+    def clean(self):
+        """Preventing self-friendships and reverse friendships (duplicate)."""
+        if self.user1 == self.user2:
+            raise ValidationError("You cannot be friends with yourself")
+        if Friendship.objects.filter(user1=self.user2, user2=self.user1).exists():
+            raise ValidationError("This friendship already exists")
+        
+    STATUS = [
+        ('Pending', 'Pending'),
+        ('Accepted', 'Accepted'),
+    ]
+    status = models.CharField(blank=False, null=False, choices=STATUS, default='Pending', max_length=12)
+
+    def __str__(self):
+        """Return a string repsentation for Friendships."""
+        return f"{self.user1} & {self.user2}: {self.status}"
+    
+    def as_dict(self):
+        """Defining dictionary representation of UserHobby."""
+        return {
+            "user1" : self.user1.id,
+            "user2" : self.user2.id,
+            "status" : self.status
+        }
+
+    class Meta:
+        """Preventing duplicate friendships."""
+        constraints = [
+            models.UniqueConstraint(fields=['user1','user2'], name='unqiue_friendship')
+        ]
+
+
 class UserHobby(models.Model):
-    """ The through model to represent ManyToMany relationship between user and hobby """
+    """The through model to represent ManyToMany relationship between User and Hobby."""
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     hobby = models.ForeignKey(Hobby, on_delete=models.CASCADE)
 
-    """ Choice field representing the user's skill level in the hobby """
+    """Choice field representing the User's skill level in the Hobby."""
     HOBBY_LEVEL = [
         ('Beginner', 'Beginner'),
         ('Intermediate', 'Intermediate'),
         ('Advanced', 'Advanced')
     ]
     level = models.CharField(blank=False, null=False, choices=HOBBY_LEVEL, default='Beginner', max_length=12)
-    startDate = models.DateField(null=False, blank=False, default=now)
+    start_date = models.DateField(null=False, blank=False, default=now)
 
-    """ return a string repsentation for user hobbies """
     def __str__(self):
+        """Return a string repsentation for User Hobbies."""
         return f"{self.user.username} - {self.hobby.name}({self.level})"
+    
+    def as_dict(self):
+        """Defining dictionary representation of UserHobby."""
+        return {
+            "user" : self.user.id,
+            "hobby" : self.hobby.id,
+            "level" : self.level,
+            "start_date" : self.start_date
+        }
