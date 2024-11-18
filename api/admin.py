@@ -5,8 +5,7 @@ from .models import UserHobby, CustomUser, Hobby, Friendship
 class UserHobbyInline(admin.TabularInline):
     """Display Hobby table inline another model"""
     model = UserHobby
-    extra = 0
-
+    extra = 0 # Number of (add hobby) forms to show
 
 @admin.register(Hobby)
 class HobbyAdmin(admin.ModelAdmin):
