@@ -57,13 +57,23 @@ class CustomUser(AbstractUser):
 
 class Friendship(models.Model):
     """The through model to represent ManyToMany relationship between User and User."""
+    user1 = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user2 = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    """Choice field representing the user's skill level in the hobby."""
+    STATUS = [
+        ('Pending', 'Pending'),
+        ('Accepted', 'Accepted'),
+    ]
+    status = models.CharField(blank=False, null=False, choices=STATUS, default='Beginner', max_length=12)
+
 
 class UserHobby(models.Model):
     """The through model to represent ManyToMany relationship between User and Hobby."""
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     hobby = models.ForeignKey(Hobby, on_delete=models.CASCADE)
 
-    """Choice field representing the user's skill level in the hobby."""
+    """Choice field representing the User's skill level in the Hobby."""
     HOBBY_LEVEL = [
         ('Beginner', 'Beginner'),
         ('Intermediate', 'Intermediate'),
