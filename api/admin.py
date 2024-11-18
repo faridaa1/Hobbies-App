@@ -10,7 +10,7 @@ class UserHobbyInline(admin.TabularInline):
 class FriendshipInline(admin.TabularInline):
     """Display Friendship table inline another model"""
     model = Friendship
-    fk_name = 'user2'
+    fk_name = 'user1'
 
 
 @admin.register(Hobby)

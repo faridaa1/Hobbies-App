@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.forms import ValidationError
 from django.utils.timezone import now
 
 
@@ -58,9 +59,14 @@ class CustomUser(AbstractUser):
 
 class Friendship(models.Model):
     """The through model to represent ManyToMany relationship between User and User."""
-    user1 = models.ForeignKey(CustomUser, related_name="sent_friend_requests", on_delete=models.CASCADE)
-    user2 = models.ForeignKey(CustomUser, related_name="received_friend_requests", on_delete=models.CASCADE)
+    user1 = models.ForeignKey(CustomUser, related_name="sent_requests", on_delete=models.CASCADE)
+    user2 = models.ForeignKey(CustomUser, related_name="received_requests", on_delete=models.CASCADE)
 
+    def clean(self):
+        """Preventing self-friendships"""
+        if self.user1 == self.user2:
+            raise ValidationError("You cannot be friends with yourself")
+        
     """Choice field representing the user's skill level in the hobby."""
     STATUS = [
         ('Pending', 'Pending'),
