@@ -5,13 +5,15 @@ from .models import UserHobby, CustomUser, Hobby, Friendship
 class UserHobbyInline(admin.TabularInline):
     """Display Hobby table inline another model"""
     model = UserHobby
+    extra = 0
+    
 
-
-class FriendshipInline(admin.TabularInline):
-    """Display Friendship table inline another model"""
-    model = Friendship
-    fk_name = 'user1'
-
+@admin.register(Friendship)
+class FriendshipAdmin(admin.ModelAdmin):
+    """Display all friendships"""
+    list_display = ('user1', 'user2', 'status')
+    list_filter = ('user1', 'user2', 'status')
+    search_fields = ('user1', 'user2', 'status')
 
 @admin.register(Hobby)
 class HobbyAdmin(admin.ModelAdmin):
@@ -26,4 +28,4 @@ class CustomUserView(admin.ModelAdmin):
     list_display = ('username', 'name', 'email', 'date_of_birth', 'is_staff', 'is_active')
     list_filter = ('date_of_birth', 'is_staff', 'is_active')
     search_fields = ('username', 'name', 'email')
-    inlines = (UserHobbyInline, FriendshipInline)
+    inlines = (UserHobbyInline,)

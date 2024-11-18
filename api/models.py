@@ -29,7 +29,7 @@ class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
     hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
-    friends = models.ManyToManyField(to='self', through='Friendship', blank=True)
+    friends = models.ManyToManyField(to='self', symmetrical=True, through='Friendship', blank=True)
 
     """Resolve clashes with the default reverse relations."""
     groups = models.ManyToManyField(
@@ -57,6 +57,7 @@ class CustomUser(AbstractUser):
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
         }
 
+
 class Friendship(models.Model):
     """The through model to represent ManyToMany relationship between User and User."""
     user1 = models.ForeignKey(CustomUser, related_name="sent_requests", on_delete=models.CASCADE)
@@ -74,6 +75,18 @@ class Friendship(models.Model):
     ]
     status = models.CharField(blank=False, null=False, choices=STATUS, default='Pending', max_length=12)
 
+    def __str__(self):
+        """Return a string repsentation for Friendships."""
+        return f"{self.user1} & {self.user2}: {self.status}"
+    
+    def as_dict(self):
+        """Defining dictionary representation of UserHobby."""
+        return {
+            "user1" : self.user1.id,
+            "user2" : self.user2.id,
+            "status" : self.status
+        }
+
 
 class UserHobby(models.Model):
     """The through model to represent ManyToMany relationship between User and Hobby."""
@@ -90,7 +103,7 @@ class UserHobby(models.Model):
     start_date = models.DateField(null=False, blank=False, default=now)
 
     def __str__(self):
-        """Return a string repsentation for user hobbies."""
+        """Return a string repsentation for User Hobbies."""
         return f"{self.user.username} - {self.hobby.name}({self.level})"
     
     def as_dict(self):
