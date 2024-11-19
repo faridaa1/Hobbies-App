@@ -6,7 +6,7 @@ from .models import CustomUser
 
 
 class PasswordField(forms.CharField):
-    """Password field for Django form"""
+    """Password field for Django form - uses type password"""
     widget = forms.PasswordInput
 
 
@@ -28,6 +28,7 @@ class SignupForm(ModelForm):
         }
         labels = {
             'name': 'Full Name',
+            'profile_picture': 'Profile picture (*.png)'
         }
 
     def __init__(self, *args, **kwargs):
@@ -39,23 +40,25 @@ class SignupForm(ModelForm):
                  'placeholder': field}  # Allows bootstrap form animation
             )
 
-    def clean_email(self):
+    def clean_email(self) -> str:
         email = self.cleaned_data['email']
         email_exists = CustomUser.objects.filter(email=email).exists()
         if email_exists:
             raise ValidationError('An account with that email already exists')
         return email
 
-    def clean_password(self):
+    def clean_password(self) -> str:
         password = self.cleaned_data['password']
         if len(password) < 8 or len(password) > 30:
             raise ValidationError(
                 "Your password must be between 8 and 30 characters")
         return password
 
-    def clean_date_of_birth(self):
+    def clean_date_of_birth(self) -> datetime.date:
         dob = self.cleaned_data['date_of_birth']
-        if dob > datetime.date.today():
+        if dob is None:
+            raise ValidationError("You must enter a birthday")
+        elif dob > datetime.date.today():
             raise ValidationError("Your birthday cannot be past today")
         return dob
 
@@ -65,5 +68,4 @@ class SignupForm(ModelForm):
         if pic:
             if pic.image.format != 'PNG':
                 raise ValidationError('You can only upload .png files')
-
         return pic
