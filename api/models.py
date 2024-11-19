@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.forms import ValidationError
@@ -9,11 +10,11 @@ class Hobby(models.Model):
     name = models.CharField(blank=False, null=False, unique=True, max_length=255)
     description = models.TextField(blank=False, null=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """String representation of Hobby object."""
         return f"{self.name}: {self.description}"
     
-    def as_dict(self):
+    def as_dict(self) -> dict[str, Any]:
         """Dictionary representation of Hobby object."""
         return {
             'hobby_id': self.id,
@@ -41,11 +42,11 @@ class CustomUser(AbstractUser):
         blank=True
     )
     
-    def __str__(self):
+    def __str__(self) -> str:
         """Returns the username as a string."""
         return self.username
     
-    def as_dict(self):
+    def as_dict(self) -> dict[str, Any]:
         """Dictionary representation of the CustomUser object."""
         return {
             "id": self.id,
@@ -76,11 +77,11 @@ class Friendship(models.Model):
     ]
     status = models.CharField(blank=False, null=False, choices=STATUS, default='Pending', max_length=12)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string repsentation for Friendships."""
         return f"{self.user1} & {self.user2}: {self.status}"
     
-    def as_dict(self):
+    def as_dict(self) -> dict[str, Any]:
         """Defining dictionary representation of UserHobby."""
         return {
             "user1" : self.user1.id,
@@ -91,7 +92,7 @@ class Friendship(models.Model):
     class Meta:
         """Preventing duplicate friendships."""
         constraints = [
-            models.UniqueConstraint(fields=['user1','user2'], name='unqiue_friendship')
+            models.UniqueConstraint(fields=['user1','user2'], name='unique_friendship')
         ]
 
 
@@ -109,11 +110,11 @@ class UserHobby(models.Model):
     level = models.CharField(blank=False, null=False, choices=HOBBY_LEVEL, default='Beginner', max_length=12)
     start_date = models.DateField(null=False, blank=False, default=now)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string repsentation for User Hobbies."""
         return f"{self.user.username} - {self.hobby.name}({self.level})"
     
-    def as_dict(self):
+    def as_dict(self) -> dict[str, Any]:
         """Defining dictionary representation of UserHobby."""
         return {
             "user" : self.user.id,
