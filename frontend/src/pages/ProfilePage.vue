@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs mt-4" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="personal-details-tab" data-bs-toggle="tab" data-bs-target="#personal-details-tab-pane" type="button" role="tab" aria-controls="personal-details-tab-pane" aria-selected="true">
                     Personal Details
@@ -52,6 +52,9 @@
               return {
                   title: "Profile",
               }
+          },
+          components: {
+            PersonalDetails
           }
       })
   </script>
