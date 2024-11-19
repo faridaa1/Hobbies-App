@@ -71,10 +71,17 @@
     profileImgInput.addEventListener('input', updateProfileSource)
 
     function updateProfileSource(e) {
-        console.log(e.target.files[0])
-        profilePreview.src = URL.createObjectURL(e.target.files[0]) // Creates url which can be used to access uploaded file
-        profilePreview.classList.toggle('hidden')
-        profilePlaceholder.classList.toggle('hidden')
+        // If uploaded file is cleared (undefined)
+        if (e.target.files[0] === undefined) {
+            // Show place holder and hide img
+            profilePlaceholder.classList.remove('hidden')
+            profilePreview.classList.add('hidden')
+        } else {
+            profilePreview.src = URL.createObjectURL(e.target.files[0]) // Creates url which can be used to access uploaded file
+            // Show new image and hide placeholder
+            profilePlaceholder.classList.add('hidden')
+            profilePreview.classList.remove('hidden')
+        }
     }
 </script>
 {% endblock %}
