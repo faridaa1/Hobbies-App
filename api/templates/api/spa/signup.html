@@ -1,27 +1,32 @@
 {% extends "api/spa/index.html" %}
+
+{% block header_css %}
+<style>
+    .field-error {
+        color: #e12638;
+        margin-bottom: 0.2rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="mt-5 container p-5 border">
     <h1 class="text-center mb-4">Signup</h1>
-    <form method="post" action="/signup/">
+    <form method="post" action="/signup/" class="signup-form">
         {% csrf_token %}
-        {{ form }}
-        <!-- <div class="mb-3 form-floating">
-            <input type="text" id="name" name="name" class="form-control" placeholder="name" value="{{ current_name }}" required>
-            <label for="name" class="form-label">Name:</label>
+        {% for field in form %}
+        <div class="mb-3">
+            <label id="{{field.id_for_label}}" class="form-label">{{field.label}}</label> 
+            {{field}}
+            {% for error in field.errors %}
+                <p class="field-error">{{error}}</p>
+            {% endfor %}
         </div>
-        <div class="mb-3 form-floating">
-            <input id="email" type="email" name="email" class="form-control" placeholder="email"  value="{{ current_email }}" required>
-            <label for="email" class="form-label">Email:</label>
+        {% endfor %}
+        <button class="btn btn-primary w-100" type="submit">SIGN UP</button>
+        <div class="row">
+            <a href="/login" class="text-center my-3" style="color: black;">Already have an account? Log in here</a>
         </div>
-        <div class="mb-3 form-floating">
-            <input type="password" id="password" name="password" class="form-control" placeholder="password" value="{{ current_password }}" required>
-            <label for="password" class="form-label">Password:</label>
-        </div>
-        <div class="mb-3 form-floating">
-            <input type="date" id="dob" name="dob" class="form-control" value="{{ current_dob }}" required>
-            <label for="dob" class="form-label">Date of Birth:</label>
-        </div> -->
-        <button class="btn btn-primary w-100" type="submit">Signup</button>
     </form>
 </div>
 {% endblock %}

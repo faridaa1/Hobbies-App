@@ -26,6 +26,15 @@ class SignupForm(ModelForm):
             "date_of_birth": DatePickerField
         }
 
+    def __init__(self, *args, **kwargs):
+        """Overriding form constructor"""
+        super(SignupForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update(
+                {'class': 'form-control',  # For bootstrap styling
+                 'placeholder': field}  # Allows bootstrap form animation
+            )
+
     def clean_username(self):
         username = self.cleaned_data['username']
         username_exists = CustomUser.objects.filter(username=username).exists()

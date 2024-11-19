@@ -80,9 +80,6 @@ class SignupFormTests(TestCase):
 class SignupViewTests(TestCase):
     """Tests for Signup view"""
 
-    def setUp(self):
-        pass
-
     def test_uses_correct_template(self):
         response = self.client.get(reverse('signup'))
         self.assertEqual(response.status_code, 200)
