@@ -6,7 +6,9 @@
             </div>
             <div>
                 Edit Picture
-                <i class="bi bi-upload"></i>
+                <button class="btn btn-secondary">
+                    <i class="bi bi-upload"></i>
+                </button>
             </div>
         </div>
         <div class="d-flex flex-column gap-2 w-100">
