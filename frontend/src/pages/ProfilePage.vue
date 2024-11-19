@@ -10,7 +10,7 @@
       export default defineComponent({
           data() {
               return {
-                  title: "Profile Page",
+                  title: "Profile",
               }
           }
       })

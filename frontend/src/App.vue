@@ -19,7 +19,7 @@
                 class=""
                 :to="{name: 'Profile Page'}"
             >
-                Profile Page
+                Profile
             </router-link>
         </div>
         <RouterView class="flex-shrink-0" />
