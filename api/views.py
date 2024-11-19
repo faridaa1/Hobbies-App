@@ -1,5 +1,5 @@
-from django.http import HttpResponse, HttpRequest, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse, HttpRequest
+from django.shortcuts import render, redirect
 from .forms import SignupForm
 from .models import CustomUser
 
@@ -14,6 +14,7 @@ def signup(request: HttpRequest) -> HttpResponse:
         # Create SignupForm instance and populate w/ form data
         form = SignupForm(request.POST)
         if form.is_valid():
+            # Create user from valid form
             data = form.cleaned_data
             CustomUser.objects.create_user(
                 username=data['username'],
@@ -23,7 +24,8 @@ def signup(request: HttpRequest) -> HttpResponse:
                 date_of_birth=data['date_of_birth']
             )
             # TODO - auth (and context?) stuff for response
-            return HttpResponseRedirect("/")
+            # TODO - use reverse for urls once ^
+            return redirect('/')
     else:
         form = SignupForm()
 

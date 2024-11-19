@@ -84,9 +84,12 @@ class SignupViewTests(TestCase):
         pass
 
     def test_uses_correct_template(self):
-        self.assertEqual(1, 2)
+        response = self.client.get(reverse('signup'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'api/spa/signup.html')
 
     def test_redirect_successful_signup(self):
         response = self.client.post(
             reverse('signup'), data=valid_signup_data())  # Uses url with name 'signup'
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/')
