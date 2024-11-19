@@ -78,11 +78,11 @@ class Friendship(models.Model):
     status = models.CharField(blank=False, null=False, choices=STATUS, default='Pending', max_length=12)
 
     def __str__(self) -> str:
-        """Return a string repsentation for Friendships."""
+        """Return a string repsentation for Friendship."""
         return f"{self.user1} & {self.user2}: {self.status}"
     
     def as_dict(self) -> dict[str, Any]:
-        """Defining dictionary representation of UserHobby."""
+        """Defining dictionary representation of Friendship."""
         return {
             "user1" : self.user1.id,
             "user2" : self.user2.id,
