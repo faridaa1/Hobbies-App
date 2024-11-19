@@ -1,21 +1,19 @@
 <template>
-    <div class="fs-3 mt-4 d-flex flex-row border border-dark rounded p-3 ps-5 align-items-center" style="gap: 10rem;">
-        <div class="d-flex flex-column gap-4 justify-content-center align-items-center">
-            <div>
-                <img style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="No Profile Picture">
+    <div class="fs-4 mt-4 d-flex flex-row border border-dark rounded p-3 ps-5 align-items-center gap-5 w-100">
+        <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100 bg-success">
+            <div class="bg-secondary">
+                <img style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="">
             </div>
-            <div>
-                Edit Pictures
-                <button class="btn btn-secondary">
-                    <i class="bi bi-upload"></i>
-                </button>
+            <div class="bg-primary text-align-center mx-auto">
+                <input type="file">
             </div>
         </div>
         <div class="d-flex flex-column gap-2 w-100">
             <div class="d-flex">
                 <div style="width: 13rem;">Full Name</div>
                 <div>{{ user.name }}</div>
-                <button><i class="bi bi-upload"></i></button>
+                
+                <button><i class="bi bi-pencil"></i></button>
             </div>
             <div class="d-flex">
                 <div style="width: 13rem;">Email</div>
