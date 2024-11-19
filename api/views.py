@@ -12,7 +12,8 @@ def signup(request: HttpRequest) -> HttpResponse:
     """View for user signup (using ssr)"""
     if request.method == "POST":
         # Create SignupForm instance and populate w/ form data
-        form = SignupForm(request.POST)
+        form = SignupForm(request.POST, request.FILES)
+        print(request.FILES)
         if form.is_valid():
             # Create user from valid form
             data = form.cleaned_data
@@ -21,7 +22,8 @@ def signup(request: HttpRequest) -> HttpResponse:
                 password=data['password'],
                 email=data['email'],
                 name=data['name'],
-                date_of_birth=data['date_of_birth']
+                date_of_birth=data['date_of_birth'],
+                profile_picture=data['profile_picture']
             )
             # TODO - auth (and context?) stuff for response
             # TODO - use reverse for urls once ^

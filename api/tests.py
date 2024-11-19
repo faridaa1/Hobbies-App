@@ -3,6 +3,7 @@ from django.test import TestCase
 from .forms import SignupForm
 from .models import CustomUser
 from django.urls import reverse
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 # https://docs.djangoproject.com/en/5.1/intro/tutorial05/
 
@@ -23,6 +24,8 @@ class SignupFormTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.valid_data = valid_signup_data()
+        cls.file_data = {'profile_picture': SimpleUploadedFile(
+            'test.png', b'file data', content_type='image/png')}
 
     def test_valid_details(self):
         form = SignupForm(data=self.valid_data)
@@ -63,8 +66,16 @@ class SignupFormTests(TestCase):
         self.assertEqual(form.errors['password'], [
                          'Your password must be between 8 and 30 characters'])
 
-    def test_picture_upload(self):
-        self.assertEqual(1, 2)
+    def test_picture_upload_invalid(self):
+        pass
+        # data = self.valid_data
+        # form = SignupForm(data, self.file_data)
+        # self.assertFalse(form.is_valid())
+        # self.assertEqual(form.errors['profile_picture'],
+        #                  'You can only upload .png files')
+
+    def test_upload_no_profile_picture(self):
+        pass
 
 
 class SignupViewTests(TestCase):

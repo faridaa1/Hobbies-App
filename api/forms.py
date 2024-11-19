@@ -20,7 +20,8 @@ class SignupForm(ModelForm):
     class Meta:
         """Form is based on CustomUser model and has following fields from that model"""
         model = CustomUser
-        fields = ['name', 'email', 'password', 'date_of_birth']
+        fields = ['name', 'email', 'password',
+                  'date_of_birth', 'profile_picture']
         field_classes = {
             "password": PasswordField,
             "date_of_birth": DatePickerField
@@ -57,3 +58,12 @@ class SignupForm(ModelForm):
         if dob > datetime.date.today():
             raise ValidationError("Your birthday cannot be past today")
         return dob
+
+    def clean_profile_picture(self):
+        pic = self.cleaned_data['profile_picture']
+
+        if pic:
+            if pic.image.format != 'PNG':
+                raise ValidationError('You can only upload .png files')
+
+        return pic
