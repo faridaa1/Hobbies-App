@@ -10,7 +10,7 @@ from django.urls import reverse
 def valid_signup_data() -> dict:
     """Returns a dict of valid data for a Signup Form"""
     return {
-        'username': 'test_username',
+        'username': 'test_email@test.com',
         'name': 'test name',
         'email': 'test_email@test.com',
         'password': 'test_password',
@@ -27,16 +27,6 @@ class SignupFormTests(TestCase):
     def test_valid_details(self):
         form = SignupForm(data=self.valid_data)
         self.assertTrue(form.is_valid())
-
-    def test_username_already_exists(self):
-        username = 'duplicate_user'
-        CustomUser.objects.create(username=username)
-        data = self.valid_data
-        data['username'] = username
-        form = SignupForm(data=data)
-        self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['username'], [
-                         'An account with that username already exists'])
 
     def test_email_already_used(self):
         email = 'same@email.com'

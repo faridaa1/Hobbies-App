@@ -17,7 +17,7 @@ def signup(request: HttpRequest) -> HttpResponse:
             # Create user from valid form
             data = form.cleaned_data
             CustomUser.objects.create_user(
-                username=data['username'],
+                username=data['email'],
                 password=data['password'],
                 email=data['email'],
                 name=data['name'],

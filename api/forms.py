@@ -20,10 +20,13 @@ class SignupForm(ModelForm):
     class Meta:
         """Form is based on CustomUser model and has following fields from that model"""
         model = CustomUser
-        fields = ['username', 'name', 'email', 'password', 'date_of_birth']
+        fields = ['name', 'email', 'password', 'date_of_birth']
         field_classes = {
             "password": PasswordField,
             "date_of_birth": DatePickerField
+        }
+        labels = {
+            'name': 'Full Name',
         }
 
     def __init__(self, *args, **kwargs):
@@ -34,14 +37,6 @@ class SignupForm(ModelForm):
                 {'class': 'form-control',  # For bootstrap styling
                  'placeholder': field}  # Allows bootstrap form animation
             )
-
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        username_exists = CustomUser.objects.filter(username=username).exists()
-        if username_exists:
-            raise ValidationError(
-                "An account with that username already exists")
-        return username
 
     def clean_email(self):
         email = self.cleaned_data['email']
