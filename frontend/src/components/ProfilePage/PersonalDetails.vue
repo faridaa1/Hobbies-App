@@ -5,7 +5,7 @@
                 <img style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="No Profile Picture">
             </div>
             <div>
-                Edit Picture
+                Edit Pictures
                 <button class="btn btn-secondary">
                     <i class="bi bi-upload"></i>
                 </button>
@@ -15,6 +15,7 @@
             <div class="d-flex">
                 <div style="width: 13rem;">Full Name</div>
                 <div>{{ user.name }}</div>
+                <button><i class="bi bi-upload"></i></button>
             </div>
             <div class="d-flex">
                 <div style="width: 13rem;">Email</div>
