@@ -17,6 +17,10 @@ class DatePickerField(forms.DateField):
 
 class SignupForm(ModelForm):
     """Django form used to sign up a user."""
+    confirm_password = PasswordField(label='Confirm Password')
+    field_order = ['name', 'email', 'password',
+                   'confirm_password', 'date_of_birth', 'profile_picture']
+
     class Meta:
         """Form is based on CustomUser model and has following fields from that model"""
         model = CustomUser
@@ -28,7 +32,7 @@ class SignupForm(ModelForm):
         }
         labels = {
             'name': 'Full Name',
-            'profile_picture': 'Profile picture (*.png)'
+            'profile_picture': 'Profile picture (*.png)',
         }
 
     def __init__(self, *args, **kwargs):
@@ -37,7 +41,7 @@ class SignupForm(ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs.update(
                 {'class': 'form-control',  # For bootstrap styling
-                 'placeholder': field}  # Allows bootstrap form animation
+                 'placeholder': self.fields[field].label}  # Placeholder is same as input label
             )
 
     def clean_email(self) -> str:
@@ -53,6 +57,15 @@ class SignupForm(ModelForm):
             raise ValidationError(
                 "Your password must be between 8 and 30 characters")
         return password
+
+    def clean_confirm_password(self):
+        password = self.cleaned_data['password']
+        confirm_password = self.cleaned_data['confirm_password']
+
+        if confirm_password and password:
+            if confirm_password != password:
+                raise ValidationError("Passwords do not match")
+        return confirm_password
 
     def clean_date_of_birth(self) -> datetime.date:
         dob = self.cleaned_data['date_of_birth']

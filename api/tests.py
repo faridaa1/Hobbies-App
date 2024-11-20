@@ -15,6 +15,7 @@ def valid_signup_data() -> dict:
         'name': 'test name',
         'email': 'test_email@test.com',
         'password': 'test_password',
+        'confirm_password': 'test_password',
         'date_of_birth': datetime.date.today()
     }
 
@@ -32,6 +33,18 @@ class SignupFormTests(TestCase):
         """Tests that passing valid data to a form is deemed valid"""
         form = SignupForm(data=self.valid_data)
         self.assertTrue(form.is_valid())
+
+    def test_confirmed_password_is_different(self):
+        """Tests that the form is not valid
+        if the confirmed password is different to the normal password
+        """
+        data = self.valid_data
+        data['confirm_password'] = 'not_same'
+        form = SignupForm(data)
+        self.assertFalse(form.is_valid())
+        print(form.errors.as_data())
+        self.assertEqual(form.errors['confirm_password'],
+                         ['Passwords do not match'])
 
     def test_email_already_used(self):
         """Tests that an error is raised
