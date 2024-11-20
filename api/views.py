@@ -33,3 +33,8 @@ def signup(request: HttpRequest) -> HttpResponse:
         form = SignupForm()
 
     return render(request, 'api/spa/signup.html', {"form": form})
+
+
+def get_user_id(request):
+    """Retrieves the User ID of the currently logged in user"""
+    return request.user.id
