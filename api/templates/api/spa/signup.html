@@ -24,16 +24,23 @@
 {% block content %}
 <div class="mt-5 container p-5 border">
     <h1 class="text-center mb-4">Signup</h1>
-    <form method="post" action="/signup/" class="signup-form" enctype="multipart/form-data">
+    <form method="post" action="/signup/" class="signup-form" id="signup-form" enctype="multipart/form-data">
         <div class="container">
             <div class="form-content row">
                 <div class="col d-flex flex-column align-self-center">
                     {% csrf_token %}
                     {% for field in form %}
-                        {% if field.label != 'Profile picture (*.png)' %} <!-- Want to render input on other side of div -->
+                        <!-- Profile pic - Want to render input on other side of div -->
+                        {% if field.label != 'Profile picture (*.png)' %} 
                             <div class="mb-3">
                                 <label id="{{field.id_for_label}}" class="form-label">{{field.label}}</label> 
                                 {{field}}
+                                {% if field.label == 'Password' %}
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" id="show-password" name="show-password" class="form-check-input"/>
+                                        <label for="show-password" class="form-check-inputs">Show Password</label>
+                                    </div>
+                                {% endif %}
                                 {% for error in field.errors %}
                                     <p class="field-error">{{error}}</p>
                                 {% endfor %}
@@ -64,11 +71,12 @@
 
 {% block js %}
 <script>
+    const form = document.getElementById('signup')
+    const passwordInput = document.querySelector('input#id_password')
+    const passwordToggle = document.getElementById('show-password')
     const profilePreview = document.getElementById('profile-preview')
     const profileImgInput = document.querySelector('input#id_profile_picture')
     const profilePlaceholder = document.getElementById('profile-preview-placeholder')
-
-    profileImgInput.addEventListener('input', updateProfileSource)
 
     function updateProfileSource(e) {
         // If uploaded file is cleared (undefined)
@@ -83,5 +91,9 @@
             profilePreview.classList.remove('hidden')
         }
     }
+
+    profileImgInput.addEventListener('input', updateProfileSource)
+    passwordToggle.addEventListener('input', (e) => passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password')
+    form.addEventListener('submit', (e) => passwordInput.type = 'password') // Don't want it to be saved by autofill
 </script>
 {% endblock %}
