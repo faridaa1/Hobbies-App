@@ -18,22 +18,39 @@
         display: none !important;
     }
 
+    .remove-upload-pic {
+        width: 2.5rem;
+        height: 2.5rem;
+        top: 4%;
+        right: 8%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="mt-5 container p-5 border">
     <h1 class="text-center mb-4">Signup</h1>
-    <form method="post" action="/signup/" class="signup-form" enctype="multipart/form-data">
+    <form method="post" action="/signup/" class="signup-form" id="signup-form" enctype="multipart/form-data">
         <div class="container">
             <div class="form-content row">
                 <div class="col d-flex flex-column align-self-center">
                     {% csrf_token %}
                     {% for field in form %}
-                        {% if field.label != 'Profile picture (*.png)' %} <!-- Want to render input on other side of div -->
+                        <!-- Profile pic - Want to render input on other side of div -->
+                        {% if field.label != 'Profile picture (*.png)' %} 
                             <div class="mb-3">
                                 <label id="{{field.id_for_label}}" class="form-label">{{field.label}}</label> 
                                 {{field}}
+                                {% if field.label == 'Password' %}
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" id="show-password" name="show-password" class="form-check-input"/>
+                                        <label for="show-password" class="form-check-inputs">Show Password</label>
+                                    </div>
+                                {% endif %}
                                 {% for error in field.errors %}
                                     <p class="field-error">{{error}}</p>
                                 {% endfor %}
@@ -42,8 +59,11 @@
                     {% endfor %}
                 </div>
                 <div class="col d-flex flex-column justify-content-center align-items-center">
-                    <img src="" alt="preview of uploaded profile pic" id="profile-preview" class="preview-img hidden"/>
-                    <i class="bi bi-person-circle" style="font-size: 16rem;" id="profile-preview-placeholder"></i>
+                    <div class="position-relative">
+                        <img src="" alt="circular preview of uploaded profile picture" id="profile-preview" class="preview-img hidden"/>
+                        <button type="button" class="btn btn-danger remove-upload-pic position-absolute rounded-circle hidden"><i class="bi bi-x"></i></button>
+                        <i class="bi bi-person-circle" style="font-size: 16rem;" id="profile-preview-placeholder"></i>
+                     </div>
                     <div class="mb-3">
                         <label id="{{form.profile_picture.id_for_label}}" class="form-label">{{form.profile_picture.label}}</label> 
                         {{form.profile_picture}}
@@ -64,17 +84,36 @@
 
 {% block js %}
 <script>
+    const form = document.getElementById('signup')
+    const passwordInput = document.querySelector('input#id_password')
+    const passwordToggle = document.getElementById('show-password')
+    const deleteUploadBtn = document.querySelector('button.remove-upload-pic')
     const profilePreview = document.getElementById('profile-preview')
     const profileImgInput = document.querySelector('input#id_profile_picture')
     const profilePlaceholder = document.getElementById('profile-preview-placeholder')
 
-    profileImgInput.addEventListener('input', updateProfileSource)
-
     function updateProfileSource(e) {
-        console.log(e.target.files[0])
-        profilePreview.src = URL.createObjectURL(e.target.files[0]) // Creates url which can be used to access uploaded file
-        profilePreview.classList.toggle('hidden')
-        profilePlaceholder.classList.toggle('hidden')
+        // If object has no files property or if uploaded file is cleared (undefined)
+        if (e.target.files == undefined || e.target.files[0] === undefined) {
+            // Show place holder and hide img
+            profilePlaceholder.classList.remove('hidden')
+            profilePreview.classList.add('hidden')
+            deleteUploadBtn.classList.add('hidden')
+        } else {
+            profilePreview.src = URL.createObjectURL(e.target.files[0]) // Creates url which can be used to access uploaded file
+            // Show new image and hide placeholder
+            profilePlaceholder.classList.add('hidden')
+            profilePreview.classList.remove('hidden')
+            deleteUploadBtn.classList.remove('hidden')
+        }
     }
+
+    deleteUploadBtn.addEventListener('click', (e) => {
+        profileImgInput.value = null // Clears file in img input
+        updateProfileSource(e)
+    })
+    profileImgInput.addEventListener('input', updateProfileSource)
+    passwordToggle.addEventListener('input', (e) => passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password')
+    form.addEventListener('submit', (e) => passwordInput.type = 'password') // Don't want it to be saved by autofill
 </script>
 {% endblock %}
