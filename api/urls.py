@@ -22,5 +22,5 @@ from .views import main_spa, signup
 
 urlpatterns = [
     path('', main_spa),
-    path('signup/', signup, name='signup'), # Signup user
+    path('signup/', signup, name='signup'),  # Signup user
 ]
