@@ -12,20 +12,22 @@
             <div class="d-flex">
                 <div style="width: 13rem;">Full Name</div>
                 <div>{{ user.name }}</div>
-                
                 <button><i class="bi bi-pencil"></i></button>
             </div>
             <div class="d-flex">
                 <div style="width: 13rem;">Email</div>
                 <div>{{ user.email }}</div>
+                <button><i class="bi bi-pencil"></i></button>
             </div>
             <div class="d-flex">
                 <div style="width: 13rem;">Password</div>
                 <div>{{ user.password }}</div>
+                <button><i class="bi bi-pencil"></i></button>
             </div>
             <div class="d-flex">
                 <div style="width: 13rem;">Date of Birth</div>
                 <div>{{ user.date_of_birth }}</div>
+                <button><i class="bi bi-pencil"></i></button>
             </div>
         </div>
     </div>
