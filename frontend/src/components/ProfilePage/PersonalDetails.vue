@@ -8,26 +8,26 @@
                 <input class="w-75 mx-auto" type="file" @change="updateProfilePicture">
             </div>
         </div>
-        <div class="d-flex flex-column gap-2 w-100">
+        <div class="d-flex flex-column gap-3 w-100">
             <div class="d-flex">
-                <div style="width: 13rem;">Full Name</div>
-                <div>{{ user.name }}</div>
-                <button><i class="bi bi-pencil"></i></button>
+                <div style="width: 10rem;">Full Name</div>
+                <input class="border border-secondary rounded px-2" type="text" disabled :value="user.name">
+                <button class="rounded mx-2 border-primary bg-primary text-white"><i class="bi bi-pencil"></i></button>
             </div>
             <div class="d-flex">
-                <div style="width: 13rem;">Email</div>
-                <div>{{ user.email }}</div>
-                <button><i class="bi bi-pencil"></i></button>
+                <div style="width: 10rem;">Email</div>
+                <input class="border border-secondary rounded px-2" type="text" disabled :value="user.email">
+                <button class="rounded mx-2 border-primary bg-primary text-white"><i class="bi bi-pencil"></i></button>
             </div>
             <div class="d-flex">
-                <div style="width: 13rem;">Password</div>
-                <div>{{ user.password }}</div>
-                <button><i class="bi bi-pencil"></i></button>
+                <div style="width: 10rem;">Password</div>
+                <input class="border border-secondary rounded px-2" type="text" disabled :value="user.password">
+                <button class="rounded mx-2 border-primary bg-primary text-white"><i class="bi bi-pencil"></i></button>
             </div>
             <div class="d-flex">
-                <div style="width: 13rem;">Date of Birth</div>
-                <div>{{ user.date_of_birth }}</div>
-                <button><i class="bi bi-pencil"></i></button>
+                <div style="width: 10rem;">Date of Birth</div>
+                <input class="border border-secondary rounded px-2" type="text" disabled :value="user.date_of_birth">
+                <button class="rounded mx-2 border-primary bg-primary text-white"><i class="bi bi-pencil"></i></button>
             </div>
         </div>
     </div>
