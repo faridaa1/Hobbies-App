@@ -4,6 +4,7 @@ export interface CustomUser {
     email: string;
     date_of_birth: string;
     hobbies: UserHobby[];
+    friends: Friendship[];
     profile_picture: string | null
 }
 
