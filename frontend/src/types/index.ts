@@ -2,7 +2,7 @@ export interface CustomUser {
     id: number;
     name: string;
     email: string;
-    date_of_birth: string;
+    date_of_birth: Date;
     hobbies: UserHobby[];
     friends: Friendship[];
     profile_picture: string | null
@@ -18,7 +18,7 @@ export interface UserHobby {
     user: number;
     hobby: number;
     level: 'Beginner' | 'Intermediate' | 'Advanced';
-    start_date: string
+    start_date: Date
 }
 
 export interface Friendship {
