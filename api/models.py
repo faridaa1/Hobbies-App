@@ -28,7 +28,7 @@ class CustomUser(AbstractUser):
     name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(unique=True, null=False, blank=False)
     date_of_birth = models.DateField(null=False, blank=False)
-    profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
+    profile_picture = models.ImageField(upload_to="profile_pictures/", null=False, blank=True)
     hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
     friends = models.ManyToManyField(to='self', symmetrical=True, through='Friendship', blank=True)
 
