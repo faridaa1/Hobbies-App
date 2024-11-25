@@ -1,8 +1,9 @@
 <template>
     <div class="fs-4 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
-            <div class="">
-                <img style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="">
+            <div>
+                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="">
+                <i v-if="!user.profile_picture" class="bi bi-person-circle"></i>
             </div>
             <div class="d-flex align-items-center">
                 <input class="w-75 mx-auto" type="file" @change="updateProfilePicture">
@@ -64,8 +65,16 @@
                     this.user.profile_picture = URL.createObjectURL(input.files[0])
                 }
             }
-        }
-          
+        },
+        async mounted() {
+            let response = await fetch("http://localhost:8000/profile/", {
+                credentials: 'include'
+            });
+            let data = await response.json();
+            // this.user = data
+            // const store = useUserStore()
+            // store.saveUser(user_id)
+          }
       })
   </script>
   

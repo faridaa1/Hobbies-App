@@ -39,7 +39,6 @@
             </div>
             <div class="tab-pane fade" id="friend-requests-received-tab-pane" role="tabpanel" aria-labelledby="friend-requests-received-tab" tabindex="4">
             </div>
-            Hi {{ user }}
         </div>
     </div>
   </template>
@@ -47,27 +46,16 @@
   <script lang="ts">
     import { defineComponent } from "vue";
     import PersonalDetails from "../components/ProfilePage/PersonalDetails.vue";
-    import { useUserStore } from "../stores/user";
   
       export default defineComponent({
           data() {
               return {
                   title: "Profile",
-                  user: {}
               }
           },
           components: {
             PersonalDetails
           },
-          async mounted() {
-            let response = await fetch("http://localhost:8000/profile/", {
-                credentials: 'include'
-            });
-            let data = await response.json();
-            this.user = data
-            // const store = useUserStore()
-            // store.saveUser(user_id)
-          }
       })
   </script>
   
