@@ -36,11 +36,11 @@ def signup(request: HttpRequest) -> HttpResponse:
 
 def get_user(request: HttpRequest) -> JsonResponse:
     """Retrieves the User ID of the currently logged in user"""
-        user : CustomUser = CustomUser.objects.get(pk=request.session.get('_auth_user_id'))
-        return JsonResponse({
-            'id': user.id,
-            "name": user.name,
-            "email": user.email,
-            "date_of_birth": user.date_of_birth,
-            "profile_picture": user.profile_picture.url if user.profile_picture else None,
-        })
+    user : CustomUser = CustomUser.objects.get(pk=request.session.get('_auth_user_id'))
+    return JsonResponse({
+        'id': user.id,
+        "name": user.name,
+        "email": user.email,
+        "date_of_birth": user.date_of_birth,
+        "profile_picture": user.profile_picture.url if user.profile_picture else None,
+    })
