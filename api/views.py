@@ -1,8 +1,8 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from .forms import SignupForm
 from .models import CustomUser
-
+from django.contrib.auth import login
 
 def main_spa(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/index.html', {})
@@ -17,7 +17,7 @@ def signup(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             # Create user from valid form
             data = form.cleaned_data
-            CustomUser.objects.create_user(
+            user = CustomUser.objects.create_user(
                 username=data['email'],
                 password=data['password'],
                 email=data['email'],
@@ -27,6 +27,7 @@ def signup(request: HttpRequest) -> HttpResponse:
             )
             # TODO - auth (and context?) stuff for response
             # TODO - use reverse for urls once ^
+            login(request, user)
             return redirect('/')
     else:
         form = SignupForm()
@@ -34,6 +35,8 @@ def signup(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/signup.html', {"form": form})
 
 
-def get_user_id(request):
+def get_user(request):
     """Retrieves the User ID of the currently logged in user"""
-    return request.user.id
+    return JsonResponse({
+        'id': request.session.get('_auth_user_id')
+    })

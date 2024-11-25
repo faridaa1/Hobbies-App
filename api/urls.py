@@ -18,9 +18,10 @@ from django.contrib import admin
 from django.urls import include, path
 from django.http import HttpResponse
 
-from .views import main_spa, signup
+from .views import main_spa, signup, get_user
 
 urlpatterns = [
     path('', main_spa),
     path('signup/', signup, name='signup'),  # Signup user
+    path('profile/', get_user, name='get user')
 ]
