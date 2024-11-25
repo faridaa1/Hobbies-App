@@ -26,9 +26,9 @@ class Hobby(models.Model):
 class CustomUser(AbstractUser):
     """Defines the custom user model."""
     name = models.CharField(max_length=150, blank=False)
-    email = models.EmailField(unique=True)
-    date_of_birth = models.DateField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
+    email = models.EmailField(unique=True, null=False, blank=False)
+    date_of_birth = models.DateField(null=False, blank=False)
+    profile_picture = models.ImageField(upload_to="profile_pictures/", null=False, blank=True)
     hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
     friends = models.ManyToManyField(to='self', symmetrical=True, through='Friendship', blank=True)
 
@@ -55,6 +55,7 @@ class CustomUser(AbstractUser):
             "email": self.email,
             "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
             "hobbies": [hobby.name for hobby in self.hobbies.all()],
+            "friends": [friendship.user1 for friendship in self.friends.all()],
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
         }
 
