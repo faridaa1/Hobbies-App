@@ -35,6 +35,7 @@
                 <Hobbies />
             </div>
             <div class="tab-pane fade" id="friends-tab-pane" role="tabpanel" aria-labelledby="friends-tab" tabindex="2">
+                <Friends />
             </div>
             <div class="tab-pane fade" id="friend-requests-sent-tab-pane" role="tabpanel" aria-labelledby="friend-requests-sent-tab" tabindex="3">
             </div>
@@ -48,6 +49,7 @@
     import { defineComponent } from "vue";
     import PersonalDetails from "../components/ProfilePage/PersonalDetails.vue";
     import Hobbies from "../components/ProfilePage/Hobbies.vue";
+    import Friends from "../components/ProfilePage/Friends.vue";
   
       export default defineComponent({
           data() {
@@ -56,7 +58,7 @@
               }
           },
           components: {
-            PersonalDetails, Hobbies
+            PersonalDetails, Hobbies, Friends
           },
       })
   </script>
