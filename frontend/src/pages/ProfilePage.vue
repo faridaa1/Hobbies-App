@@ -56,7 +56,7 @@
               }
           },
           components: {
-            PersonalDetails
+            PersonalDetails, Hobbies
           },
       })
   </script>
