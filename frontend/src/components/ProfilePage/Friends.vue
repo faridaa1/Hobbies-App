@@ -2,7 +2,7 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <h1>My Friends</h1>
         <hr>
-        <div class="fs-4 mt-4 d-flex flex-rowalign-items-center gap-5 w-100" v-for="(friend, index) in friends">
+        <div class="fs-4 mt-4 d-flex flex-rowalign-items-center gap-5 w-100 align-items-center" v-for="(friend, index) in friends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
                 <img v-if="friend.profile_picture" style="width: 70px; height:70px; object-fit: cover;" class="rounded-circle" :src="friend.profile_picture" alt="">
                 <i v-if="!friend.profile_picture" class="bi bi-person-circle p-0" style="font-size: 70px; line-height: 0"></i>
