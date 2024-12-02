@@ -41,6 +41,7 @@
                 <FriendRequestsSent />
             </div>
             <div class="tab-pane fade" id="friend-requests-received-tab-pane" role="tabpanel" aria-labelledby="friend-requests-received-tab" tabindex="4">
+                <FriendRequestsReceived />
             </div>
         </div>
     </div>
@@ -52,6 +53,7 @@
     import Hobbies from "../components/ProfilePage/Hobbies.vue";
     import Friends from "../components/ProfilePage/Friends.vue";
     import FriendRequestsSent from "../components/ProfilePage/FriendRequestsSent.vue";
+    import FriendRequestsReceived from "../components/ProfilePage/FriendRequestsReceived.vue";
   
       export default defineComponent({
           data() {
@@ -60,7 +62,7 @@
               }
           },
           components: {
-            PersonalDetails, Hobbies, Friends, FriendRequestsSent
+            PersonalDetails, Hobbies, Friends, FriendRequestsSent, FriendRequestsReceived
           },
       })
   </script>
