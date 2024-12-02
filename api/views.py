@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from .forms import SignupForm
 from .models import CustomUser, Hobby
-
+from django.contrib.auth import login
 
 def main_spa(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/index.html', {})
@@ -17,7 +17,7 @@ def signup(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             # Create user from valid form
             data = form.cleaned_data
-            CustomUser.objects.create_user(
+            user = CustomUser.objects.create_user(
                 username=data['email'],
                 password=data['password'],
                 email=data['email'],
@@ -27,6 +27,7 @@ def signup(request: HttpRequest) -> HttpResponse:
             )
             # TODO - auth (and context?) stuff for response
             # TODO - use reverse for urls once ^
+            login(request, user) # temporary - change as u see fit
             return redirect('http://localhost:5173/profile')
     else:
         form = SignupForm()
@@ -40,8 +41,9 @@ def hobbies_api_view(request: HttpRequest) -> HttpResponse:
         'hobbies' : [hobby.as_dict() for hobby in Hobby.objects.all()],
     })
 
+
 def user_api_view(request: HttpRequest) -> HttpResponse:
     """Defining GET and PUT for a specific user."""
     return JsonResponse({
-        'hobbies' : [hobby.as_dict() for hobby in User.objects.all()],
+        'user' : [CustomUser.objects.get(pk=request.user.id).as_dict()],
     }) # dummy data for now

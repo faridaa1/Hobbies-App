@@ -45,11 +45,12 @@ export default defineComponent({
         const hobbiesStore = useHobbiesStore()
         hobbiesStore.setHobbies(hobbies)
 
-        // let userResponse = await fetch("http://localhost:8000/api/user/"); // should be updated to pass session key?? i think. some kind of authentication
-        // let userData = await userResponse.json();
-        // let user = userData.hobbies as CustomUser;
-        // const userStore = useUserStore()
-        // userStore.saveUser(user)
+        let userResponse = await fetch("http://localhost:8000/api/user/", {method:'GET', credentials: 'include',}); // should be updated to pass session key?? i think. some kind of authentication
+        let userData = await userResponse.json();
+        console.log(userData)
+        let user = userData.hobbies as CustomUser;
+        const userStore = useUserStore()
+        userStore.saveUser(user)
     }
 });
 
