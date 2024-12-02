@@ -32,9 +32,18 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { RouterView } from "vue-router";
+import { Hobby } from "./types";
+import { useHobbiesStore } from "./stores/hobbies";
 
 export default defineComponent({
     components: { RouterView },
+    async mounted() {
+        let response = await fetch("http://localhost:8000/api/hobbies/");
+        let data = await response.json();
+        let hobbies = data.hobbies as Hobby[];
+        const hobbiesStore = useHobbiesStore()
+        hobbiesStore.setHobbies(hobbies)
+    }
 });
 
 </script>

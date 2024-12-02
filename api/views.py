@@ -1,7 +1,7 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from .forms import SignupForm
-from .models import CustomUser
+from .models import CustomUser, Hobby
 
 
 def main_spa(request: HttpRequest) -> HttpResponse:
@@ -32,3 +32,10 @@ def signup(request: HttpRequest) -> HttpResponse:
         form = SignupForm()
 
     return render(request, 'api/spa/signup.html', {"form": form})
+
+
+def hobbies_api_view(request: HttpRequest) -> HttpResponse:
+    """ Returning all hobbies for global store."""
+    return JsonResponse({
+        'hobbies' : [hobby.as_dict() for hobby in Hobby.objects.all()],
+    })

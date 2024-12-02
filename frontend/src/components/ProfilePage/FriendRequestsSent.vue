@@ -60,10 +60,6 @@
             }
         },
         async mounted() {
-            let response = await fetch("http://localhost:8000/profile/", {
-                credentials: 'include'
-            });
-            let data = await response.json();
             // this.user = data
             // const store = useUserStore()
             // store.saveUser(user_id)

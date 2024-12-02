@@ -9,9 +9,9 @@ export interface CustomUser {
 }
 
 export interface Hobby {
-    id: number;
-    name: string;
-    description: string
+    hobby_id: number;
+    hobby_name: string;
+    hobby_description: string
 }
 
 export interface UserHobby { 
