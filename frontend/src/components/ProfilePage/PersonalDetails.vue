@@ -2,7 +2,7 @@
     <div class="fs-4 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
             <div class="position-relative">
-                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="">
+                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="Profile Picture">
                 <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
                 <button class="text-danger border-0 bg-transparent position-absolute top-0 end-0" v-if="user.profile_picture" @click="user.profile_picture=''"><i class="bi bi-x fs-1"></i></button>
             </div>
@@ -33,7 +33,7 @@
                 <div style="width: 10rem;">Date of Birth</div>
                 <input class="border border-secondary rounded px-2" type="text" :disabled="!isEditingDateOfBirth" :value="user.date_of_birth">
                 <button v-if="!isEditingDateOfBirth" class="rounded mx-2 border-primary bg-primary text-white" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil"></i></button>
-                <button v-if="isEditingDateOfBirth"class="rounded mx-2 px-3 border-primary bg-success text-white" @click="isEditingDateOfBirth = false">Save</button>
+                <button v-if="isEditingDateOfBirth"class="rounded mx-2 px-3 bg-success text-white" @click="isEditingDateOfBirth = false">Save</button>
             </div>
         </div>
     </div>
@@ -76,11 +76,6 @@
                 }
             }
         },
-        async mounted() {
-            // this.user = data
-            // const store = useUserStore()
-            // store.saveUser(user_id)
-          }
       })
   </script>
   
