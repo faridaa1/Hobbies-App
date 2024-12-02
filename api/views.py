@@ -26,8 +26,7 @@ def signup(request: HttpRequest) -> HttpResponse:
             )
             # TODO - auth (and context?) stuff for response
             # TODO - use reverse for urls once ^
-            # login(request, user) # temporary - change as u see fit
-            return redirect('http://localhost:5173/profile')
+            return redirect('http://localhost:5173/profile/')
     else:
         form = SignupForm()
 
@@ -43,6 +42,19 @@ def hobbies_api_view(request: HttpRequest) -> HttpResponse:
 
 def user_api_view(request: HttpRequest) -> HttpResponse:
     """Defining GET and PUT for a specific user."""
+    print(request.COOKIES)
+    if (request.user.id):
+        return JsonResponse({
+            'user' : CustomUser.objects.get(pk=request.user.id).as_dict(),
+        })
     return JsonResponse({
-        'user' : CustomUser.objects.get(pk=request.user.id).as_dict(),
+        'user' : {
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "password": "password123",
+        "date_of_birth": "2000-01-01",  # Format as ISO date string
+        "hobbies": [],  # Empty list for hobbies
+        "friends": [],  # Empty list for friends
+        "profile_picture": None,  # No profile picture
+        }
     })

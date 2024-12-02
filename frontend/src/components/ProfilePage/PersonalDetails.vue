@@ -12,28 +12,28 @@
         </div>
         <div class="d-flex flex-column gap-3 w-100">
             <div class="d-flex">
-                <div style="width: 10rem;">Full Name</div>
+                <div class="label">Full Name</div>
                 <input class="border border-secondary rounded px-2" type="text" :disabled="!isEditingName" :value="user.name">
-                <button v-if="!isEditingName"class="rounded mx-2 border-primary bg-primary text-white" @click="isEditingName = true"><i class="bi bi-pencil"></i></button>
-                <button v-if="isEditingName"class="rounded mx-2 px-3 border-primary bg-success text-white" @click="isEditingName = false">Save</button>
+                <button type="button" v-if="!isEditingName"class="button edit" @click="isEditingName = true"><i class="bi bi-pencil"></i></button>
+                <button type="button" v-if="isEditingName"class="button save" @click="isEditingName = false">Save</button>
             </div>
             <div class="d-flex">
-                <div style="width: 10rem;">Email</div>
+                <div class="label">Email</div>
                 <input class="border border-secondary rounded px-2" type="text" :disabled="!isEditingEmail" :value="user.email">
-                <button v-if="!isEditingEmail" class="rounded mx-2 border-primary bg-primary text-white" @click="isEditingEmail = true"><i class="bi bi-pencil"></i></button>
-                <button v-if="isEditingEmail"class="rounded mx-2 px-3 border-primary bg-success text-white" @click="isEditingEmail = false">Save</button>
+                <button type="button" v-if="!isEditingEmail" class="button edit" @click="isEditingEmail = true"><i class="bi bi-pencil"></i></button>
+                <button type="button" v-if="isEditingEmail"class="button save" @click="isEditingEmail = false">Save</button>
             </div>
             <div class="d-flex">
-                <div style="width: 10rem;">Password</div>
+                <div class="label">Password</div>
                 <input class="border border-secondary rounded px-2" type="text" :disabled="!isEditingPassword" :value="user.password">
-                <button v-if="!isEditingPassword" class="rounded mx-2 border-primary bg-primary text-white" @click="isEditingPassword = true"><i class="bi bi-pencil"></i></button>
-                <button v-if="isEditingPassword"class="rounded mx-2 px-3 border-primary bg-success text-white" @click="isEditingPassword = false">Save</button>
+                <button type="button" v-if="!isEditingPassword" class="button edit" @click="isEditingPassword = true"><i class="bi bi-pencil"></i></button>
+                <button type="button" v-if="isEditingPassword"class="button save" @click="isEditingPassword = false">Save</button>
             </div>
             <div class="d-flex">
-                <div style="width: 10rem;">Date of Birth</div>
+                <div class="label">Date of Birth</div>
                 <input class="border border-secondary rounded px-2" type="text" :disabled="!isEditingDateOfBirth" :value="user.date_of_birth">
-                <button v-if="!isEditingDateOfBirth" class="rounded mx-2 border-primary bg-primary text-white" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil"></i></button>
-                <button v-if="isEditingDateOfBirth"class="rounded mx-2 px-3 bg-success text-white" @click="isEditingDateOfBirth = false">Save</button>
+                <button type="button" v-if="!isEditingDateOfBirth" class="button edit" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil"></i></button>
+                <button type="button" v-if="isEditingDateOfBirth"class="button save" @click="isEditingDateOfBirth = false">Save</button>
             </div>
         </div>
     </div>
@@ -72,5 +72,24 @@
   </script>
   
 <style scoped>
+    .button {
+        border-radius: 0.25rem; 
+        margin-left: 0.5rem; 
+        margin-right: 0.5rem;
+        color: #ffffff; /* White text */
+        border: none; /* Remove border if needed */
+    }
+    .edit {
+        background-color: #007bff;
+    }
+    .save {
+        padding-left: 1rem; 
+        padding-right: 1rem;
+        background-color: #28a745; 
+        cursor: pointer; 
+    }
+    .label {
+        width: 10rem;
+    }
 </style>
   
