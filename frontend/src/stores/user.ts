@@ -3,7 +3,7 @@ import { CustomUser } from '../types'
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        user: null as CustomUser | null
+        user: {} as CustomUser 
     }),
     actions: {
         saveUser(user: CustomUser) {

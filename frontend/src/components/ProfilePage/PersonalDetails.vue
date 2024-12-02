@@ -40,28 +40,14 @@
   </template>
   
   <script lang="ts">
-      import { defineComponent } from "vue";
-  
-      interface User {
-        profile_picture : string;
-        name : string;
-        email : string;
-        password : string;
-        date_of_birth : string;
-      }
+    import { defineComponent } from "vue";
+    import { useUserStore } from "../../stores/user";
+    import { CustomUser } from "../../types";
+
       
       export default defineComponent({
           data() {
               return {
-                  title: "Other Page",
-                  user: {
-                    // profile_picture : "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649",
-                    profile_picture : "",
-                    name : "Person McPerson",
-                    email : "email@gmail.com",
-                    password : "password",
-                    date_of_birth : "01/01/2004",
-                  } as User,
                   isEditingName: false,
                   isEditingEmail: false,
                   isEditingPassword: false,
@@ -76,6 +62,12 @@
                 }
             }
         },
+        computed: {
+            user(): CustomUser {
+                const userStore = useUserStore()
+                return userStore.user;
+            }
+        }
       })
   </script>
   

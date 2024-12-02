@@ -53,6 +53,7 @@ class CustomUser(AbstractUser):
             "username": self.username,
             "name": self.name,
             "email": self.email,
+            "password": self.password,
             "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
             "hobbies": [hobby.name for hobby in self.hobbies.all()],
             "friends": [friendship.user1 for friendship in self.friends.all()],
