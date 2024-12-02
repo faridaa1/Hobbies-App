@@ -32,17 +32,24 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { RouterView } from "vue-router";
-import { Hobby } from "./types";
+import { CustomUser, Hobby } from "./types";
 import { useHobbiesStore } from "./stores/hobbies";
+import { useUserStore } from "./stores/user";
 
 export default defineComponent({
     components: { RouterView },
     async mounted() {
-        let response = await fetch("http://localhost:8000/api/hobbies/");
-        let data = await response.json();
-        let hobbies = data.hobbies as Hobby[];
+        let hobbiesResponse = await fetch("http://localhost:8000/api/hobbies/");
+        let hobbiesData = await hobbiesResponse.json();
+        let hobbies = hobbiesData.hobbies as Hobby[];
         const hobbiesStore = useHobbiesStore()
         hobbiesStore.setHobbies(hobbies)
+
+        let userResponse = await fetch("http://localhost:8000/api/user/");
+        let userData = await userResponse.json();
+        let user = userData.hobbies as CustomUser;
+        const userStore = useUserStore()
+        userStore.saveUser(user)
     }
 });
 
