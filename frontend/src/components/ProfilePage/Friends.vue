@@ -8,9 +8,8 @@
                 <i v-if="!friend.profile_picture" class="bi bi-person-circle p-0" style="font-size: 70px; line-height: 0"></i>
                 <div class="p-2 rounded w-100">{{ friend.name }}</div>
             </div>
-            <button class="border-0 bg-primary text-white rounded px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;">
+            <button type="button" class="btn btn-primary px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;">
                 Remove
-                <!-- <i class="bi bi-trash-fill"></i> -->
             </button>
         </div>
     </div>
