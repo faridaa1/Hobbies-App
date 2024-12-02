@@ -32,6 +32,7 @@
                 <PersonalDetails />
             </div>
             <div class="tab-pane fade" id="hobbies-tab-pane" role="tabpanel" aria-labelledby="hobbies-tab" tabindex="1">
+                <Hobbies />
             </div>
             <div class="tab-pane fade" id="friends-tab-pane" role="tabpanel" aria-labelledby="friends-tab" tabindex="2">
             </div>
@@ -46,6 +47,7 @@
   <script lang="ts">
     import { defineComponent } from "vue";
     import PersonalDetails from "../components/ProfilePage/PersonalDetails.vue";
+    import Hobbies from "../components/ProfilePage/Hobbies.vue";
   
       export default defineComponent({
           data() {
