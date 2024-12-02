@@ -4,10 +4,10 @@
             <div class="position-relative">
                 <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="Profile Picture">
                 <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
-                <button class="text-danger border-0 bg-transparent position-absolute top-0 end-0" v-if="user.profile_picture" @click="user.profile_picture=''"><i class="bi bi-x fs-1"></i></button>
+                <button type="button" class="text-danger border-0 bg-transparent position-absolute top-0 end-0" v-if="user.profile_picture" @click="user.profile_picture=''"><i class="bi bi-x fs-1"></i></button>
             </div>
             <div class="d-flex align-items-center">
-                <input class="w-75 mx-auto" type="file" @change="updateProfilePicture">
+                <input class="w-75 mx-auto" type="file" accept=".png" @change="updateProfilePicture">
             </div>
         </div>
         <div class="d-flex flex-column gap-3 w-100">
