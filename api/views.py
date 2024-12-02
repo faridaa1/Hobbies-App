@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from .forms import SignupForm
 from .models import CustomUser, Hobby
-from django.contrib.auth import login
 
 def main_spa(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/index.html', {})
@@ -27,7 +26,7 @@ def signup(request: HttpRequest) -> HttpResponse:
             )
             # TODO - auth (and context?) stuff for response
             # TODO - use reverse for urls once ^
-            login(request, user) # temporary - change as u see fit
+            # login(request, user) # temporary - change as u see fit
             return redirect('http://localhost:5173/profile')
     else:
         form = SignupForm()
