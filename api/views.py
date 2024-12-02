@@ -39,3 +39,9 @@ def hobbies_api_view(request: HttpRequest) -> HttpResponse:
     return JsonResponse({
         'hobbies' : [hobby.as_dict() for hobby in Hobby.objects.all()],
     })
+
+def user_api_view(request: HttpRequest) -> HttpResponse:
+    """Defining GET and PUT for a specific user."""
+    return JsonResponse({
+        'hobbies' : [hobby.as_dict() for hobby in User.objects.all()],
+    }) # dummy data for now
