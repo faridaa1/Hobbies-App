@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
 from .forms import SignupForm
 from .models import CustomUser, Hobby
 
@@ -19,7 +20,7 @@ def signup(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             # Create user from valid form
             data = form.cleaned_data
-            user = CustomUser.objects.create_user(
+            CustomUser.objects.create_user(
                 username=data['email'],
                 password=data['password'],
                 email=data['email'],
@@ -27,8 +28,10 @@ def signup(request: HttpRequest) -> HttpResponse:
                 date_of_birth=data['date_of_birth'],
                 profile_picture=data['profile_picture']
             )
-            # TODO - auth (and context?) stuff for response
-            # TODO - use reverse for urls once ^
+            user = authenticate(  # verifies details
+                request, username=data['email'], password=data['password'])
+            if user is not None:
+                login(request, user)  # logs in user and saves id in session
             return redirect('http://localhost:5173/profile/')
     else:
         form = SignupForm()
@@ -46,9 +49,9 @@ def hobbies_api_view(request: HttpRequest) -> HttpResponse:
 def user_api_view(request: HttpRequest) -> HttpResponse:
     """Defining GET and PUT for a specific user."""
     print(request.COOKIES)
-    if (request.user.id):
+    if (request.user.is_authenticated):
         return JsonResponse({
-            'user': CustomUser.objects.get(pk=request.user.id).as_dict(),
+            'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
     return JsonResponse({
         'user': {
