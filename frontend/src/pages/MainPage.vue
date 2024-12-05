@@ -15,10 +15,6 @@ export default defineComponent({
       title: "Main Page",
     }
   },
-  async mounted() {
-    const store = useUserStore()
-    store.getUser()
-  },
   computed: {
     user() {
       const store = useUserStore()
