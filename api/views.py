@@ -53,14 +53,15 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
         return JsonResponse({
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
-    return JsonResponse({
-        'user': {
-            "name": "John Doe",
-            "email": "john.doe@example.com",
-            "password": "password123",
-            "date_of_birth": "2000-01-01",  # Format as ISO date string
-            "hobbies": [],  # Empty list for hobbies
-            "friends": [],  # Empty list for friends
-            "profile_picture": None,  # No profile picture
-        }
-    })
+    return HttpResponse('test')
+    # return JsonResponse({
+    #     'user': {
+    #         "name": "John Doe",
+    #         "email": "john.doe@example.com",
+    #         "password": "password123",
+    #         "date_of_birth": "2000-01-01",  # Format as ISO date string
+    #         "hobbies": [],  # Empty list for hobbies
+    #         "friends": [],  # Empty list for friends
+    #         "profile_picture": None,  # No profile picture
+    #     }
+    # })

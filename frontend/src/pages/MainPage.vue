@@ -2,7 +2,7 @@
   <div class="h1">
     {{ title }}
   </div>
-  <h1>Current User details: {{ user }}</h1>
+  <h1>Current User details: {{ user.user }}</h1>
 </template>
 
 <script lang="ts">
@@ -18,7 +18,7 @@ export default defineComponent({
   computed: {
     user() {
       const store = useUserStore()
-      return store.user
+      return store
     }
   }
 })
