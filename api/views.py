@@ -44,6 +44,7 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
     """Defining GET and PUT for a specific user."""
     print(request.COOKIES)
     if (request.user.id):
+        print(CustomUser.objects.get(pk=request.user.id))
         return JsonResponse({
             'user' : CustomUser.objects.get(pk=request.user.id).as_dict(),
         })

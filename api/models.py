@@ -55,7 +55,7 @@ class CustomUser(AbstractUser):
             "email": self.email,
             "password": self.password,
             "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
-            "hobbies": [hobby.name for hobby in self.hobbies.all()],
+            "hobbies": [hobby.as_dict() for hobby in self.hobbies.all()],
             "friends": [friendship.user1 for friendship in self.friends.all()],
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
         }
@@ -119,8 +119,8 @@ class UserHobby(models.Model):
     def as_dict(self) -> dict[str, Any]:
         """Defining dictionary representation of UserHobby."""
         return {
-            "user" : self.user.id,
-            "hobby" : self.hobby.id,
+            "user" : self.user,
+            "hobby" : self.hobby,
             "level" : self.level,
             "start_date" : self.start_date
         }
