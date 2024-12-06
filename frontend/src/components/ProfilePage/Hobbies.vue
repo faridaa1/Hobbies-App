@@ -8,7 +8,7 @@
                 :data-bs-toggle="'modal'"
                 :data-bs-target="'#addHobby'"
                 >
-                <i class="bi bi-plus-circle-fill darken-hover fs-1"></i>
+                <i class="bi bi-plus-circle-fill fs-1 bluebtn"></i>
             </button>
         </div>
         <div class="modal fade" :id="'addHobby'">
@@ -16,7 +16,6 @@
                 <div class="modal-content">
                     <AddHobby />
                 </div>
-
             </div>
         </div>
         <div class="fs-4 mt-4 d-flex flex-rowalign-items-center gap-5 w-100" v-for="(hobby, index) in hobbies">
@@ -29,7 +28,7 @@
                 <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ hobby.hobby_description }}</div>
             </div>
             <button class="text-primary border-0 bg-white fs-1">
-                <i class="bi bi-trash-fill darken-hover"></i>
+                <i class="bi bi-trash-fill darken-hover bluebtn"></i>
             </button>
         </div>
     </div>
@@ -59,4 +58,7 @@
 </script>
   
 <style scoped>
+    .bluebtn:hover {
+        color: darkblue;
+    }
 </style>
