@@ -59,3 +59,6 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
         "profile_picture": None,  # No profile picture
         }
     })
+
+def hobby_api_view(request: HttpRequest) -> HttpResponse:
+    print("here")
