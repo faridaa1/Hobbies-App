@@ -6,9 +6,9 @@
         </div>
         <form class="modal-body mb-3 d-flex flex-column">
             <div v-if="hobbySelected" class="d-flex gap-4 mb-4">
-                <label class="label">Select Hobby</label>
-                <select class="rounded">
-                    <option v-for="hobby in hobbies">
+                <label class="label">Select a Hobby</label>
+                <select class="rounded" v-model="newHobby.hobby_id">
+                    <option v-for="hobby in filteredHobbies" :key="hobby.hobby_id" :value="hobby.hobby_id">
                         {{ hobby.hobby_name }}
                     </option>   
                 </select>
@@ -32,11 +32,11 @@
                 </div>
             </div>
             <div class="mt-2">
-                <button type="button" class="btn btn-secondary" @click="hobbySelected=!hobbySelected">
-                    {{ hobbySelected ? 'Add New Hobby Instead' : 'Select Hobby Instead' }}
+                <button type="button" class="btn btn-secondary" @click="hobbySelected=!hobbySelected; valid = !valid">
+                    {{ hobbySelected ? 'Add a New Hobby Instead' : 'Select a Hobby Instead' }}
                 </button>
             </div>
-            <button type="button" class="mt-3 btn btn-primary mx-auto" :disabled="!valid" data-bs-dismiss="modal">Add Hobby</button>
+            <button type="button" class="mt-3 btn btn-primary mx-auto" :disabled="!valid" data-bs-dismiss="modal" @click="submit">Add Hobby</button>
         </form>
     </div>
   </template>
@@ -53,7 +53,7 @@
                 newHobby: {} as Hobby,
                 hobbySelected: true,
                 errorText: {},
-                valid: false
+                valid: true,
             }
         },
         methods: {
@@ -87,17 +87,54 @@
                 } else {
                     this.valid = false
                 }
+            },
+            async submit(): Promise<void> {
+                let newHobby;
+                if (this.hobbySelected) {
+                    const hobby = this.hobbies.filter(hobby => hobby.hobby_id === this.newHobby.hobby_id)
+                    newHobby = JSON.stringify(hobby)
+                } else {
+                    this.newHobby.hobby_id = -1
+                    newHobby = JSON.stringify(this.newHobby)
+                }
+                let response = await fetch("http://localhost:8000/api/hobby/", {
+                    method:'POST', 
+                    credentials: 'include', 
+                    headers: { 
+                        'Content-Type': 'application/json',
+                    },
+                    body: newHobby,
+                }) 
+                let data = await response.json()
+                let hobby = data.hobby as Hobby
+                const hobbiesStore = useHobbiesStore()
+                console.log(hobby)
+                // // hobbiesStore.addHobby(this.newHobby)
+                // const userStore = useUserStore()
+                // let user: CustomUser = userStore.user
+                // let userHobbies: UserHobby[] = user.hobbies
             }
         },
         computed: {
             hobbies(): Hobby[] {
                 const hobbiesStore = useHobbiesStore()
+                return hobbiesStore.hobbies || []
+            },
+            myHobbies(): Hobby[] {
                 const userStore = useUserStore()
                 let user: CustomUser = userStore.user;
-                let userHobbies: UserHobby[] = user.hobbies;
-                return hobbiesStore.hobbies;
+                let userHobbies: Hobby[] = user.hobbies;
+                return userHobbies;
+            }, filteredHobbies(): Hobby[] {
+                if (this.hobbies && this.myHobbies) {
+                    let hobbiesFiltered = this.hobbies.filter(hobby => !this.myHobbies.some(myHobby => myHobby.hobby_id == hobby.hobby_id))
+                     this.newHobby.hobby_id = hobbiesFiltered[0].hobby_id
+                     return hobbiesFiltered
+                } else {
+                    return []
+                }
             }
-        }
+        },
     })
 </script>
   

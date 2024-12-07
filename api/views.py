@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from .forms import SignupForm
-from .models import CustomUser, Hobby
+from .models import CustomUser, Hobby, UserHobby
 
 def main_spa(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/index.html', {})
@@ -60,5 +60,13 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
         }
     })
 
+
 def hobby_api_view(request: HttpRequest) -> HttpResponse:
     print("here")
+    return JsonResponse ({})
+
+
+def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
+    return JsonResponse({
+        'hobbies' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=id)],
+    })

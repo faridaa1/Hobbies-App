@@ -56,7 +56,7 @@ class CustomUser(AbstractUser):
             "password": self.password,
             "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
             "hobbies": [hobby.as_dict() for hobby in self.hobbies.all()],
-            "friends": [friendship.user1 for friendship in self.friends.all()],
+            # "friends": [friendship.user1 for friendship in self.friends.all()],
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
         }
 

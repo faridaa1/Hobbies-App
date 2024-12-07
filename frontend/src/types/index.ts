@@ -4,7 +4,7 @@ export interface CustomUser {
     email: string;
     password: string;
     date_of_birth: Date;
-    hobbies: UserHobby[];
+    hobbies: Hobby[];
     friends: Friendship[];
     profile_picture: string;
 }
@@ -15,7 +15,7 @@ export interface Hobby {
     hobby_description: string
 }
 
-export interface UserHobby { 
+export interface UserHobby {
     user: CustomUser;
     hobby: Hobby;
     level: 'Beginner' | 'Intermediate' | 'Advanced';

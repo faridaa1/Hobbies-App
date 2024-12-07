@@ -3,7 +3,7 @@ import { Hobby } from '../types'
 
 export const useHobbiesStore = defineStore('hobbies', {
     state: () => ({
-        hobbies: {} as Hobby[]
+        hobbies: [] as Hobby[]
     }),
     actions: {
         addHobby(hobby: Hobby) {

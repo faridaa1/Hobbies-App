@@ -36,8 +36,7 @@
   
   <script lang="ts">
     import { defineComponent } from "vue";
-    import { useHobbiesStore } from "../../stores/hobbies";
-    import { CustomUser, Hobby, UserHobby } from "../../types";
+    import { CustomUser, Hobby } from "../../types";
     import { useUserStore } from "../../stores/user";
     import AddHobby from "./AddHobby.vue";
 
@@ -46,11 +45,10 @@
             AddHobby
         },
         computed: {
-            hobbies(): UserHobby[] {
-                const hobbiesStore = useHobbiesStore()
+            hobbies(): Hobby[] {
                 const userStore = useUserStore()
                 let user: CustomUser = userStore.user;
-                let userHobbies: UserHobby[] = user.hobbies;
+                let userHobbies: Hobby[] = user.hobbies;
                 return userHobbies;
             }
         }
