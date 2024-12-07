@@ -66,3 +66,14 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
     #         "profile_picture": None,  # No profile picture
     #     }
     # })
+
+
+def hobby_api_view(request: HttpRequest) -> HttpResponse:
+    print("here")
+    return JsonResponse ({})
+
+
+def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
+    return JsonResponse({
+        'hobbies' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=id)],
+    })
