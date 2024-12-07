@@ -60,7 +60,7 @@ class SignupForm(ModelForm):
         """Cleans d.o.b. field - checks that it's not in the future"""
         dob = self.cleaned_data['date_of_birth']
         if dob is None:
-            raise ValidationError("You must enter a birthday")
+            raise ValidationError("This field is required.")
         elif dob > datetime.date.today():
             raise ValidationError("Your birthday cannot be past today")
         return dob

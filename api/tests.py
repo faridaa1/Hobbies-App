@@ -38,7 +38,7 @@ class SignupFormTests(TestCase):
         if an account with the given email already exists
         """
         email = 'same@email.com'
-        CustomUser.objects.create(username='duplicate_user', email=email)
+        CustomUser.objects.create(username='duplicate_user', email=email, name=email, date_of_birth=self.valid_data['date_of_birth'])
         data = self.valid_data
         data['email'] = email
         form = SignupForm(data=data)
@@ -53,7 +53,7 @@ class SignupFormTests(TestCase):
         form = SignupForm(data=data)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['date_of_birth'], [
-                         'You must enter a birthday'])
+                         'This field is required.'])
 
     def test_birthday_in_future(self):
         """Tests that an error is raised if the birthday is in the future"""
@@ -115,4 +115,4 @@ class SignupViewTests(TestCase):
         response = self.client.post(
             reverse('signup'), data=valid_signup_data())  # Uses url with name 'signup'
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/')
+        self.assertEqual(response.url, 'http://localhost:5173/profile/')
