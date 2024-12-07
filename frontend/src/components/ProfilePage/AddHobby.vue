@@ -126,14 +126,13 @@
                 let userHobbies: Hobby[] = user.hobbies;
                 return userHobbies;
             }, filteredHobbies(): Hobby[] {
-                if (this.hobbies && this.myHobbies) {
+                    if (this.hobbies && this.myHobbies) {
                     let hobbiesFiltered = this.hobbies.filter(hobby => !this.myHobbies.some(myHobby => myHobby.hobby_id == hobby.hobby_id))
-                    if (hobbiesFiltered && hobbiesFiltered[0]) {
+                    if (hobbiesFiltered.length > 0) {
                         this.newHobby.hobby_id = hobbiesFiltered[0].hobby_id
                     }
                     return hobbiesFiltered
                 } else {
-                    console.log("blank")
                     return []
                 }
             }
