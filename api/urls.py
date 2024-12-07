@@ -22,6 +22,6 @@ urlpatterns = [
     path('signup/', signup, name='signup'),  # Signup user
     path('api/hobby/', hobby_api_view, name='hobby'),
     path('api/hobbies/', hobbies_api_view, name='hobbies'),
-    path('api/user/', user_api_view, name='user'),,
+    path('api/user/', user_api_view, name='user'),
     path('api/user/hobbies/<int:id>/', user_hobbies_api_view, name='user hobbies')
 ]
