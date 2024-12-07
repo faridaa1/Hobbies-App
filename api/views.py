@@ -49,6 +49,7 @@ def hobbies_api_view(request: HttpRequest) -> HttpResponse:
 def user_api_view(request: HttpRequest) -> HttpResponse:
     """Defining GET and PUT for a specific user."""
     print(request.COOKIES)
+    print(request.user)
     if (request.user.is_authenticated):
         return JsonResponse({
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
