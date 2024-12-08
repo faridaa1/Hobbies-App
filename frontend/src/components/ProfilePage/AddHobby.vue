@@ -117,7 +117,6 @@
                     let data = await response.json()
                     let hobby = data.hobby as Hobby
                     const hobbiesStore = useHobbiesStore()
-                    console.log("here", csrf)
                 }
                 // // hobbiesStore.addHobby(this.newHobby)
                 // const userStore = useUserStore()

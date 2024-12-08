@@ -69,7 +69,7 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
 
 
 def hobby_api_view(request: HttpRequest) -> HttpResponse:
-    print("here")
+    print(request.body)
     return JsonResponse ({})
 
 
