@@ -91,7 +91,7 @@
             async submit(): Promise<void> {
                 let newHobby;
                 if (this.hobbySelected) {
-                    const hobby = this.hobbies.filter(hobby => hobby.hobby_id === this.newHobby.hobby_id)
+                    const hobby = this.hobbies.find(hobby => hobby.hobby_id === this.newHobby.hobby_id)
                     newHobby = JSON.stringify(hobby)
                 } else {
                     this.newHobby.hobby_id = -1
@@ -105,7 +105,8 @@
                     }
                 }
                 if (csrf) {
-                    let response = await fetch("http://localhost:8000/api/hobby/", {
+                    let response = await fetch(`http://localhost:8000/api/user/hobbies/${this.user.id}/`, {
+
                         method:'POST', 
                         credentials: 'include', 
                         headers: { 
@@ -125,6 +126,11 @@
             }
         },
         computed: {
+            user(): CustomUser {
+                const userStore = useUserStore()
+                let user: CustomUser = userStore.user;
+                return user;
+            },
             hobbies(): Hobby[] {
                 const hobbiesStore = useHobbiesStore()
                 return hobbiesStore.hobbies || []
