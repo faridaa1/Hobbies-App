@@ -1,3 +1,4 @@
+import json
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -69,7 +70,14 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
 
 
 def hobby_api_view(request: HttpRequest) -> HttpResponse:
-    print(request.body)
+    """Defining POST for new Hobby object."""
+    if request.method == 'POST':
+        POST = json.loads(request.body)
+        new_hobby = Hobby.objects.create(
+            hobby_name = POST['hobby_id'].id,
+            hobby_description = POST['hobby_description']
+        )
+        return JsonResponse(new_hobby.as_dict())
     return JsonResponse ({})
 
 
