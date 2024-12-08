@@ -97,18 +97,28 @@
                     this.newHobby.hobby_id = -1
                     newHobby = JSON.stringify(this.newHobby)
                 }
-                let response = await fetch("http://localhost:8000/api/hobby/", {
-                    method:'POST', 
-                    credentials: 'include', 
-                    headers: { 
-                        'Content-Type': 'application/json',
-                    },
-                    body: newHobby,
-                }) 
-                let data = await response.json()
-                let hobby = data.hobby as Hobby
-                const hobbiesStore = useHobbiesStore()
-                console.log(hobby)
+                let csrf;
+                for (let cookie of document.cookie.split(';')) {
+                    const csrftoken = cookie.split('=')
+                    if (csrftoken[0] === 'csrftoken') {
+                        csrf = csrftoken[1]
+                    }
+                }
+                if (csrf) {
+                    let response = await fetch("http://localhost:8000/api/hobby/", {
+                        method:'POST', 
+                        credentials: 'include', 
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            "X-CSRFToken": csrf
+                        },
+                        body: newHobby,
+                    }) 
+                    let data = await response.json()
+                    let hobby = data.hobby as Hobby
+                    const hobbiesStore = useHobbiesStore()
+                    console.log("here", csrf)
+                }
                 // // hobbiesStore.addHobby(this.newHobby)
                 // const userStore = useUserStore()
                 // let user: CustomUser = userStore.user
