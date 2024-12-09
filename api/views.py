@@ -85,10 +85,11 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == 'POST':
         user = CustomUser.objects.get(pk=id)
         POST = json.loads(request.body)
-        newHobby = UserHobby.objects.create(
-            
-        )
-        print(user)
+        # newHobby = UserHobby.objects.create(
+            # user = user
+            # hobby = POST
+        # )
+        print(POST['hobby_id'])
 
     return JsonResponse({
         'hobbies' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=id)],
