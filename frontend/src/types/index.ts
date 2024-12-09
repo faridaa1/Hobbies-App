@@ -19,7 +19,7 @@ export interface UserHobby {
     user: CustomUser;
     hobby: Hobby;
     level: 'Beginner' | 'Intermediate' | 'Advanced';
-    start_date: Date
+    start_date: String;
 }
 
 export interface Friendship {

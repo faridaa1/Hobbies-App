@@ -7,7 +7,7 @@
         <form class="modal-body mb-3 d-flex flex-column">
             <div v-if="hobbySelected" class="d-flex gap-4 mb-4">
                 <label class="label">Select a Hobby</label>
-                <select class="rounded" v-model="newHobby.hobby_id">
+                <select class="rounded" v-model="data.newHobby.hobby_id" @input="validate">
                     <option v-for="hobby in filteredHobbies" :key="hobby.hobby_id" :value="hobby.hobby_id">
                         {{ hobby.hobby_name }}
                     </option>   
@@ -18,21 +18,34 @@
                     <label class="label mb-3">Add New Hobby</label>
                     <div class="d-flex mt-3 gap-3">
                         <label>Name <span class="text-danger">*</span></label>
-                        <input type="text" @input="validate" v-model="newHobby.hobby_name">
+                        <input type="text" @input="validate" v-model="data.newHobby.hobby_name">
                     </div>
                     <p class="text-danger"> {{ errorText.hobby_name }}</p>
                     <div class="d-flex flex-column mt-4 w-75">
-                        <label>Description <span class="text-danger">*</span></label>
-                        <textarea @input="validate" v-model="newHobby.hobby_description"></textarea>
+                        <label class="mb-2">Description <span class="text-danger">*</span></label>
+                        <textarea @input="validate" v-model="data.newHobby.hobby_description"></textarea>
                     </div>
                     <p class="text-danger"> {{ errorText.hobby_description }}</p>
                 </div>
-                <div class="my-3">
+        </div>
+            <div class="d-flex gap-4 mt-2">
+                <label>Level <span class="text-danger">*</span></label>
+                <select class="rounded" v-model="data.newUserHobby.level" @input="validate">
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+            </div>
+            <div class="d-flex gap-4 mt-4">
+                <label>Start Date <span class="text-danger">*</span></label>
+                <input type="date" class="rounded" :max="today" v-model="data.newUserHobby.start_date" @input="validate">
+            </div>
+            <p class="text-danger"> {{ errorText.start_date }}</p>
+            <div class="my-2">
                     <span class="text-danger">*</span> - Required field
                 </div>
-            </div>
             <div class="mt-2">
-                <button type="button" class="btn btn-secondary" @click="hobbySelected=!hobbySelected; valid = !valid">
+                <button type="button" class="btn btn-secondary" @click="hobbySelected=!hobbySelected">
                     {{ hobbySelected ? 'Add a New Hobby Instead' : 'Select a Hobby Instead' }}
                 </button>
             </div>
@@ -48,72 +61,92 @@
     import { useUserStore } from "../../stores/user";
 
     export default defineComponent({
-        data(): {newHobby: Hobby, hobbySelected: boolean, errorText: {[key: string]: string}, valid: boolean} {
+        data(): {
+            data: {
+                user: number, 
+                newHobby: Hobby, 
+                newUserHobby: UserHobby, 
+            }
+            hobbySelected: boolean, 
+            errorText: {[key: string]: string}, 
+            valid: boolean} {
             return {
-                newHobby: {} as Hobby,
                 hobbySelected: true,
                 errorText: {},
-                valid: true,
+                valid: false,
+                data: {
+                    user: 0,
+                    newHobby: {} as Hobby,
+                    newUserHobby: {
+                        level: 'Beginner' // setting default level
+                    } as UserHobby,
+                }
             }
         },
         methods: {
             validate() {
                 // hobby name validation
-                if (!this.newHobby.hobby_name || this.newHobby.hobby_name.trim().length === 0) {
-                    this.errorText.hobby_name = 'Enter a name'
-                } else if (this.newHobby.hobby_name.length > 255) {
-                    this.errorText.hobby_name = 'Name must be below 255 characters'
-                } else if (this.newHobby.hobby_name.match(/^[ ]+.*[ ]*$|[ ]*.*[ ]+$/)) {
-                    this.errorText.hobby_name = 'Name cannot start or end in space'
-                } else if (!this.newHobby.hobby_name.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
-                    this.errorText.hobby_name = 'Only one space between words'
-                } else {
-                    this.errorText.hobby_name = ''
+                if (!this.hobbySelected) {
+                    if (!this.data.newHobby.hobby_name || this.data.newHobby.hobby_name.trim().length === 0) {
+                        this.errorText.hobby_name = 'Enter a name'
+                    } else if (this.data.newHobby.hobby_name.length > 255) {
+                        this.errorText.hobby_name = 'Name must be below 255 characters'
+                    } else if (this.data.newHobby.hobby_name.match(/^[ ]+.*[ ]*$|[ ]*.*[ ]+$/)) {
+                        this.errorText.hobby_name = 'Name cannot start or end in space'
+                    } else if (!this.data.newHobby.hobby_name.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
+                        this.errorText.hobby_name = 'Only one space between words'
+                    } else {
+                        this.errorText.hobby_name = ''
+                    }
+
+                    // hobby description validation
+                    if (!this.data.newHobby.hobby_description || this.data.newHobby.hobby_description.trim().length === 0) {
+                        this.errorText.hobby_description = 'Enter a name'
+                    } else if (this.data.newHobby.hobby_description.match(/^[ ]+.*[ ]*$|[ ]*.*[ ]+$/)) {
+                        this.errorText.hobby_description = 'Description cannot start or end in space'
+                    } else if (!this.data.newHobby.hobby_description.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
+                        this.errorText.hobby_description = 'Only one space between words'
+                    } else {
+                        this.errorText.hobby_description = ''
+                    }
                 }
 
-                // hobby description validation
-                if (!this.newHobby.hobby_description || this.newHobby.hobby_description.trim().length === 0) {
-                    this.errorText.hobby_description = 'Enter a name'
-                } else if (this.newHobby.hobby_description.match(/^[ ]+.*[ ]*$|[ ]*.*[ ]+$/)) {
-                    this.errorText.hobby_description = 'Description cannot start or end in space'
-                } else if (!this.newHobby.hobby_description.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
-                    this.errorText.hobby_description = 'Only one space between words'
+                // hobby start date validation
+                if (this.data.newUserHobby.start_date === undefined || this.data.newUserHobby.start_date === '') {
+                    this.errorText.start_date = 'Enter a date'
                 } else {
-                    this.errorText.hobby_description = ''
+                    this.errorText.start_date = ''
                 }
 
-                if (this.errorText.hobby_name === '' && this.errorText.hobby_description === '') {
+                if (this.errorText.hobby_name === '' && this.errorText.hobby_description === '' && this.errorText.start_date === '') {
                     this.valid = true
+                } else if (this.hobbySelected && this.errorText.start_date == '') {
+                    this.valid = true
+
                 } else {
+                    console.log(this.errorText.hobby_name === '')
                     this.valid = false
                 }
             },
             async submit(): Promise<void> {
-                let newHobby;
+                this.data.user = this.user.id
                 if (this.hobbySelected) {
-                    const hobby = this.hobbies.find(hobby => hobby.hobby_id === this.newHobby.hobby_id)
-                    newHobby = JSON.stringify(hobby)
-                } else {
-                    this.newHobby.hobby_id = -1
-                    newHobby = JSON.stringify(this.newHobby)
-                }
-                let csrf;
-                for (let cookie of document.cookie.split(';')) {
-                    const csrftoken = cookie.split('=')
-                    if (csrftoken[0] === 'csrftoken') {
-                        csrf = csrftoken[1]
+                    const hobby = this.hobbies.find(hobby => hobby.hobby_id === this.data.newHobby.hobby_id)
+                    if (hobby) {
+                        this.data.newHobby = hobby
+                    } else {
+                        console.log("Hobby not found")
                     }
                 }
-                if (csrf) {
+                if (this.csrf !== '') {
                     let response = await fetch(`http://localhost:8000/api/user/hobbies/${this.user.id}/`, {
-
                         method:'POST', 
                         credentials: 'include', 
                         headers: { 
                             'Content-Type': 'application/json',
-                            "X-CSRFToken": csrf
+                            "X-CSRFToken": this.csrf
                         },
-                        body: newHobby,
+                        body: JSON.stringify(this.data),
                     }) 
                     let data = await response.json()
                     let hobby = data.hobby as Hobby
@@ -144,12 +177,27 @@
                     if (this.hobbies && this.myHobbies) {
                     let hobbiesFiltered = this.hobbies.filter(hobby => !this.myHobbies.some(myHobby => myHobby.hobby_id == hobby.hobby_id))
                     if (hobbiesFiltered.length > 0) {
-                        this.newHobby.hobby_id = hobbiesFiltered[0].hobby_id
+                        this.data.newHobby.hobby_id = hobbiesFiltered[0].hobby_id
                     }
                     return hobbiesFiltered
                 } else {
                     return []
                 }
+            }, today() : string {
+                const today: Date = new Date();
+                const year: number = today.getFullYear();
+                const month: string = (today.getMonth()+1).toString().padStart(2, '0')
+                const day: string = today.getDate().toString().padStart(2, '0')
+                return `${year}-${month}-${day}`;
+            }, csrf() : string {
+                let csrf: string;
+                for (let cookie of document.cookie.split(';')) {
+                    const csrftoken = cookie.split('=')
+                    if (csrftoken[0] === 'csrftoken') {
+                        return csrftoken[1]
+                    }
+                }
+                return '';
             }
         },
     })
