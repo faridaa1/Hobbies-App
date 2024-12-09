@@ -82,16 +82,17 @@ def hobby_api_view(request: HttpRequest) -> HttpResponse:
 
 
 def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
+    """Defining POST request for UserHobby."""
     if request.method == 'POST':
         user = CustomUser.objects.get(pk=id)
-        POST = json.loads(request.body)
-        print(user)
-        # newHobby = UserHobby.objects.create(
-            # user = user
-            # hobby = POST
-        # )
-        print(POST['hobby_id'])
+        POST = json.loads(request.body)['newHobby']
+        if POST['hobby_id'] != -1:
+            # adding existing hobby
+            newHobby = UserHobby.objects.create(
+                user = CustomUser.objects.get(pk=id),
+                hobby = Hobby.objects.get(pk=POST['hobby_id'])
+            )
 
     return JsonResponse({
-        'hobbies' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=id)],
+        'user_hobby' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newHobby.user, hobby=newHobby.hobby)],
     })

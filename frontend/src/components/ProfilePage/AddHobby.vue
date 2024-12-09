@@ -146,7 +146,11 @@
                         body: JSON.stringify(this.data),
                     }) 
                     let data = await response.json()
-                    let hobby = data.hobby as Hobby
+                    let userHobby = data.hobby as UserHobby
+                    console.log(userHobby)
+                    if (this.data.newHobby.hobby_id === -1) {
+                        console.log("new oone added")
+                    }
                     const hobbiesStore = useHobbiesStore()
                 }
                 // // hobbiesStore.addHobby(this.newHobby)
