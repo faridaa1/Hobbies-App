@@ -85,6 +85,7 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == 'POST':
         user = CustomUser.objects.get(pk=id)
         POST = json.loads(request.body)
+        print(user)
         # newHobby = UserHobby.objects.create(
             # user = user
             # hobby = POST

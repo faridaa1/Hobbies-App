@@ -63,7 +63,6 @@
     export default defineComponent({
         data(): {
             data: {
-                user: number, 
                 newHobby: Hobby, 
                 newUserHobby: UserHobby, 
             }
@@ -75,7 +74,6 @@
                 errorText: {},
                 valid: false,
                 data: {
-                    user: 0,
                     newHobby: {} as Hobby,
                     newUserHobby: {
                         level: 'Beginner' // setting default level
@@ -129,7 +127,6 @@
                 }
             },
             async submit(): Promise<void> {
-                this.data.user = this.user.id
                 if (this.hobbySelected) {
                     const hobby = this.hobbies.find(hobby => hobby.hobby_id === this.data.newHobby.hobby_id)
                     if (hobby) {
