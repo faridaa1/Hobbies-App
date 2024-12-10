@@ -82,6 +82,13 @@
             }
         },
         methods: {
+            hobbyExists(): boolean {
+                let hobbiesFiltered = this.hobbies.find(hobby => hobby.hobby_name == this.data.newHobby.hobby_name)
+                if (hobbiesFiltered) {
+                    return true
+                }
+                return false
+            },
             validate() {
                 // hobby name validation
                 if (!this.hobbySelected) {
@@ -93,6 +100,8 @@
                         this.errorText.hobby_name = 'Name cannot start or end in space'
                     } else if (!this.data.newHobby.hobby_name.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
                         this.errorText.hobby_name = 'Only one space between words'
+                    } else if (this.hobbyExists()) {
+                        this.errorText.hobby_name = 'Hobby already exists'
                     } else {
                         this.errorText.hobby_name = ''
                     }
@@ -148,7 +157,7 @@
                     }) 
                     let data = await response.json()
                     let userHobby: UserHobby = data.user_hobby[0]
-                    if (this.data.newHobby.hobby_id === 1) {
+                    if (this.data.newHobby.hobby_id === -1) {
                         // update with recently added hobby
                         const hobbiesStore = useHobbiesStore()
                         hobbiesStore.addHobby(userHobby.hobby)
@@ -176,14 +185,13 @@
                 const hobbiesStore = useHobbiesStore()
                 return hobbiesStore.hobbies || []
             },
-            myHobbies(): Hobby[] {
+            myHobbies(): UserHobby[] {
                 const userStore = useUserStore()
-                let user: CustomUser = userStore.user;
-                let userHobbies: Hobby[] = user.hobbies;
+                let userHobbies: UserHobby[] = userStore.hobbies.user_hobbies;
                 return userHobbies;
             }, filteredHobbies(): Hobby[] {
-                    if (this.hobbies && this.myHobbies) {
-                    let hobbiesFiltered = this.hobbies.filter(hobby => !this.myHobbies.some(myHobby => myHobby.hobby_id == hobby.hobby_id))
+                if (this.hobbies && this.myHobbies) {
+                    let hobbiesFiltered = this.hobbies.filter(hobby => !this.myHobbies.some(myHobby => myHobby.hobby.hobby_id === hobby.hobby_id))
                     if (hobbiesFiltered.length > 0) {
                         this.data.newHobby.hobby_id = hobbiesFiltered[0].hobby_id
                     }
@@ -207,8 +215,10 @@
                 return '';
             },
         },
-        mounted() {
-            this.hobbySelected = this.filteredHobbies.length > 1
+        watch: {
+            filteredHobbies(newHobbies) {
+                this.hobbySelected = newHobbies.length > 1
+            }
         }
     })
 </script>
