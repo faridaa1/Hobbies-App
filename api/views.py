@@ -1,6 +1,6 @@
 import json
 from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import SignupForm
 from .models import CustomUser, Hobby, UserHobby
@@ -69,9 +69,8 @@ def hobby_api_view(request: HttpRequest) -> HttpResponse:
 
 
 def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
-    """Defining GET and POST handling for UserHobby."""
+    """Defining GET, POST, and DELETE handling for UserHobby."""
     if request.method == 'GET':
-        print(id)
         user = CustomUser.objects.get(pk=id)
         return JsonResponse({
             'user_hobbies' : [user_hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=user)],
@@ -101,3 +100,11 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
         return JsonResponse({
             'user_hobby' : [user_hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newUserHobby.user, hobby=newUserHobby.hobby)],
         })
+    
+    if request.method == 'DELETE':
+        id = id.split('&')
+        user = CustomUser.objects.get(pk=id[0])
+        hobby = Hobby.objects.get(pk=id[1])
+        user_hobby = get_object_or_404(UserHobby, user=user, hobby=hobby)
+        user_hobby.delete()
+        return JsonResponse({})

@@ -158,11 +158,11 @@
 
                     // resetting values
                     this.data = {
-                    newHobby: {} as Hobby,
-                    newUserHobby: {
-                        level: 'Beginner' // setting default level
-                    } as UserHobby,
-                }
+                        newHobby: {} as Hobby,
+                        newUserHobby: {
+                            level: 'Beginner' // setting default level
+                        } as UserHobby,
+                    }
                 }
             }
         },

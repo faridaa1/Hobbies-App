@@ -35,7 +35,7 @@
                 <div>Start Date</div>
                 <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.start_date }}</div>
             </div>
-            <button class="text-primary border-0 bg-white fs-1">
+            <button class="text-primary border-0 bg-white fs-1" @click="deleteHobby(userHobby)">
                 <i class="bi bi-trash-fill darken-hover bluebtn"></i>
             </button>
         </div>
@@ -43,8 +43,8 @@
   </template>
   
   <script lang="ts">
-    import { defineComponent, toRaw } from "vue";
-    import { CustomUser, UserHobby, UserHobbies } from "../../types";
+    import { defineComponent } from "vue";
+    import { CustomUser, UserHobby, UserHobbies, Hobby } from "../../types";
     import { useUserStore } from "../../stores/user";
     import AddHobby from "./AddHobby.vue";
 
@@ -57,14 +57,41 @@
                 userHobbies: [] as UserHobby[]
             }
         },
+        methods: {
+            async deleteHobby(userHobby: UserHobby) {
+                if (this.csrf !== '') {
+                    let response = await fetch(`http://localhost:8000/api/user/hobbies/${this.user.id}&${userHobby.hobby.hobby_id}/`, {
+                        method:'DELETE', 
+                        credentials: 'include', 
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            "X-CSRFToken": this.csrf
+                        },
+                    }) 
+                    if (response.ok) {
+                        const userStore = useUserStore()
+                        userStore.deleteHobby(userHobby)
+                    } else {
+                        console.log("Error deleting hobby")
+                    }
+                }
+            }
+        },
         computed: {
             hobbies(): UserHobby[] {
                 let hobbies: UserHobbies = useUserStore().hobbies
                 return hobbies.user_hobbies || []; 
-            }, 
-            user(): CustomUser {
+            }, user(): CustomUser {
                 return useUserStore().user;
-            }
+            },csrf() : string {
+                for (let cookie of document.cookie.split(';')) {
+                    const csrftoken = cookie.split('=')
+                    if (csrftoken[0] === 'csrftoken') {
+                        return csrftoken[1]
+                    }
+                }
+                return '';
+            },
         },
     })
 </script>

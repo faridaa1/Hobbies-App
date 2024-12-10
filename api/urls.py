@@ -23,5 +23,5 @@ urlpatterns = [
     path('api/hobby/', hobby_api_view, name='hobby'),
     path('api/hobbies/', hobbies_api_view, name='hobbies'),
     path('api/user/', user_api_view, name='user'),
-    path('api/user/hobbies/<int:id>/', user_hobbies_api_view, name='user hobbies')
+    path('api/user/hobbies/<str:id>/', user_hobbies_api_view, name='user hobbies')
 ]
