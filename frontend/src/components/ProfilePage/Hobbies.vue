@@ -19,7 +19,6 @@
             </div>
         </div>
         <div class="fs-4 mt-4 d-flex flex-row gap-5 w-100" v-if="hobbies.length" v-for="(userHobby, index) in hobbies">
-            i am {{userHobby}}
             <div class="d-flex flex-column w-100">
                 <div>Name</div>
                 <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.hobby.hobby_name }}</div>
@@ -45,7 +44,7 @@
   
   <script lang="ts">
     import { defineComponent, toRaw, useId } from "vue";
-    import { CustomUser, Hobby, UserHobby, UserHobbyInterface } from "../../types";
+    import { CustomUser, Hobby, UserHobby, UserHobbies } from "../../types";
     import { useUserStore } from "../../stores/user";
     import AddHobby from "./AddHobby.vue";
 
@@ -60,8 +59,8 @@
         },
         computed: {
             hobbies(): UserHobby[] {
-                // let h = toRaw(useUserStore()) as UserHobbyInterface
-                return h.user_hobbies; 
+                let hobbies: UserHobbies = toRaw(useUserStore().hobbies)
+                return hobbies.user_hobbies || []; 
             }, 
             user(): CustomUser {
                 return useUserStore().user;

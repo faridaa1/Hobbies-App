@@ -78,13 +78,26 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
         }) 
     
     if request.method == 'POST':
-        POST = json.loads(request.body)['newHobby']
-        if POST['hobby_id'] != -1:
+        POST = json.loads(request.body)
+        if POST['newHobby']['hobby_id'] != -1:
             # adding existing hobby
-            newHobby = UserHobby.objects.create(
+            newUserHobby = UserHobby.objects.create(
                 user = CustomUser.objects.get(pk=id),
-                hobby = Hobby.objects.get(pk=POST['hobby_id'])
+                hobby = Hobby.objects.get(pk=POST['newHobby']['hobby_id']),
+                level = POST['newUserHobby']['level'],
+                start_date = POST['newUserHobby']['start_date']
+            )
+        else:
+            newHobby = Hobby.objects.create(
+                name = POST['newHobby']['hobby_name'],
+                description = POST['newHobby']['hobby_description']
+            )
+            newUserHobby = UserHobby.objects.create(
+                user = CustomUser.objects.get(pk=id),
+                hobby = newHobby,
+                level = POST['newUserHobby']['level'],
+                start_date = POST['newUserHobby']['start_date']
             )
         return JsonResponse({
-            'user_hobby' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newHobby.user, hobby=newHobby.hobby)],
+            'user_hobby' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newUserHobby.user, hobby=newUserHobby.hobby)],
         })

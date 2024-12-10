@@ -22,6 +22,10 @@ export interface UserHobby {
     start_date: String;
 }
 
+export interface UserHobbies {
+    user_hobbies: UserHobby[]
+}
+
 export interface Friendship {
     user1: number;
     user2: number;

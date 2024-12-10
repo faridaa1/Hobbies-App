@@ -44,7 +44,7 @@
             <div class="my-2">
                     <span class="text-danger">*</span> - Required field
                 </div>
-            <div class="mt-2">
+            <div class="mt-2" v-if="filteredHobbies.length > 1">
                 <button type="button" class="btn btn-secondary" @click="hobbySelected=!hobbySelected">
                     {{ hobbySelected ? 'Add a New Hobby Instead' : 'Select a Hobby Instead' }}
                 </button>
@@ -122,7 +122,6 @@
                     this.valid = true
 
                 } else {
-                    console.log(this.errorText.hobby_name === '')
                     this.valid = false
                 }
             },
@@ -132,9 +131,12 @@
                     if (hobby) {
                         this.data.newHobby = hobby
                     } else {
-                        console.log("Hobby not found")
+                        confirm("Hobby not found")
                     }
+                } else {
+                    this.data.newHobby.hobby_id = -1
                 }
+                console.log(this.data)
                 if (this.csrf !== '') {
                     let response = await fetch(`http://localhost:8000/api/user/hobbies/${this.user.id}/`, {
                         method:'POST', 
@@ -199,8 +201,11 @@
                     }
                 }
                 return '';
-            }
+            },
         },
+        mounted() {
+            this.hobbySelected = this.filteredHobbies.length > 1
+        }
     })
 </script>
   
