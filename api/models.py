@@ -86,8 +86,10 @@ class Friendship(models.Model):
     
     def as_dict(self, current_user) -> dict[str, Any]:
         user: CustomUser
+        sent:bool = False
         if self.user1 == current_user:
             user = self.user2
+            sent = True
         else:
             user = self.user1
 
@@ -95,7 +97,8 @@ class Friendship(models.Model):
         return {
             "user_name" : user.name,
             "user_profile_picture" : user.profile_picture.url if user.profile_picture else None,
-            "status" : self.status
+            "status" : self.status,
+            "sent" : sent
         }
 
     class Meta:
