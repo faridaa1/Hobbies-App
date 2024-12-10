@@ -4,13 +4,14 @@
             <h1>My Hobbies</h1>
             <button 
                 type="button" 
-                class="border-0 bg-transparent text-primary"
+                class="border-0 bg-transparent d-flex justify-content-center text-primary"
                 :data-bs-toggle="'modal'"
                 :data-bs-target="'#addHobby'"
                 >
                 <i class="bi bi-plus-circle-fill fs-1 bluebtn"></i>
             </button>
         </div>
+        <hr>
         <div class="modal fade" :id="'addHobby'">
             <div class="modal-dialog">
                 <div class="modal-content">
