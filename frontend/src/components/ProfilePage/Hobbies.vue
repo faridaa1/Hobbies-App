@@ -43,8 +43,8 @@
   </template>
   
   <script lang="ts">
-    import { defineComponent, toRaw, useId } from "vue";
-    import { CustomUser, Hobby, UserHobby, UserHobbies } from "../../types";
+    import { defineComponent, toRaw } from "vue";
+    import { CustomUser, UserHobby, UserHobbies } from "../../types";
     import { useUserStore } from "../../stores/user";
     import AddHobby from "./AddHobby.vue";
 
@@ -59,7 +59,7 @@
         },
         computed: {
             hobbies(): UserHobby[] {
-                let hobbies: UserHobbies = toRaw(useUserStore().hobbies)
+                let hobbies: UserHobbies = useUserStore().hobbies
                 return hobbies.user_hobbies || []; 
             }, 
             user(): CustomUser {

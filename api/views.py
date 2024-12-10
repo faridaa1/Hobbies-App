@@ -99,5 +99,5 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
                 start_date = POST['newUserHobby']['start_date']
             )
         return JsonResponse({
-            'user_hobby' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newUserHobby.user, hobby=newUserHobby.hobby)],
+            'user_hobby' : [user_hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newUserHobby.user, hobby=newUserHobby.hobby)],
         })

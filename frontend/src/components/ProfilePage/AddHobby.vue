@@ -136,7 +136,6 @@
                 } else {
                     this.data.newHobby.hobby_id = -1
                 }
-                console.log(this.data)
                 if (this.csrf !== '') {
                     let response = await fetch(`http://localhost:8000/api/user/hobbies/${this.user.id}/`, {
                         method:'POST', 
@@ -148,17 +147,23 @@
                         body: JSON.stringify(this.data),
                     }) 
                     let data = await response.json()
-                    let userHobby = data.hobby as UserHobby
-                    console.log(userHobby)
-                    if (this.data.newHobby.hobby_id === -1) {
-                        console.log("new oone added")
+                    let userHobby: UserHobby = data.user_hobby[0]
+                    if (this.data.newHobby.hobby_id === 1) {
+                        // update with recently added hobby
+                        const hobbiesStore = useHobbiesStore()
+                        hobbiesStore.addHobby(userHobby.hobby)
                     }
-                    const hobbiesStore = useHobbiesStore()
+                    const userStore = useUserStore()
+                    userStore.addHobby(userHobby)
+
+                    // resetting values
+                    this.data = {
+                    newHobby: {} as Hobby,
+                    newUserHobby: {
+                        level: 'Beginner' // setting default level
+                    } as UserHobby,
                 }
-                // // hobbiesStore.addHobby(this.newHobby)
-                // const userStore = useUserStore()
-                // let user: CustomUser = userStore.user
-                // let userHobbies: UserHobby[] = user.hobbies
+                }
             }
         },
         computed: {
@@ -193,7 +198,6 @@
                 const day: string = today.getDate().toString().padStart(2, '0')
                 return `${year}-${month}-${day}`;
             }, csrf() : string {
-                let csrf: string;
                 for (let cookie of document.cookie.split(';')) {
                     const csrftoken = cookie.split('=')
                     if (csrftoken[0] === 'csrftoken') {

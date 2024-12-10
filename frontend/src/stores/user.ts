@@ -20,6 +20,7 @@ export const useUserStore = defineStore('user', {
         },
         addHobby(hobby: UserHobby) {
             this.hobbies.user_hobbies.push(hobby)
+            console.log("im her ",this.hobbies.user_hobbies)
         },
         deleteHobby(hobby : UserHobby) {
             this.hobbies.user_hobbies = this.hobbies.user_hobbies.filter(myHobby => myHobby !== hobby)
