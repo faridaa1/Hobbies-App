@@ -1,16 +1,11 @@
 import { defineStore } from 'pinia'
-import { CustomUser, UserHobbies, UserHobby } from '../types'
+import { CustomUser, Friendship, UserHobbies, UserHobby } from '../types'
 
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: {} as CustomUser,
         hobbies: {} as UserHobbies
     }),
-    getters: {
-        getHobbies: (state) => {
-            return state.hobbies;
-        },
-    },
     actions: {
         saveUser(user: CustomUser) {
             this.user = user
@@ -20,10 +15,20 @@ export const useUserStore = defineStore('user', {
         },
         addHobby(hobby: UserHobby) {
             this.hobbies.user_hobbies.push(hobby)
-            console.log("im her ",this.hobbies.user_hobbies)
         },
         deleteHobby(hobby : UserHobby) {
             this.hobbies.user_hobbies = this.hobbies.user_hobbies.filter(myHobby => myHobby !== hobby)
         },
+        updateFriendship(id: number) {
+            let friendship = this.user.friends.find(fs => fs.id === id) as Friendship
+            if (friendship) {
+                if (friendship.status === 'Accepted') {
+                    friendship.status = friendship.status
+                } else {
+                    console.log(friendship.id)
+                    this.user.friends = this.user.friends.filter(fs => fs.id !== id)
+                }
+            } 
+        }
     }
 })

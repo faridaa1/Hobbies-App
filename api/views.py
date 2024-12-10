@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import SignupForm
-from .models import CustomUser, Hobby, UserHobby
+from .models import CustomUser, Friendship, Hobby, UserHobby
 
 URL = 'http://localhost:5173/'
 
@@ -107,4 +107,16 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
         hobby = Hobby.objects.get(pk=id[1])
         user_hobby = get_object_or_404(UserHobby, user=user, hobby=hobby)
         user_hobby.delete()
+        return JsonResponse({})
+
+def friendship_api_view(request: HttpRequest, id: int):
+    friendship = Friendship.objects.get(pk=id)
+    POST = json.loads(request.body)
+    print(POST)
+    if POST:
+        friendship.status = 'Accepted'
+        friendship.save()
+        return JsonResponse(friendship.as_dict(request.user.username))
+    else:
+        friendship.delete()
         return JsonResponse({})

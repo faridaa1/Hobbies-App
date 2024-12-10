@@ -95,6 +95,7 @@ class Friendship(models.Model):
 
         """Defining dictionary representation of Friendship."""
         return {
+            "id" : self.id,
             "user_name" : user.name,
             "user_profile_picture" : user.profile_picture.url if user.profile_picture else None,
             "status" : self.status,

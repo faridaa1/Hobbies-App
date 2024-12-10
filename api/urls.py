@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import main_spa, signup, hobbies_api_view, user_api_view, hobby_api_view, user_hobbies_api_view
+from .views import main_spa, signup, hobbies_api_view, user_api_view, hobby_api_view, user_hobbies_api_view, friendship_api_view
 
 urlpatterns = [
     path('', main_spa),
@@ -23,5 +23,6 @@ urlpatterns = [
     path('api/hobby/', hobby_api_view, name='hobby'),
     path('api/hobbies/', hobbies_api_view, name='hobbies'),
     path('api/user/', user_api_view, name='user'),
-    path('api/user/hobbies/<str:id>/', user_hobbies_api_view, name='user hobbies')
+    path('api/user/hobbies/<str:id>/', user_hobbies_api_view, name='user hobbies'),
+    path('api/user/friendship/<int:id>/', friendship_api_view, name='friendship')
 ]
