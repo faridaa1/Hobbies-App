@@ -83,7 +83,7 @@
         },
         methods: {
             hobbyExists(): boolean {
-                let hobbiesFiltered = this.hobbies.find(hobby => hobby.hobby_name == this.data.newHobby.hobby_name)
+                let hobbiesFiltered = this.hobbies.find(hobby => hobby.hobby_name.toLowerCase() == this.data.newHobby.hobby_name.toLowerCase())
                 if (hobbiesFiltered) {
                     return true
                 }
