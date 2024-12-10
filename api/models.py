@@ -119,8 +119,8 @@ class UserHobby(models.Model):
     def as_dict(self) -> dict[str, Any]:
         """Defining dictionary representation of UserHobby."""
         return {
-            "user" : self.user,
-            "hobby" : self.hobby,
+            "user" : self.user.as_dict(),
+            "hobby" : self.hobby.as_dict(),
             "level" : self.level,
             "start_date" : self.start_date
         }

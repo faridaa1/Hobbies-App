@@ -18,14 +18,23 @@
                 </div>
             </div>
         </div>
-        <div class="fs-4 mt-4 d-flex flex-rowalign-items-center gap-5 w-100" v-for="(hobby, index) in hobbies">
+        <div class="fs-4 mt-4 d-flex flex-row gap-5 w-100" v-if="hobbies.length" v-for="(userHobby, index) in hobbies">
+            i am {{userHobby}}
             <div class="d-flex flex-column w-100">
                 <div>Name</div>
-                <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ hobby.hobby_name }}</div>
+                <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.hobby.hobby_name }}</div>
             </div>
             <div class="d-flex flex-column w-100">
                 <div>Description</div>
-                <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ hobby.hobby_description }}</div>
+                <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.hobby.hobby_description }}</div>
+            </div>
+            <div class="d-flex flex-column w-100">
+                <div>Level</div>
+                <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.level }}</div>
+            </div>
+            <div class="d-flex flex-column w-100">
+                <div>Start Date</div>
+                <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.start_date }}</div>
             </div>
             <button class="text-primary border-0 bg-white fs-1">
                 <i class="bi bi-trash-fill darken-hover bluebtn"></i>
@@ -35,8 +44,8 @@
   </template>
   
   <script lang="ts">
-    import { defineComponent } from "vue";
-    import { CustomUser, Hobby } from "../../types";
+    import { defineComponent, toRaw, useId } from "vue";
+    import { CustomUser, Hobby, UserHobby, UserHobbyInterface } from "../../types";
     import { useUserStore } from "../../stores/user";
     import AddHobby from "./AddHobby.vue";
 
@@ -44,14 +53,20 @@
         components: {
             AddHobby
         },
-        computed: {
-            hobbies(): Hobby[] {
-                const userStore = useUserStore()
-                let user: CustomUser = userStore.user;
-                let userHobbies: Hobby[] = user.hobbies;
-                return userHobbies;
+        data(): {userHobbies: UserHobby[] } {
+            return {
+                userHobbies: [] as UserHobby[]
             }
-        }
+        },
+        computed: {
+            hobbies(): UserHobby[] {
+                // let h = toRaw(useUserStore()) as UserHobbyInterface
+                return h.user_hobbies; 
+            }, 
+            user(): CustomUser {
+                return useUserStore().user;
+            }
+        },
     })
 </script>
   

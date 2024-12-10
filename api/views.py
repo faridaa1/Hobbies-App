@@ -49,24 +49,11 @@ def hobbies_api_view(request: HttpRequest) -> HttpResponse:
 
 def user_api_view(request: HttpRequest) -> HttpResponse:
     """Defining GET and PUT for a specific user."""
-    print(request.COOKIES)
-    print(request.user)
     if (request.user.is_authenticated):
         return JsonResponse({
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
     return HttpResponse('test')
-    # return JsonResponse({
-    #     'user': {
-    #         "name": "John Doe",
-    #         "email": "john.doe@example.com",
-    #         "password": "password123",
-    #         "date_of_birth": "2000-01-01",  # Format as ISO date string
-    #         "hobbies": [],  # Empty list for hobbies
-    #         "friends": [],  # Empty list for friends
-    #         "profile_picture": None,  # No profile picture
-    #     }
-    # })
 
 
 def hobby_api_view(request: HttpRequest) -> HttpResponse:
@@ -82,9 +69,15 @@ def hobby_api_view(request: HttpRequest) -> HttpResponse:
 
 
 def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
-    """Defining POST request for UserHobby."""
-    if request.method == 'POST':
+    """Defining GET and POST handling for UserHobby."""
+    if request.method == 'GET':
+        print(id)
         user = CustomUser.objects.get(pk=id)
+        return JsonResponse({
+            'user_hobbies' : [user_hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=user)],
+        }) 
+    
+    if request.method == 'POST':
         POST = json.loads(request.body)['newHobby']
         if POST['hobby_id'] != -1:
             # adding existing hobby
@@ -92,7 +85,6 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
                 user = CustomUser.objects.get(pk=id),
                 hobby = Hobby.objects.get(pk=POST['hobby_id'])
             )
-
-    return JsonResponse({
-        'user_hobby' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newHobby.user, hobby=newHobby.hobby)],
-    })
+        return JsonResponse({
+            'user_hobby' : [user_hobby.hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newHobby.user, hobby=newHobby.hobby)],
+        })
