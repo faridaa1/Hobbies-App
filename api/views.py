@@ -112,7 +112,6 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
 def friendship_api_view(request: HttpRequest, id: int):
     friendship = Friendship.objects.get(pk=id)
     POST = json.loads(request.body)
-    print(POST)
     if POST:
         friendship.status = 'Accepted'
         friendship.save()

@@ -8,7 +8,7 @@
                 <i v-if="!friend.user_profile_picture" class="bi bi-person-circle p-0" style="font-size: 70px; line-height: 0"></i>
                 <div class="p-2 rounded w-100">{{ friend.user_name }}</div>
             </div>
-            <button type="button" class="btn btn-primary px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;">
+            <button type="button" class="btn btn-primary px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;" @click="removeFriend(friend.id)">
                 Remove
             </button>
         </div>
@@ -21,15 +21,41 @@
     import { useUserStore } from "../../stores/user";
 
     export default defineComponent({
-    computed: {
-        user(): CustomUser {
-            return useUserStore().user
-        }, friends(): Friendship[] {
-            if (this.user && this.user.friends) {
-                return this.user.friends.filter(friendship => friendship.status === 'Accepted')
+        methods: {
+            async removeFriend(id: number) {
+                if (this.csrf !== '') {
+                    console.log(id)
+                    const userStore = useUserStore()
+                    userStore.updateFriendship(id, false)
+                    await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
+                        method:'POST', 
+                        credentials: 'include', 
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            "X-CSRFToken": this.csrf
+                        },
+                        body: JSON.stringify(false),
+                    }) 
+                }
             }
-            return []
-        }
+        },
+        computed: {
+            user(): CustomUser {
+                return useUserStore().user
+            }, friends(): Friendship[] {
+                if (this.user && this.user.friends) {
+                    return this.user.friends.filter(friendship => friendship.status === 'Accepted')
+                }
+                return []
+            }, csrf() : string {
+                for (let cookie of document.cookie.split(';')) {
+                    const csrftoken = cookie.split('=')
+                    if (csrftoken[0] === 'csrftoken') {
+                        return csrftoken[1]
+                    }
+                }
+                return '';
+            }
         }
     })
   </script>
