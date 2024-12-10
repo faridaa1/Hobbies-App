@@ -46,6 +46,7 @@
             async handleResponse(isAccepted: boolean, id: number) {
                 if (this.csrf !== '') {
                     const userStore = useUserStore()
+                    console.log(isAccepted)
                     userStore.updateFriendship(id, isAccepted)
                     await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
                         method:'POST', 

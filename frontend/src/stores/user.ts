@@ -23,7 +23,7 @@ export const useUserStore = defineStore('user', {
             let friendship = this.user.friends.find(fs => fs.id === id) as Friendship
             if (friendship) {
                 if (isAccepted) {
-                    friendship.status = friendship.status
+                    friendship.status = 'Accepted'
                 } else {
                     this.user.friends = this.user.friends.filter(fs => fs.id !== id)
                 }
