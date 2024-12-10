@@ -8,7 +8,7 @@
                 <i v-if="!friend.user_profile_picture" class="bi bi-person-circle p-0" style="font-size: 70px; line-height: 0"></i>
                 <div class="p-2 rounded w-100">{{ friend.user_name }}</div>
             </div>
-            <button type="button" class="btn btn-danger px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;">
+            <button type="button" class="btn btn-danger px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;" @click="unsend(friend.id)">
                 Cancel
                 <!-- <i class="bi bi-trash-fill"></i> -->
             </button>
@@ -22,6 +22,23 @@
     import { useUserStore } from "../../stores/user";
 
     export default defineComponent({
+        methods: {
+            async unsend(id: number) {
+                if (this.csrf !== '') {
+                    const userStore = useUserStore()
+                    userStore.updateFriendship(id, false)
+                    await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
+                        method:'POST', 
+                        credentials: 'include', 
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            "X-CSRFToken": this.csrf
+                        },
+                        body: JSON.stringify(false),
+                    }) 
+                }
+            }
+        },
         computed: {
             user(): CustomUser {
                 return useUserStore().user
@@ -30,6 +47,14 @@
                     return this.user.friends.filter(friendship => friendship.status === 'Pending' && friendship.sent)
                 }
                 return []
+            }, csrf() : string {
+                for (let cookie of document.cookie.split(';')) {
+                    const csrftoken = cookie.split('=')
+                    if (csrftoken[0] === 'csrftoken') {
+                        return csrftoken[1]
+                    }
+                }
+                return '';
             }
         }
     })
