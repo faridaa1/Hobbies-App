@@ -27,7 +27,7 @@ export interface UserHobbies {
 }
 
 export interface Friendship {
-    user1: number;
-    user2: number;
+    user_name: string;
+    user_profile_picture: string;
     status: 'Pending' | 'Accepted'
 }

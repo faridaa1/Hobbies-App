@@ -57,7 +57,7 @@ class CustomUser(AbstractUser):
             "password": self.password,
             "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
             "hobbies": [hobby.as_dict() for hobby in self.hobbies.all()],
-            "friends": [friendship.as_dict() for friendship in Friendship.objects.filter(Q(user1=self) | Q(user2=self))],
+            "friends": [friendship.as_dict(self) for friendship in Friendship.objects.filter(Q(user1=self) | Q(user2=self))],
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
         }
 
@@ -84,12 +84,17 @@ class Friendship(models.Model):
         """Return a string repsentation for Friendship."""
         return f"{self.user1} & {self.user2}: {self.status}"
     
-    def as_dict(self) -> dict[str, Any]:
-        print(self.user1.name)
+    def as_dict(self, current_user) -> dict[str, Any]:
+        user: CustomUser
+        if self.user1 == current_user:
+            user = self.user2
+        else:
+            user = self.user1
+
         """Defining dictionary representation of Friendship."""
         return {
-            "user1" : self.user1.name,
-            "user2" : self.user2.name,
+            "user_name" : user.name,
+            "user_profile_picture" : user.profile_picture.url if user.profile_picture else None,
             "status" : self.status
         }
 
