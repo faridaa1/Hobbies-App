@@ -46,12 +46,12 @@
 
       
       export default defineComponent({
-          data() {
+          data(): {isEditingName: boolean, isEditingEmail:boolean, isEditingPassword: boolean, isEditingDateOfBirth: boolean} {
               return {
                   isEditingName: false,
                   isEditingEmail: false,
                   isEditingPassword: false,
-                  isEditingDateOfBirth: false
+                  isEditingDateOfBirth: false,
               }
           },
           methods: {
