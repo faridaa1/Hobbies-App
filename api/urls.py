@@ -14,8 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
-from .views import main_spa, signup, hobbies_api_view, user_api_view, hobby_api_view, user_hobbies_api_view, friendship_api_view
+from .views import main_spa, signup, hobbies_api_view, user_api_view, hobby_api_view, user_hobbies_api_view, friendship_api_view, profile_api_view
 
 urlpatterns = [
     path('', main_spa),
@@ -23,6 +25,7 @@ urlpatterns = [
     path('api/hobby/', hobby_api_view, name='hobby'),
     path('api/hobbies/', hobbies_api_view, name='hobbies'),
     path('api/user/', user_api_view, name='user'),
+    path('api/user/<int:id>/', profile_api_view, name='profile'),
     path('api/user/hobbies/<str:id>/', user_hobbies_api_view, name='user hobbies'),
     path('api/user/friendship/<int:id>/', friendship_api_view, name='friendship')
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

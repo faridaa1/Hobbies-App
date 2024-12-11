@@ -48,12 +48,20 @@ def hobbies_api_view(request: HttpRequest) -> HttpResponse:
 
 
 def user_api_view(request: HttpRequest) -> HttpResponse:
-    """Defining GET and PUT for a specific user."""
+    """Defining GET and PUT for a user."""
     if (request.user.is_authenticated):
         return JsonResponse({
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
     return HttpResponse('test')
+
+
+def profile_api_view(request: HttpRequest, id: int) -> HttpResponse:
+    user = get_object_or_404(CustomUser, pk=id)
+    user.profile_picture = request.FILES.get('profile_picture') 
+    user.save()
+    print(user.profile_picture)
+    return JsonResponse(user.as_dict())
 
 
 def hobby_api_view(request: HttpRequest) -> HttpResponse:
@@ -109,7 +117,7 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
         user_hobby.delete()
         return JsonResponse({})
 
-def friendship_api_view(request: HttpRequest, id: int):
+def friendship_api_view(request: HttpRequest, id: int) -> HttpResponse:
     friendship = Friendship.objects.get(pk=id)
     POST = json.loads(request.body)
     if POST:

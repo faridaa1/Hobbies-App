@@ -2,12 +2,15 @@
     <div class="fs-4 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
             <div class="position-relative">
-                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="user.profile_picture" alt="Profile Picture">
-                <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
-                <button type="button" class="text-danger border-0 bg-transparent position-absolute top-0 end-0" v-if="user.profile_picture" @click="user.profile_picture=''"><i class="bi bi-x fs-1"></i></button>
+                <img v-if="user.profile_picture" style="width: 150px; height:150px; object-fit: cover;" class="rounded-circle" :src="`http://localhost:8000/${user.profile_picture}`" alt="Profile Picture">
+                <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 150px; line-height: 0;"></i>
+                <button type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="updateProfilePicture"><i class="bi bi-x fs-1"></i></button>
             </div>
             <div class="d-flex align-items-center">
-                <input class="w-75 mx-auto" type="file" accept=".png" @change="updateProfilePicture">
+                <input class="d-none" type="file" accept=".png" @change="updateProfilePicture" id="file">
+                <label for="file" class="btn btn-primary">Select</label>
+                <span v-if="user.profile_picture" class="ms-2 text-success">File Selected</span>
+                <span v-if="!user.profile_picture" class="ms-2 text-danger">No File Selected</span>
             </div>
         </div>
         <div class="d-flex flex-column gap-3 w-100">
@@ -55,18 +58,43 @@
               }
           },
           methods: {
-            updateProfilePicture(event: Event) {
+            async updateProfilePicture(event: Event) {
                 const input: HTMLInputElement = event.target as HTMLInputElement
-                if (input && input.files && input.files[0]) {
-                    this.user.profile_picture = URL.createObjectURL(input.files[0])
-                }
+                if (this.csrf !== '') {
+                    let file: FormData = new FormData()
+                    if (input && input.files && input.files[0]) { 
+                        file.append('profile_picture', input.files[0])
+                    } else {
+                        file.append('profile_picture', '')
+                    }
+                    let response = await fetch(`http://localhost:8000/api/user/${this.user.id}/`, {
+                        method:'POST', 
+                        credentials: 'include', 
+                        headers: { 
+                            "X-CSRFToken": this.csrf
+                        },
+                        body: file
+                    }) 
+                    let data: CustomUser = await response.json()
+                    const userStore = useUserStore()
+                    userStore.saveUser(data)
+                } 
             }
         },
         computed: {
             user(): CustomUser {
                 const userStore = useUserStore()
+                console.log(userStore.user.profile_picture)
                 return userStore.user;
-            }
+            }, csrf() : string {
+                for (let cookie of document.cookie.split(';')) {
+                    const csrftoken = cookie.split('=')
+                    if (csrftoken[0] === 'csrftoken') {
+                        return csrftoken[1]
+                    }
+                }
+                return '';
+            },
         }
       })
   </script>
