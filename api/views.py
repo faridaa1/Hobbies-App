@@ -70,7 +70,7 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> HttpResponse:
         user.profile_picture = request.FILES.get('profile_picture') 
         user.save()
     elif field == 'name':
-        user.name = request.POST.get('name') 
+        user.name = json.loads(request.body)
         user.save()
     elif field == 'email':
         user.email = request.POST.get('email') 

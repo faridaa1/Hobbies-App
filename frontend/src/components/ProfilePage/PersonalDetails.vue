@@ -33,15 +33,17 @@
             <div v-if="errorText.email" class="text-danger fs-5">{{ errorText.email }}</div>
             <div class="d-flex mt-3">
                 <div class="label me-3">Password</div>
-                <input class="border border-secondary rounded px-2 me-2" type="email" :disabled="!isEditingPassword" :value="user.password">
+                <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingPassword" :value="user.password">
                 <button type="button" v-if="!isEditingPassword" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingPassword = true"><i class="bi bi-pencil pencil"></i></button>
                 <button type="button" v-if="isEditingPassword"class="btn btn-success" @click="isEditingPassword = false">Save</button>
             </div>
+            <div v-if="errorText.password" class="text-danger fs-5">{{ errorText.password }}</div>
             <div class="d-flex mt-3 me-3">
                 <div class="label me-3">Date of Birth</div>
                 <input class="border border-secondary rounded px-2 me-2" type="date" :max="today" v-model="dob" :disabled="!isEditingDateOfBirth">
                 <button type="button" v-if="!isEditingDateOfBirth" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil pencil"></i></button>
                 <button type="button" v-if="isEditingDateOfBirth" class="btn btn-success" @click="(event) => { updateProfile(event); isEditingDateOfBirth=false; }">Save</button>
+                <button type="button" v-if="isEditingDateOfBirth"class="btn btn-danger px-2 py-1 ms-1" @click="dob=user.date_of_birth; isEditingDateOfBirth=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
             </div>
         </div>
     </div>
@@ -109,8 +111,9 @@
                 this.validName = false;
             },
             async updateProfile(event: Event) {
-                const input: HTMLInputElement = event.target as HTMLInputElement
+                let response;
                 if (this.csrf !== '') {
+                    const input: HTMLInputElement = event.target as HTMLInputElement
                     let file: FormData = new FormData()
                     let field: string;
                     if (this.isEditingProfilePicture) {
@@ -120,29 +123,40 @@
                             file.append('profile_picture', '')
                         }
                         field = 'pic'
-                        this.isEditingProfilePicture = false
-                    } else if (this.isEditingName) {
-                        file.append('name', this.name)
-                        field = 'name'
-                    } else if (this.isEditingEmail) {
-                        file.append('email', this.email)
-                        field = 'email'
-                    } else if (this.isEditingDateOfBirth) {
-                        console.log(this.dob)
-                        file.append('dob', this.dob)
-                        field = 'dob'
-                    }
-                    else {
-                        field = ''
-                    }
-                    let response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
+                        response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
                         method:'PUT', 
                         credentials: 'include', 
                         headers: { 
                             "X-CSRFToken": this.csrf
                         },
                         body: file
-                    }) 
+                        }) 
+                        this.isEditingProfilePicture = false
+                    } else { 
+                        let userInput: BodyInit;
+                        if (this.isEditingName) {
+                            userInput = this.name
+                            field = 'name'
+                        } else if (this.isEditingEmail) {
+                            userInput = this.email
+                            field = 'email'
+                        } else if (this.isEditingDateOfBirth) {
+                            console.log(this.dob)
+                            userInput = this.dob
+                            field = 'dob'
+                        } else {
+                            return;
+                        }
+                        response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
+                            method:'PUT', 
+                            credentials: 'include', 
+                            headers: { 
+                                "Content-Type": 'application/json',
+                                "X-CSRFToken": this.csrf
+                            },
+                            body: JSON.stringify(userInput)
+                        }) 
+                    }
                     let data: CustomUser = await response.json()
                     const userStore = useUserStore()
                     userStore.saveUser(data)
