@@ -33,16 +33,35 @@
             <div v-if="errorText.email" class="text-danger fs-5">{{ errorText.email }}</div>
             <div class="d-flex mt-3">
                 <div class="label me-3">Password</div>
-                <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingPassword" :value="user.password">
                 <button type="button" v-if="!isEditingPassword" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingPassword = true"><i class="bi bi-pencil pencil"></i></button>
-                <button type="button" v-if="isEditingPassword"class="btn btn-success" @click="isEditingPassword = false">Save</button>
             </div>
-            <div v-if="errorText.password" class="text-danger fs-5">{{ errorText.password }}</div>
+            <div v-if="isEditingPassword" class="d-flex flex-column gap-3 fs-5">
+                <div class="d-flex">
+                    <label class="mt-2" style="width: 14rem;">Current Password</label>
+                    <input class="border border-secondary rounded px-2 me-2" :type="!showOldPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.oldPassword" @input="checkPasswords">
+                    <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showOldPassword = !showOldPassword"><i :class="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                </div>
+                <div class="d-flex">
+                    <label style="width: 14rem;">New Password</label>
+                    <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingPassword" v-model="password.newPassword" @input="checkPasswords">
+                    <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword = !showNewPassword"><i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                </div>
+                <div class="d-flex">
+                    <label style="width: 14rem;">Re-enter New Password</label>
+                    <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingPassword" v-model="password.newPassword2" @input="checkPasswords">
+                    <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword2 = !showNewPassword2"><i :class="showNewPassword2 ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                </div>
+                <div v-if="errorText.password" class="text-danger fs-5">{{ errorText.password }}</div>
+                <div>
+                    <button type="button" v-if="isEditingPassword" :disabled="!validPassword" class="btn btn-success" @click="(event) => { updateProfile(event); password.newPassword =''; password.oldPassword=''; password.newPassword2=''; isEditingPassword = false}">Save</button>
+                    <button type="button" class="btn btn-danger px-2 py-1 ms-1" @click="password.newPassword =''; password.oldPassword=''; password.newPassword2=''; errorText.password=''; isEditingPassword=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
+                </div>
+            </div>
             <div class="d-flex mt-3 me-3">
                 <div class="label me-3">Date of Birth</div>
                 <input class="border border-secondary rounded px-2 me-2" type="date" :max="today" v-model="dob" :disabled="!isEditingDateOfBirth">
                 <button type="button" v-if="!isEditingDateOfBirth" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil pencil"></i></button>
-                <button type="button" v-if="isEditingDateOfBirth" class="btn btn-success" @click="(event) => { updateProfile(event); isEditingDateOfBirth=false; }">Save</button>
+                <button type="button" v-if="isEditingDateOfBirth" class="btn btn-success" @click="(event) => { updateProfile(event);  isEditingDateOfBirth=false; }">Save</button>
                 <button type="button" v-if="isEditingDateOfBirth"class="btn btn-danger px-2 py-1 ms-1" @click="dob=user.date_of_birth; isEditingDateOfBirth=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
             </div>
         </div>
@@ -64,6 +83,11 @@
             validName: boolean, 
             validEmail: boolean, 
             email: string, 
+            password: {oldPassword: string, newPassword: string, newPassword2: string},
+            showOldPassword: boolean,
+            showNewPassword: boolean,
+            showNewPassword2: boolean,
+            validPassword: boolean,
             isEditingName: boolean, 
             isEditingEmail:boolean, 
             isEditingPassword: boolean, 
@@ -73,8 +97,17 @@
             errorText: {},
             name: '',
             dob: '',
+            password: {
+                oldPassword: '',
+                newPassword: '',
+                newPassword2: ''
+            },
+            validPassword: false,
             validName: true,
-            validEmail: false,
+            showOldPassword: false,
+            showNewPassword: false,
+            showNewPassword2: false,
+            validEmail: true,
             email: '',
             isEditingName: false,
             isEditingEmail: false,
@@ -84,6 +117,39 @@
             }
           },
           methods: {
+            async checkPasswords() {
+                if (this.password.newPassword === '') {
+                    this.errorText.password = 'Enter new pasword'
+                } else if (this.password.newPassword2 === '') {
+                    this.errorText.password = 'Re-enter new pasword'
+                } else if (this.password.newPassword !== this.password.newPassword2) {
+                    this.errorText.password = "New passwords must match"
+                } else if (this.password.oldPassword === this.password.newPassword) {
+                    this.errorText.password = "Current and New passwords are the same"
+                } else if (this.password.oldPassword === '') {
+                    this.errorText.password = 'Enter current pasword'
+                }
+                else {
+                    let response = await fetch(`http://localhost:8000/api/user/${this.user.id}/checkpass/`, {
+                    method:'PUT', 
+                    credentials: 'include', 
+                    headers: { 
+                        "X-CSRFToken": this.csrf
+                    },
+                    body: JSON.stringify(this.password)
+                    }) 
+                    const data = await response.json()
+                    if (data.match === false) {
+                        this.errorText.password = 'Current Password is Incorrect'
+                    } else {
+                        console.log(data)
+                        this.validPassword = true
+                        this.errorText.password = ''
+                        return
+                    }
+                }
+                this.validPassword = false
+            },
             validateEmail(event: Event) {
                 event.preventDefault()
                 const usersStore = useUsersStore()
@@ -117,6 +183,7 @@
                     let file: FormData = new FormData()
                     let field: string;
                     if (this.isEditingProfilePicture) {
+                        console.log(this.user.id)
                         if (input && input.files && input.files[0]) { 
                             file.append('profile_picture', input.files[0])
                         } else {
@@ -124,16 +191,16 @@
                         }
                         field = 'pic'
                         response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
-                        method:'PUT', 
-                        credentials: 'include', 
-                        headers: { 
-                            "X-CSRFToken": this.csrf
-                        },
-                        body: file
+                            method:'POST', 
+                            credentials: 'include', 
+                            headers: { 
+                                "X-CSRFToken": this.csrf
+                            },
+                            body: file
                         }) 
                         this.isEditingProfilePicture = false
                     } else { 
-                        let userInput: BodyInit;
+                        let userInput: BodyInit | {};
                         if (this.isEditingName) {
                             userInput = this.name
                             field = 'name'
@@ -141,11 +208,15 @@
                             userInput = this.email
                             field = 'email'
                         } else if (this.isEditingDateOfBirth) {
-                            console.log(this.dob)
                             userInput = this.dob
                             field = 'dob'
                         } else {
-                            return;
+                            userInput = {
+                                oldPassword: this.password.oldPassword,
+                                newPassword: this.password.newPassword,
+                            }
+                            field = 'password'
+                            this.validPassword = false;
                         }
                         response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
                             method:'PUT', 

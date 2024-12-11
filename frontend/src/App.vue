@@ -5,25 +5,23 @@
     <main class="container pt-4">
         <div>
             <router-link
-                class=""
                 :to="{name: 'Main Page'}"
             >
                 Main Page
             </router-link>
             |
             <router-link
-                class=""
                 :to="{name: 'Other Page'}"
             >
                 Other Page
             </router-link>
             |
             <router-link
-                class=""
                 :to="{name: 'Profile Page'}"
             >
                 My Profile
             </router-link>
+            <!-- <button type="button" class="btn btn-primary ms-5">Sign Out</button> -->
         </div>
         <RouterView class="flex-shrink-0" />
     </main>

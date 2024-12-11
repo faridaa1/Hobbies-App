@@ -66,18 +66,25 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
 def profile_api_view(request: HttpRequest, id: int, field: str) -> HttpResponse:
     """Defining PUT for profile data"""
     user = get_object_or_404(CustomUser, pk=id)
+    print("FIELD ISSSSSSSSSSSSS",field)
     if field == 'pic': 
+        print(request.FILES.get('profile_picture'))
         user.profile_picture = request.FILES.get('profile_picture') 
         user.save()
     elif field == 'name':
         user.name = json.loads(request.body)
         user.save()
     elif field == 'email':
-        user.email = request.POST.get('email') 
+        user.email = json.loads(request.body) 
         user.save()
     elif field == 'dob':
-        print(request.POST.get('dob'))
-        user.date_of_birth = datetime.strptime(request.POST.get('dob'), "%Y-%m-%d").date()
+        user.date_of_birth = datetime.strptime(json.loads(request.body), "%Y-%m-%d").date()
+        user.save()
+    elif field == 'checkpass':
+        data = json.loads(request.body)
+        return JsonResponse({'match': user.check_password(data['oldPassword'])})
+    elif field == 'password':
+        user.set_password(json.loads(request.body)['newPassword'])
         user.save()
     return JsonResponse(user.as_dict())
 

@@ -2,7 +2,6 @@ export interface CustomUser {
     id: number;
     name: string;
     email: string;
-    password: string;
     date_of_birth: string;
     hobbies: Hobby[];
     friends: Friendship[];

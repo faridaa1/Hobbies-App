@@ -54,7 +54,6 @@ class CustomUser(AbstractUser):
             "username": self.username,
             "name": self.name,
             "email": self.email,
-            "password": self.password,
             "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
             "hobbies": [hobby.as_dict() for hobby in self.hobbies.all()],
             "friends": [friendship.as_dict(self) for friendship in Friendship.objects.filter(Q(user1=self) | Q(user2=self))],
