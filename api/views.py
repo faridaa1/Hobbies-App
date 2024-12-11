@@ -40,6 +40,12 @@ def signup(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/signup.html', {"form": form})
 
 
+def users_api_view(request: HttpRequest) -> HttpResponse:
+    return JsonResponse({
+        'users': [user.as_dict() for user in CustomUser.objects.all()],
+    })
+
+
 def hobbies_api_view(request: HttpRequest) -> HttpResponse:
     """ Returning all hobbies for global store."""
     return JsonResponse({
@@ -64,7 +70,9 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> HttpResponse:
     elif field == 'name':
         user.name = request.POST.get('name') 
         user.save()
-    print(user)
+    elif field == 'email':
+        user.email = request.POST.get('email') 
+        user.save()
     return JsonResponse(user.as_dict())
 
 

@@ -2,7 +2,7 @@
     <div class="fs-4 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
             <div class="position-relative">
-                <img v-if="user.profile_picture" style="width: 150px; height:150px; object-fit: cover;" class="rounded-circle" :src="`http://localhost:8000/${user.profile_picture}`" alt="Profile Picture">
+                <img v-if="user.profile_picture" style="width: 150px; height:150px; object-fit: cover;" class="rounded-circle" :src="`http://localhost:8000${user.profile_picture}`" alt="Profile Picture">
                 <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 150px; line-height: 0;"></i>
                 <button type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="(event) => { isEditingProfilePicture=true; updateProfile(event); }"><i class="bi bi-x fs-1"></i></button>
             </div>
@@ -22,21 +22,24 @@
                 <button type="button" v-if="isEditingName"class="btn btn-danger px-2 py-1 ms-1" @click="name=user.name; errorText.name=''; isEditingName=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
             </div>
             <div v-if="errorText.name" class="text-danger fs-5">{{ errorText.name }}</div>
-            <div class="d-flex gap-3 mt-3">
-                <div class="label">Email</div>
-                <input class="border border-secondary rounded px-2" type="text" :disabled="!isEditingEmail" :value="user.email">
+            <form class="d-flex mt-3" @submit="validateEmail">
+                <div class="label me-3">Email</div>
+                <input class="border border-secondary rounded px-2 me-2" type="email" ref="email" :disabled="!isEditingEmail" v-model="email" @input="validEmail=false">
                 <button type="button" v-if="!isEditingEmail" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingEmail = true"><i class="bi bi-pencil pencil"></i></button>
-                <button type="button" v-if="isEditingEmail"class="btn btn-success" @click="isEditingEmail = false">Save</button>
-            </div>
-            <div class="d-flex gap-3 mt-3">
-                <div class="label">Password</div>
-                <input class="border border-secondary rounded px-2" type="text" :disabled="!isEditingPassword" :value="user.password">
+                <button type="submit" v-if="isEditingEmail && !validEmail"class="btn btn-secondary">Check</button>
+                <button type="submit" v-if="isEditingEmail && validEmail"class="btn btn-success" @click="(event) => { updateProfile(event); isEditingEmail=false; }">Save</button>
+                <button type="button" v-if="isEditingEmail"class="btn btn-danger px-2 py-1 ms-1" @click="email=user.email; errorText.email=''; isEditingEmail=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
+            </form>
+            <div v-if="errorText.email" class="text-danger fs-5">{{ errorText.email }}</div>
+            <div class="d-flex mt-3">
+                <div class="label me-3">Password</div>
+                <input class="border border-secondary rounded px-2 me-2" type="email" :disabled="!isEditingPassword" :value="user.password">
                 <button type="button" v-if="!isEditingPassword" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingPassword = true"><i class="bi bi-pencil pencil"></i></button>
                 <button type="button" v-if="isEditingPassword"class="btn btn-success" @click="isEditingPassword = false">Save</button>
             </div>
-            <div class="d-flex gap-3 mt-3">
+            <div class="d-flex mt-3 me-3">
                 <div class="label">Date of Birth</div>
-                <input class="border border-secondary rounded px-2" type="text" :disabled="!isEditingDateOfBirth" :value="user.date_of_birth">
+                <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingDateOfBirth" :value="user.date_of_birth">
                 <button type="button" v-if="!isEditingDateOfBirth" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil pencil"></i></button>
                 <button type="button" v-if="isEditingDateOfBirth"class="btn btn-success" @click="isEditingDateOfBirth = false">Save</button>
             </div>
@@ -48,6 +51,7 @@
     import { defineComponent } from "vue";
     import { useUserStore } from "../../stores/user";
     import { CustomUser } from "../../types";
+import { useUsersStore } from "../../stores/users";
 
       
       export default defineComponent({
@@ -55,6 +59,7 @@
             errorText: {[key: string]: string}, 
             name: string, 
             validName: boolean, 
+            validEmail: boolean, 
             email: string, 
             isEditingName: boolean, 
             isEditingEmail:boolean, 
@@ -65,6 +70,7 @@
                 errorText: {},
                 name: '',
                 validName: false,
+                validEmail: false,
                 email: '',
                 isEditingName: false,
                 isEditingEmail: false,
@@ -74,12 +80,21 @@
               }
           },
           methods: {
+            validateEmail(event: Event) {
+                event.preventDefault()
+                const usersStore = useUsersStore()
+                if (usersStore.users.filter(userX => userX.id !== this.user.id).map(user => user.email).includes(this.email)) {
+                    this.errorText.email = 'Email already exists'
+                } else {
+                    this.errorText.email = ''
+                    this.validEmail = true;
+                }
+            },
             validateName() {
                 if (this.name === '') {
                     this.errorText.name = 'Name cannot be empty'
                 } else if (this.name.length > 150) {
                     this.errorText.name = 'Name must be below 151 characters'
-                console.log(this.name === '')
                 } else if (this.name.match(/^[ ]+.*[ ]*$|[ ]*.*[ ]+$/)) {
                     this.errorText.name = 'Name cannot start or end in space'
                 } else if (!this.name.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
@@ -109,7 +124,11 @@
                     } else if (this.isEditingName) {
                         file.append('name', this.name)
                         field = 'name'
-                    } else {
+                    } else if (this.isEditingEmail) {
+                        file.append('email', this.email)
+                        field = 'email'
+                    }
+                    else {
                         field = ''
                     }
                     let response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
@@ -131,6 +150,7 @@
                 const userStore = useUserStore()
                 let user:CustomUser = userStore.user
                 this.name = user.name
+                this.email = user.email
                 return user;
             }, csrf() : string {
                 for (let cookie of document.cookie.split(';')) {
