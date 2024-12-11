@@ -56,11 +56,15 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
     return HttpResponse('test')
 
 
-def profile_api_view(request: HttpRequest, id: int) -> HttpResponse:
+def profile_api_view(request: HttpRequest, id: int, field: str) -> HttpResponse:
     user = get_object_or_404(CustomUser, pk=id)
-    user.profile_picture = request.FILES.get('profile_picture') 
-    user.save()
-    print(user.profile_picture)
+    if field == 'pic': 
+        user.profile_picture = request.FILES.get('profile_picture') 
+        user.save()
+    elif field == 'name':
+        user.name = request.POST.get('name') 
+        user.save()
+    print(user)
     return JsonResponse(user.as_dict())
 
 
