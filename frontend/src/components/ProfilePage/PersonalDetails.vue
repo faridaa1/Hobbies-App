@@ -38,10 +38,10 @@
                 <button type="button" v-if="isEditingPassword"class="btn btn-success" @click="isEditingPassword = false">Save</button>
             </div>
             <div class="d-flex mt-3 me-3">
-                <div class="label">Date of Birth</div>
-                <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingDateOfBirth" :value="user.date_of_birth">
+                <div class="label me-3">Date of Birth</div>
+                <input class="border border-secondary rounded px-2 me-2" type="date" :max="today" v-model="dob" :disabled="!isEditingDateOfBirth">
                 <button type="button" v-if="!isEditingDateOfBirth" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil pencil"></i></button>
-                <button type="button" v-if="isEditingDateOfBirth"class="btn btn-success" @click="isEditingDateOfBirth = false">Save</button>
+                <button type="button" v-if="isEditingDateOfBirth" class="btn btn-success" @click="(event) => { updateProfile(event); isEditingDateOfBirth=false; }">Save</button>
             </div>
         </div>
     </div>
@@ -51,13 +51,14 @@
     import { defineComponent } from "vue";
     import { useUserStore } from "../../stores/user";
     import { CustomUser } from "../../types";
-import { useUsersStore } from "../../stores/users";
+    import { useUsersStore } from "../../stores/users";
 
       
       export default defineComponent({
           data(): {
             errorText: {[key: string]: string}, 
             name: string, 
+            dob: string,
             validName: boolean, 
             validEmail: boolean, 
             email: string, 
@@ -66,18 +67,19 @@ import { useUsersStore } from "../../stores/users";
             isEditingPassword: boolean, 
             isEditingDateOfBirth: boolean, 
             isEditingProfilePicture: boolean} {
-              return {
-                errorText: {},
-                name: '',
-                validName: false,
-                validEmail: false,
-                email: '',
-                isEditingName: false,
-                isEditingEmail: false,
-                isEditingPassword: false,
-                isEditingDateOfBirth: false,
-                isEditingProfilePicture: false
-              }
+            return {
+            errorText: {},
+            name: '',
+            dob: '',
+            validName: true,
+            validEmail: false,
+            email: '',
+            isEditingName: false,
+            isEditingEmail: false,
+            isEditingPassword: false,
+            isEditingDateOfBirth: false,
+            isEditingProfilePicture: false
+            }
           },
           methods: {
             validateEmail(event: Event) {
@@ -99,8 +101,6 @@ import { useUsersStore } from "../../stores/users";
                     this.errorText.name = 'Name cannot start or end in space'
                 } else if (!this.name.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
                     this.errorText.name = 'Only one space between words'
-                } else if (this.name === this.user.name) {
-                    this.errorText.name = 'No changes detected'
                 } else {
                     this.errorText.name = ''
                     this.validName = true
@@ -127,12 +127,16 @@ import { useUsersStore } from "../../stores/users";
                     } else if (this.isEditingEmail) {
                         file.append('email', this.email)
                         field = 'email'
+                    } else if (this.isEditingDateOfBirth) {
+                        console.log(this.dob)
+                        file.append('dob', this.dob)
+                        field = 'dob'
                     }
                     else {
                         field = ''
                     }
                     let response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
-                        method:'POST', 
+                        method:'PUT', 
                         credentials: 'include', 
                         headers: { 
                             "X-CSRFToken": this.csrf
@@ -150,6 +154,7 @@ import { useUsersStore } from "../../stores/users";
                 const userStore = useUserStore()
                 let user:CustomUser = userStore.user
                 this.name = user.name
+                this.dob = user.date_of_birth
                 this.email = user.email
                 return user;
             }, csrf() : string {
@@ -160,9 +165,15 @@ import { useUsersStore } from "../../stores/users";
                     }
                 }
                 return '';
-            },
+            }, today() : string {
+                const today: Date = new Date();
+                const year: number = today.getFullYear();
+                const month: string = (today.getMonth()+1).toString().padStart(2, '0')
+                const day: string = today.getDate().toString().padStart(2, '0')
+                return `${year}-${month}-${day}`;
+            }
         }
-      })
+    })
   </script>
   
 <style scoped>

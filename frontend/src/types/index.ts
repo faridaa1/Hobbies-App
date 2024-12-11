@@ -3,7 +3,7 @@ export interface CustomUser {
     name: string;
     email: string;
     password: string;
-    date_of_birth: Date;
+    date_of_birth: string;
     hobbies: Hobby[];
     friends: Friendship[];
     profile_picture: string;

@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -63,6 +64,7 @@ def user_api_view(request: HttpRequest) -> HttpResponse:
 
 
 def profile_api_view(request: HttpRequest, id: int, field: str) -> HttpResponse:
+    """Defining PUT for profile data"""
     user = get_object_or_404(CustomUser, pk=id)
     if field == 'pic': 
         user.profile_picture = request.FILES.get('profile_picture') 
@@ -72,6 +74,10 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> HttpResponse:
         user.save()
     elif field == 'email':
         user.email = request.POST.get('email') 
+        user.save()
+    elif field == 'dob':
+        print(request.POST.get('dob'))
+        user.date_of_birth = datetime.strptime(request.POST.get('dob'), "%Y-%m-%d").date()
         user.save()
     return JsonResponse(user.as_dict())
 
