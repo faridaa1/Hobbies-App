@@ -147,5 +147,6 @@ def friendship_api_view(request: HttpRequest, id: int) -> HttpResponse:
         friendship.save()
         return JsonResponse(friendship.as_dict(request.user.username))
     else:
+        # if friendship is rejected, delete relationship
         friendship.delete()
         return JsonResponse({})
