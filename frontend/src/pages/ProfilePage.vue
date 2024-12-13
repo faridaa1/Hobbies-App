@@ -56,14 +56,18 @@
     import FriendRequestsReceived from "../components/ProfilePage/FriendRequestsReceived.vue";
   
       export default defineComponent({
-          data() {
-              return {
-                  title: "Profile",
-              }
-          },
-          components: {
-            PersonalDetails, Hobbies, Friends, FriendRequestsSent, FriendRequestsReceived
-          },
+        data(): {title: String} {
+            return {
+                title: "Profile" as String,
+            }
+        },
+        components: {
+            PersonalDetails, 
+            Hobbies, 
+            Friends, 
+            FriendRequestsSent, 
+            FriendRequestsReceived
+        },
       })
   </script>
   
