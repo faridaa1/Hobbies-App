@@ -41,21 +41,21 @@
             </div>
             <div v-if="isEditingPassword" class="d-flex flex-column gap-3 mt-2">
                 <div class="d-flex flex-column">
-                    <label style="width: 14rem;">Current Password</label>
+                    <label>Current Password</label>
                     <div class="d-flex">
                         <input class="border border-secondary rounded px-2 me-2 w-100" :type="showOldPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.oldPassword" @input="validPassword=false">
                         <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showOldPassword = !showOldPassword"><i :class="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
                     </div>
                 </div>
                 <div class="d-flex flex-column">
-                    <label style="width: 14rem;">New Password</label>
+                    <label>New Password</label>
                     <div class="d-flex">
                         <input class="border border-secondary rounded px-2 me-2 w-100" :type="showNewPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword" @input="validPassword=false">
                         <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword = !showNewPassword"><i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
                     </div>
                 </div>
                 <div class="d-flex flex-column">
-                    <label style="width: 14rem;">Re-Enter New Password</label>
+                    <label>Re-Enter New Password</label>
                     <div class="d-flex">
                         <input class="border border-secondary rounded px-2 me-2 w-100" :type="showNewPassword2 ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword2" @input="validPassword=false">
                         <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword2 = !showNewPassword2"><i :class="showNewPassword2 ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
@@ -86,7 +86,6 @@
     import { useUserStore } from "../../stores/user";
     import { CustomUser } from "../../types";
     import { useUsersStore } from "../../stores/users";
-
         
     export default defineComponent({
         props: { 
@@ -102,7 +101,7 @@
             validName: boolean, 
             validEmail: boolean, 
             email: string, 
-            password: {oldPassword: string, newPassword: string, newPassword2: string},
+            password: { oldPassword: string, newPassword: string, newPassword2: string },
             showOldPassword: boolean,
             showNewPassword: boolean,
             showNewPassword2: boolean,
@@ -113,55 +112,48 @@
             isEditingDateOfBirth: boolean, 
             isEditingProfilePicture: boolean } {
             return {
-            errorText: {},
-            name: '',
-            dob: '',
-            password: {
-                oldPassword: '',
-                newPassword: '',
-                newPassword2: ''
-            },
-            validPassword: false,
-            validName: true,
-            showOldPassword: true,
-            showNewPassword: true,
-            showNewPassword2: true,
-            validEmail: true,
-            email: '',
-            isEditingName: false,
-            isEditingEmail: false,
-            isEditingPassword: false,
-            isEditingDateOfBirth: false,
-            isEditingProfilePicture: false
+                errorText: {},
+                name: '',
+                dob: '',
+                password: {
+                    oldPassword: '',
+                    newPassword: '',
+                    newPassword2: ''
+                },
+                validPassword: false,
+                validName: true,
+                showOldPassword: false,
+                showNewPassword: false,
+                showNewPassword2: false,
+                validEmail: true,
+                email: '',
+                isEditingName: false,
+                isEditingEmail: false,
+                isEditingPassword: false,
+                isEditingDateOfBirth: false,
+                isEditingProfilePicture: false
             }
-            },
-            methods: {
+        }, methods: {
             async checkPasswords() {
-                if (this.password.oldPassword === '') {
-                    this.errorText.password = 'Enter current pasword'
-                } else if (this.password.newPassword === '') {
-                    this.errorText.password = 'Enter new pasword'
-                } else if (this.password.newPassword2 === '') {
-                    this.errorText.password = 'Re-enter new pasword'
-                } else if (this.password.newPassword.length < 8 || this.password.newPassword.length > 30) {
+                if (this.password.oldPassword === '' || this.password.newPassword === '' || this.password.newPassword2 === '') {
+                    this.errorText.password = 'Fill in all fields.'
+                } else if (this.password.newPassword.length < 8 || this.password.newPassword.length > 30 
+                    || this.password.newPassword2.length < 8 || this.password.newPassword2.length > 30) {
                     this.errorText.password = "New password must be between 8 and 30 characters"
-                } else if (this.password.newPassword2.length < 8 || this.password.newPassword2.length > 30) {
-                    this.errorText.password = "Re-entered password must be between 8 and 30 characters"
                 } else if (this.password.newPassword !== this.password.newPassword2) {
                     this.errorText.password = "New passwords must match"
                 } else if (this.password.oldPassword === this.password.newPassword) {
                     this.errorText.password = "Current and New passwords are the same"
-                }
-                else {
-                    let response = await fetch(`http://localhost:8000/api/user/${this.user.id}/checkpass/`, {
+                } else {
+                    let response: Response = await fetch(`http://localhost:8000/api/user/${this.user.id}/checkpass/`, {
                         method:'PUT', 
                         credentials: 'include', 
                         headers: { 
-                            "X-CSRFToken": this.csrf
+                            "X-CSRFToken": useUserStore().csrf
                         },
                         body: JSON.stringify(this.password)
                     }) 
-                    const data = await response.json()
+                    const data: { match: boolean } = await response.json()
                     if (data.match === false) {
                         this.errorText.password = 'Current Password is Incorrect'
                     } else {
@@ -171,8 +163,7 @@
                     }
                 }
                 this.validPassword = false
-            },
-            validateEmail(event: Event) {
+            }, validateEmail(event: Event) {
                 event.preventDefault()
                 const usersStore = useUsersStore()
                 if (usersStore.users.filter(userX => userX.id !== this.user.id).map(user => user.email).includes(this.email)) {
@@ -181,8 +172,7 @@
                     this.errorText.email = ''
                     this.validEmail = true;
                 }
-            },
-            validateName() {
+            }, validateName() {
                 if (this.name === '') {
                     this.errorText.name = 'Name cannot be empty'
                 } else if (this.name.length > 150) {
@@ -199,13 +189,12 @@
                 this.validName = false;
             },
             async updateProfile(event: Event) {
-                let response;
-                if (this.csrf !== '') {
-                    const input: HTMLInputElement = event.target as HTMLInputElement
+                let response: Response;
+                if (useUserStore().csrf !== '') {
+                    const input = event.target as HTMLInputElement
                     let file: FormData = new FormData()
                     let field: string;
                     if (this.isEditingProfilePicture) {
-                        console.log(this.user.id)
                         if (input && input.files && input.files[0]) { 
                             file.append('profile_picture', input.files[0])
                         } else {
@@ -216,7 +205,7 @@
                             method:'POST', 
                             credentials: 'include', 
                             headers: { 
-                                "X-CSRFToken": this.csrf
+                                "X-CSRFToken": useUserStore().csrf
                             },
                             body: file
                         }) 
@@ -245,41 +234,28 @@
                             credentials: 'include', 
                             headers: { 
                                 "Content-Type": 'application/json',
-                                "X-CSRFToken": this.csrf
+                                "X-CSRFToken": useUserStore().csrf
                             },
                             body: JSON.stringify(userInput)
                         }) 
                     }
                     let data: CustomUser = await response.json()
-                    const userStore = useUserStore()
-                    userStore.saveUser(data)
+                    useUserStore().saveUser(data)
                 } 
             }
         },
         computed: {
             user(): CustomUser {
-                const userStore = useUserStore()
-                let user:CustomUser = userStore.user
+                let user:CustomUser = useUserStore().user
                 this.name = user.name
                 this.dob = user.date_of_birth
                 this.email = user.email
                 return user;
-            }, csrf() : string {
-                for (let cookie of document.cookie.split(';')) {
-                    const csrftoken = cookie.split('=')
-                    if (csrftoken[0] === 'csrftoken') {
-                        return csrftoken[1]
-                    }
-                }
-                return '';
-            }
+            },
         }
     })
 </script>
   
 <style scoped>
-    .pencil {
-        font-size: 1.3rem;
-    }
 </style>
   
