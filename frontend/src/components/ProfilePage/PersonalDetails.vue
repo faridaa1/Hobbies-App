@@ -15,7 +15,7 @@
         </div>
         <div class="d-flex flex-column w-100">
             <div class="d-flex">
-                <div class="label me-3">Name</div>
+                <div class="label me-3">Full Name</div>
                 <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingName" v-model="name" @input="validateName">
                 <button type="button" v-if="!isEditingName"class="btn btn-primary px-2 py-0 d-flex" @click="isEditingName = true"><i class="bi bi-pencil pencil"></i></button>
                 <button type="button" :disabled="!validName" v-if="isEditingName"class="btn btn-success" @click="(event) => { updateProfile(event); isEditingName=false; }">Save</button>

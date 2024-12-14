@@ -41,31 +41,30 @@ def signup(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/signup.html', {"form": form})
 
 
-def users_api_view(request: HttpRequest) -> HttpResponse:
+def users_api_view(request: HttpRequest) -> JsonResponse:
     """Returns all users for a global store"""
     return JsonResponse({
         'users': [user.as_dict() for user in CustomUser.objects.all()],
     })
 
 
-def hobbies_api_view(request: HttpRequest) -> HttpResponse:
+def hobbies_api_view(request: HttpRequest) -> JsonResponse:
     """Returning all hobbies for a global store"""
     return JsonResponse({
         'hobbies': [hobby.as_dict() for hobby in Hobby.objects.all()],
     })
 
 
-def user_api_view(request: HttpRequest) -> HttpResponse:
+def user_api_view(request: HttpRequest) -> JsonResponse:
     """Returning logged in user for a global store"""
     if (request.user.is_authenticated):
         return JsonResponse({
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
-    # redirect unauthenticated user to sign up page
-    return redirect('http://localhost:8000/signup/')
+    return JsonResponse({'error' : 'unauthorised user'}, staus=401)
 
 
-def profile_api_view(request: HttpRequest, id: int, field: str) -> HttpResponse:
+def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
     """Defining PUT request handling for profile data"""
     user = get_object_or_404(CustomUser, pk=id)
     if field == 'pic': 
@@ -85,7 +84,7 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> HttpResponse:
     return JsonResponse(user.as_dict())
 
 
-def hobby_api_view(request: HttpRequest) -> HttpResponse:
+def hobby_api_view(request: HttpRequest) -> JsonResponse:
     """Defining POST for Hobby object"""
     if request.method == 'POST':
         POST = json.loads(request.body)
@@ -97,7 +96,7 @@ def hobby_api_view(request: HttpRequest) -> HttpResponse:
     return JsonResponse ({})
 
 
-def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
+def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
     """Defining GET, POST, and DELETE handling for UserHobby"""
     if request.method == 'GET':
         user = CustomUser.objects.get(pk=id)
@@ -138,7 +137,7 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> HttpResponse:
     return JsonResponse({})
 
 
-def friendship_api_view(request: HttpRequest, id: int) -> HttpResponse:
+def friendship_api_view(request: HttpRequest, id: int) -> JsonResponse:
     """Defining POST request handling for Friendship."""
     friendship = Friendship.objects.get(pk=id)
     if json.loads(request.body):
