@@ -31,7 +31,7 @@
 
     export default defineComponent({
         components: { RouterView },
-        async mounted() {
+        async mounted(): Promise<void> {
             let userResponse: Response = await fetch("http://localhost:8000/api/user/", {
                 method:'GET', 
                 credentials: 'include'
