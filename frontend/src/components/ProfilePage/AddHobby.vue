@@ -76,7 +76,7 @@
             hobbySelected: boolean, 
             errorText: {[key: string]: string}, 
             valid: boolean 
-        } { return {
+        }{ return {
                 hobbySelected: true,
                 errorText: {},
                 valid: false,
@@ -95,7 +95,7 @@
                 }
                 return false
             },
-            validate() {
+            validate(): void {
                 // hobby name validation
                 if (!this.hobbySelected) {
                     if (!this.data.newHobby.hobby_name || this.data.newHobby.hobby_name.trim().length === 0) {
@@ -200,7 +200,7 @@
             }
         },
         watch: {
-            filteredHobbies(newHobbies) {
+            filteredHobbies(newHobbies): void {
                 this.hobbySelected = newHobbies.length > 1
             }
         }

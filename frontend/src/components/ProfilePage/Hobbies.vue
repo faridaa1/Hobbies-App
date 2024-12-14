@@ -63,7 +63,7 @@
             }
         },
         methods: {
-            async deleteHobby(userHobby: UserHobby) {
+            async deleteHobby(userHobby: UserHobby): Promise<void> {
                 if (useUserStore().csrf !== '') {
                     let response: Response = await fetch(`http://localhost:8000/api/user/hobbies/${useUserStore().user.id}&${userHobby.hobby.hobby_id}/`, {
                         method:'DELETE', 
