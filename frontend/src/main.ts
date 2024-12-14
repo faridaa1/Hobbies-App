@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia';
+import { createPinia, Pinia } from 'pinia';
 import App from './App.vue'
 import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 
 const app = createApp(App)
-const pinia = createPinia()
+const pinia: Pinia = createPinia()
 
 app.use(router)
 app.use(pinia)
