@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia'
-import { CustomUser, Friendship, UserHobbies, UserHobby } from '../types'
+import { CustomUser, Friendship, UserHobby } from '../types'
 
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: {} as CustomUser,
-        hobbies: {} as UserHobbies,
+        hobbies: {} as { user_hobbies: UserHobby[] },
         csrf: '' as string
     }),
     actions: {
         saveUser(user: CustomUser) {
             this.user = user
         },
-        saveHobbies(hobbies: UserHobbies) {
+        saveHobbies(hobbies: { user_hobbies: UserHobby[] }) {
             this.hobbies = hobbies
         },
         addHobby(hobby: UserHobby) {

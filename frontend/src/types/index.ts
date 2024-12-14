@@ -21,10 +21,6 @@ export interface UserHobby {
     start_date: String;
 }
 
-export interface UserHobbies {
-    user_hobbies: UserHobby[]
-}
-
 export interface Friendship {
     id: number;
     user_name: string;

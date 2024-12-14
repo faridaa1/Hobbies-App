@@ -74,6 +74,7 @@
                     userStore.csrf = csrftoken[1]
                 }
             }
+            console.log(document.cookie, useUserStore().csrf)
         }
     });
 </script>

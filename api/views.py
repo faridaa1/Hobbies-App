@@ -132,9 +132,8 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
                 level = POST['newUserHobby']['level'],
                 start_date = POST['newUserHobby']['start_date']
             )
-        return JsonResponse({
-            'user_hobby' : [user_hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=newUserHobby.user, hobby=newUserHobby.hobby)],
-        })
+        return JsonResponse(newUserHobby.as_dict()
+        )
     elif request.method == 'DELETE':
         id = id.split('&')
         user = CustomUser.objects.get(pk=id[0])

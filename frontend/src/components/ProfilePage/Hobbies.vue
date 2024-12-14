@@ -44,8 +44,8 @@
 </template>
   
 <script lang="ts">
-    import { defineComponent } from "vue";
-    import { UserHobby, UserHobbies } from "../../types";
+    import { defineComponent, toRaw } from "vue";
+    import { UserHobby } from "../../types";
     import { useUserStore } from "../../stores/user";
     import AddHobby from "./AddHobby.vue";
 
@@ -83,8 +83,10 @@
         },
         computed: {
             hobbies(): UserHobby[] {
-                let hobbies: UserHobbies = useUserStore().hobbies
-                return hobbies.user_hobbies || []; 
+                let hobbies: { user_hobbies: UserHobby[] } = useUserStore().hobbies
+                if (hobbies && hobbies.user_hobbies) { 
+                return hobbies.user_hobbies
+                } else return []
             }
         },
     })
