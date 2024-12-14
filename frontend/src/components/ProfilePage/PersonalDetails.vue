@@ -1,9 +1,9 @@
 <template>
-    <div class="fs-4 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
+    <div class="fs-5 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
             <div class="position-relative">
-                <img v-if="user.profile_picture" style="width: 150px; height:150px; object-fit: cover;" class="rounded-circle" :src="`http://localhost:8000${user.profile_picture}`" alt="Profile Picture">
-                <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 150px; line-height: 0;"></i>
+                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`http://localhost:8000${user.profile_picture}`" alt="Profile Picture">
+                <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
                 <button type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="(event) => { isEditingProfilePicture=true; updateProfile(event); }"><i class="bi bi-x fs-1"></i></button>
             </div>
             <div class="d-flex align-items-center">
@@ -14,56 +14,68 @@
             </div>
         </div>
         <div class="d-flex flex-column w-100">
-            <div class="d-flex">
-                <div class="label me-3">Full Name</div>
-                <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingName" v-model="name" @input="validateName">
-                <button type="button" v-if="!isEditingName"class="btn btn-primary px-2 py-0 d-flex" @click="isEditingName = true"><i class="bi bi-pencil pencil"></i></button>
-                <button type="button" :disabled="!validName" v-if="isEditingName"class="btn btn-success" @click="(event) => { updateProfile(event); isEditingName=false; }">Save</button>
-                <button type="button" v-if="isEditingName"class="btn btn-danger px-2 py-1 ms-1" @click="name=user.name; errorText.name=''; isEditingName=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
+            <div class="d-flex flex-column gap-2">
+                <label>Full Name</label>
+                <div class="d-flex">
+                    <input class="border border-secondary rounded px-2 me-2 w-100" type="text" :disabled="!isEditingName" v-model="name" @input="validateName">
+                    <button type="button" v-if="!isEditingName"class="btn btn-primary p-2" @click="isEditingName = true"><i class="bi bi-pencil d-flex"></i></button>
+                    <button type="button" :disabled="!validName" v-if="isEditingName"class="btn btn-success me-1" @click="(event) => { updateProfile(event); isEditingName=false; }">Save</button>
+                    <button type="button" v-if="isEditingName"class="btn btn-danger" @click="name=user.name; errorText.name=''; isEditingName=false;"><i class="bi bi-arrow-counterclockwise"></i></button>
+                </div>
             </div>
             <div v-if="errorText.name" class="text-danger fs-5">{{ errorText.name }}</div>
-            <form class="d-flex mt-3" @submit="validateEmail">
-                <div class="label me-3">Email</div>
-                <input class="border border-secondary rounded px-2 me-2" type="email" ref="email" :disabled="!isEditingEmail" v-model="email" @input="validEmail=false">
-                <button type="button" v-if="!isEditingEmail" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingEmail = true"><i class="bi bi-pencil pencil"></i></button>
-                <button type="submit" v-if="isEditingEmail && !validEmail"class="btn btn-secondary">Check</button>
-                <button type="submit" v-if="isEditingEmail && validEmail"class="btn btn-success" @click="(event) => { updateProfile(event); isEditingEmail=false; }">Save</button>
-                <button type="button" v-if="isEditingEmail"class="btn btn-danger px-2 py-1 ms-1" @click="email=user.email; errorText.email=''; isEditingEmail=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
+            <form class="d-flex flex-column gap-2 mt-3" @submit="validateEmail">
+                <label>Email</label>
+                <div class="d-flex">
+                    <input class="border border-secondary rounded px-2 me-2 w-100" type="email" ref="email" :disabled="!isEditingEmail" v-model="email" @input="validEmail=false">
+                    <button type="button" v-if="!isEditingEmail" class="btn btn-primary p-2" @click="isEditingEmail = true"><i class="bi bi-pencil d-flex"></i></button>
+                    <button type="submit" v-if="isEditingEmail && !validEmail"class="btn btn-secondary me-1">Check</button>
+                    <button type="button" v-if="isEditingEmail && validEmail"class="btn btn-success me-1" @click="(event) => { updateProfile(event); isEditingEmail=false; }">Save</button>
+                    <button type="button" v-if="isEditingEmail"class="btn btn-danger" @click="email=user.email; errorText.email=''; isEditingEmail=false;"><i class="bi bi-arrow-counterclockwise"></i></button>
+                </div>
             </form>
             <div v-if="errorText.email" class="text-danger fs-5">{{ errorText.email }}</div>
             <div class="d-flex mt-3">
-                <div class="label me-3">Password</div>
-                <button type="button" v-if="!isEditingPassword" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingPassword = true"><i class="bi bi-pencil pencil"></i></button>
+                <label class="me-3">Password</label>
+                <button type="button" v-if="!isEditingPassword" class="btn btn-primary p-2" @click="isEditingPassword = true"><i class="bi bi-pencil d-flex"></i></button>
             </div>
-            <div v-if="isEditingPassword" class="d-flex flex-column gap-3 fs-5">
-                <div class="d-flex">
-                    <label class="mt-2" style="width: 14rem;">Current Password</label>
-                    <input class="border border-secondary rounded px-2 me-2" :type="showOldPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.oldPassword" @input="validPassword=false">
-                    <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showOldPassword = !showOldPassword"><i :class="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+            <div v-if="isEditingPassword" class="d-flex flex-column gap-3 mt-2">
+                <div class="d-flex flex-column">
+                    <label style="width: 14rem;">Current Password</label>
+                    <div class="d-flex">
+                        <input class="border border-secondary rounded px-2 me-2 w-100" :type="showOldPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.oldPassword" @input="validPassword=false">
+                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showOldPassword = !showOldPassword"><i :class="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                    </div>
                 </div>
-                <div class="d-flex">
+                <div class="d-flex flex-column">
                     <label style="width: 14rem;">New Password</label>
-                    <input class="border border-secondary rounded px-2 me-2" :type="showNewPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword" @input="validPassword=false">
-                    <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword = !showNewPassword"><i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                    <div class="d-flex">
+                        <input class="border border-secondary rounded px-2 me-2 w-100" :type="showNewPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword" @input="validPassword=false">
+                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword = !showNewPassword"><i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                    </div>
                 </div>
-                <div class="d-flex">
-                    <label style="width: 14rem;">Re-enter New Password</label>
-                    <input class="border border-secondary rounded px-2 me-2" :type="showNewPassword2 ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword2" @input="validPassword=false">
-                    <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword2 = !showNewPassword2"><i :class="showNewPassword2 ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                <div class="d-flex flex-column">
+                    <label style="width: 14rem;">Re-Enter New Password</label>
+                    <div class="d-flex">
+                        <input class="border border-secondary rounded px-2 me-2 w-100" :type="showNewPassword2 ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword2" @input="validPassword=false">
+                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword2 = !showNewPassword2"><i :class="showNewPassword2 ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                    </div>
                 </div>
                 <div v-if="errorText.password" class="text-danger fs-5">{{ errorText.password }}</div>
                 <div>
-                    <button type="button" v-if="isEditingPassword && !validPassword" class="btn btn-secondary" @click="checkPasswords">Check</button>
-                    <button type="button" v-if="isEditingPassword && validPassword" :disabled="!validPassword" class="btn btn-success" @click="(event) => { updateProfile(event); password.newPassword =''; password.oldPassword=''; password.newPassword2=''; isEditingPassword = false}">Save</button>
-                    <button type="button" class="btn btn-danger px-2 py-1 ms-1" @click="password.newPassword =''; password.oldPassword=''; password.newPassword2=''; errorText.password=''; isEditingPassword=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
+                    <button type="button" v-if="isEditingPassword && !validPassword" class="btn btn-secondary me-1" @click="checkPasswords">Check</button>
+                    <button type="button" v-if="isEditingPassword && validPassword" :disabled="!validPassword" class="btn btn-success me-1" @click="(event) => { updateProfile(event); password.newPassword =''; password.oldPassword=''; password.newPassword2=''; isEditingPassword = false}">Save</button>
+                    <button type="button" class="btn btn-danger" @click="password.newPassword =''; password.oldPassword=''; password.newPassword2=''; errorText.password=''; isEditingPassword=false;"><i class="bi bi-arrow-counterclockwise"></i></button>
                 </div>
             </div>
-            <div class="d-flex mt-3 me-3">
-                <div class="label me-3">Date of Birth</div>
-                <input class="border border-secondary rounded px-2 me-2" type="date" :max="today" v-model="dob" :disabled="!isEditingDateOfBirth">
-                <button type="button" v-if="!isEditingDateOfBirth" class="btn btn-primary px-2 py-0 d-flex" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil pencil"></i></button>
-                <button type="button" v-if="isEditingDateOfBirth" class="btn btn-success" @click="(event) => { updateProfile(event);  isEditingDateOfBirth=false; }">Save</button>
-                <button type="button" v-if="isEditingDateOfBirth"class="btn btn-danger px-2 py-1 ms-1" @click="dob=user.date_of_birth; isEditingDateOfBirth=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
+            <div class="d-flex flex-column mt-3 me-3 gap-2 w-100">
+                <label class="me-3">Date of Birth</label>
+                <div class="d-flex">
+                    <input class="border border-secondary rounded px-2 me-2 w-100" type="date" :max="today" v-model="dob" :disabled="!isEditingDateOfBirth">
+                    <button type="button" v-if="!isEditingDateOfBirth" class="btn btn-primary p-2" @click="isEditingDateOfBirth = !isEditingDateOfBirth"><i class="bi bi-pencil d-flex"></i></button>
+                    <button type="button" v-if="isEditingDateOfBirth" class="btn btn-success me-1" @click="(event) => { updateProfile(event);  isEditingDateOfBirth=false; }">Save</button>
+                    <button type="button" v-if="isEditingDateOfBirth"class="btn btn-danger" @click="dob=user.date_of_birth; isEditingDateOfBirth=false;"><i class="bi bi-arrow-counterclockwise"></i></button>
+                </div>
             </div>
         </div>
     </div>
