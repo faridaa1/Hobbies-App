@@ -61,6 +61,12 @@
     import { useUserStore } from "../../stores/user";
 
     export default defineComponent({
+        props: {
+            today: {
+                type: String,
+                required: true
+            }
+        },
         data(): {
             data: {
                 newHobby: Hobby, 
@@ -199,12 +205,6 @@
                 } else {
                     return []
                 }
-            }, today() : string {
-                const today: Date = new Date();
-                const year: number = today.getFullYear();
-                const month: string = (today.getMonth()+1).toString().padStart(2, '0')
-                const day: string = today.getDate().toString().padStart(2, '0')
-                return `${year}-${month}-${day}`;
             }, csrf() : string {
                 for (let cookie of document.cookie.split(';')) {
                     const csrftoken = cookie.split('=')

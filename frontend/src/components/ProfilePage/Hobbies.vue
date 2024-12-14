@@ -15,7 +15,7 @@
         <div class="modal fade" :id="'addHobby'">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <AddHobby />
+                    <AddHobby :today=today />
                 </div>
             </div>
         </div>
@@ -50,6 +50,12 @@
     import AddHobby from "./AddHobby.vue";
 
     export default defineComponent({
+        props: {
+            today: {
+                type: String,
+                required: true
+            }
+        },
         components: {
             AddHobby
         },

@@ -68,15 +68,21 @@
     </div>
   </template>
   
-  <script lang="ts">
+<script lang="ts">
     import { defineComponent } from "vue";
     import { useUserStore } from "../../stores/user";
     import { CustomUser } from "../../types";
     import { useUsersStore } from "../../stores/users";
 
-      
-      export default defineComponent({
-          data(): {
+        
+    export default defineComponent({
+        props: { 
+            today: { 
+                type: String, 
+                required: true
+            }
+        },
+            data(): {
             errorText: {[key: string]: string}, 
             name: string, 
             dob: string,
@@ -115,8 +121,8 @@
             isEditingDateOfBirth: false,
             isEditingProfilePicture: false
             }
-          },
-          methods: {
+            },
+            methods: {
             async checkPasswords() {
                 if (this.password.newPassword === '') {
                     this.errorText.password = 'Enter new pasword'
@@ -250,16 +256,10 @@
                     }
                 }
                 return '';
-            }, today() : string {
-                const today: Date = new Date();
-                const year: number = today.getFullYear();
-                const month: string = (today.getMonth()+1).toString().padStart(2, '0')
-                const day: string = today.getDate().toString().padStart(2, '0')
-                return `${year}-${month}-${day}`;
             }
         }
     })
-  </script>
+</script>
   
 <style scoped>
     .pencil {
