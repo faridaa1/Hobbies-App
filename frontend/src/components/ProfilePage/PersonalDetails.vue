@@ -140,7 +140,7 @@
                 } else if (field === 'newpass') {
                     this.showNewPassword = !this.showNewPassword
                 } else if (field === 'newpass2') {
-                    this.showNewPassword2 = this.showNewPassword2
+                    this.showNewPassword2 = !this.showNewPassword2
                 } else if (field === 'dob') {
                     this.isEditingDateOfBirth = !this.isEditingDateOfBirth
                 }
