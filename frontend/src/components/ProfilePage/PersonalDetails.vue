@@ -44,21 +44,21 @@
                     <label>Current Password</label>
                     <div class="d-flex">
                         <input class="border border-secondary rounded px-2 me-2 w-100" :type="showOldPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.oldPassword" @input="validPassword=false">
-                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="toggleField(showOldPassword)"><i :class="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="toggleField('oldpass')"><i :class="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
                     </div>
                 </div>
                 <div class="d-flex flex-column">
                     <label>New Password</label>
                     <div class="d-flex">
                         <input class="border border-secondary rounded px-2 me-2 w-100" :type="showNewPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword" @input="validPassword=false">
-                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="toggleField(showNewPassword)"><i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="toggleField('newpass')"><i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
                     </div>
                 </div>
                 <div class="d-flex flex-column">
                     <label>Re-Enter New Password</label>
                     <div class="d-flex">
                         <input class="border border-secondary rounded px-2 me-2 w-100" :type="showNewPassword2 ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword2" @input="validPassword=false">
-                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="toggleField(showNewPassword2)"><i :class="showNewPassword2 ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
+                        <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="toggleField('newpass2')"><i :class="showNewPassword2 ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
                     </div>
                 </div>
                 <div v-if="errorText.password" class="text-danger fs-5">{{ errorText.password }}</div>
@@ -72,7 +72,7 @@
                 <label class="me-3">Date of Birth</label>
                 <div class="d-flex">
                     <input class="border border-secondary rounded px-2 me-2 w-100" type="date" :max="today" v-model="dob" :disabled="!isEditingDateOfBirth">
-                    <button type="button" v-if="!isEditingDateOfBirth" class="btn btn-primary p-2" @click="toggleField(isEditingDateOfBirth)"><i class="bi bi-pencil d-flex"></i></button>
+                    <button type="button" v-if="!isEditingDateOfBirth" class="btn btn-primary p-2" @click="isEditingDateOfBirth=true"><i class="bi bi-pencil d-flex"></i></button>
                     <button type="button" v-if="isEditingDateOfBirth" class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
                     <button type="button" v-if="isEditingDateOfBirth"class="btn btn-danger" @click="reset('dob')"><i class="bi bi-arrow-counterclockwise"></i></button>
                 </div>
@@ -134,8 +134,16 @@
                 isEditingProfilePicture: false
             }
         }, methods: {
-            toggleField(fieldShown:boolean): void {
-                fieldShown = !fieldShown
+            toggleField(field:string): void {
+                if (field === 'oldpass') {
+                    this.showOldPassword = !this.showOldPassword
+                } else if (field === 'newpass') {
+                    this.showNewPassword = !this.showNewPassword
+                } else if (field === 'newpass2') {
+                    this.showNewPassword2 = this.showNewPassword2
+                } else if (field === 'dob') {
+                    this.isEditingDateOfBirth = !this.isEditingDateOfBirth
+                }
             },
             reset(field: string): void {
                 if (field === 'name') {
