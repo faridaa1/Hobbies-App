@@ -54,7 +54,13 @@
             const userStore = useUserStore()
             userStore.saveUser(user)
             userStore.saveHobbies(userHobbiesResponse)
-            console.log(document.querySelector("input[name=csrfmiddlewaretoken]").value)
+            for (let cookie of document.cookie.split(';')) {
+                const csrftoken: string[] = cookie.split('=')
+                if (csrftoken[0] === 'csrftoken') {
+                    userStore.csrf = csrftoken[1]
+                }
+            }
+            console.log(userStore.csrf)
         }
     });
 </script>

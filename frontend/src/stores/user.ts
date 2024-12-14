@@ -4,7 +4,8 @@ import { CustomUser, Friendship, UserHobbies, UserHobby } from '../types'
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: {} as CustomUser,
-        hobbies: {} as UserHobbies
+        hobbies: {} as UserHobbies,
+        csrf: '' as string
     }),
     actions: {
         saveUser(user: CustomUser) {
@@ -17,10 +18,10 @@ export const useUserStore = defineStore('user', {
             this.hobbies.user_hobbies.push(hobby)
         },
         deleteHobby(hobby : UserHobby) {
-            this.hobbies.user_hobbies = this.hobbies.user_hobbies.filter(myHobby => myHobby !== hobby)
+            this.hobbies.user_hobbies = this.hobbies.user_hobbies.filter(myHobby => myHobby.hobby.hobby_id !== hobby.hobby.hobby_id)
         },
         updateFriendship(id: number, isAccepted: boolean) {
-            let friendship = this.user.friends.find(fs => fs.id === id) as Friendship
+            let friendship: Friendship | undefined = this.user.friends.find(fs => fs.id === id) 
             if (friendship) {
                 if (isAccepted) {
                     friendship.status = 'Accepted'
