@@ -172,13 +172,12 @@
                 } else if (this.password.oldPassword === this.password.newPassword) {
                     this.errorText.password = "Current and New passwords are the same"
                 } else {
-                    let response: Response = await fetch(`http://localhost:8000/api/user/${this.user.id}/checkpass/`, {
-                        method:'PUT', 
+                    let response: Response = await fetch(`http://localhost:8000/api/user/${this.user.id}/password/${this.password.oldPassword}`, {
+                        method:'GET', 
                         credentials: 'include', 
                         headers: { 
                             "X-CSRFToken": useUserStore().csrf
                         },
-                        body: JSON.stringify(this.password)
                     }) 
                     const data: { match: boolean } = await response.json()
                     if (data.match === false) {

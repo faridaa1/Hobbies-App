@@ -65,30 +65,35 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
     return JsonResponse({'Error' : 'Unauthorised user'}, status=401)
 
 
+def check_password_api_view(request: HttpRequest, id: int, password: str) -> JsonResponse:
+    if request == 'GET':
+        user = get_object_or_404(CustomUser, pk=id)
+        return JsonResponse({'match': user.check_password(currentPassword)})
+    return JsonResponse({})
+
 def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
     """Defining PUT request handling for profile data"""
-    user = get_object_or_404(CustomUser, pk=id)
-    if field == 'pic': 
-        user.profile_picture = request.FILES.get('profile_picture') 
-    elif field == 'name':
-        user.name = json.loads(request.body)
-    elif field == 'email':
-        user.email = json.loads(request.body) 
-    elif field == 'dob':
-        user.date_of_birth = datetime.strptime(json.loads(request.body), "%Y-%m-%d").date()
-    elif field == 'checkpass':
-        data = json.loads(request.body)
-        return JsonResponse({'match': user.check_password(data['oldPassword'])})
-    elif field == 'password':
-        user.set_password(json.loads(request.body)['newPassword'])
+    if request.method == 'PUT':
+        user = get_object_or_404(CustomUser, pk=id)
+        if field == 'pic': 
+            user.profile_picture = request.FILES.get('profile_picture') 
+        elif field == 'name':
+            user.name = json.loads(request.body)
+        elif field == 'email':
+            user.email = json.loads(request.body) 
+        elif field == 'dob':
+            user.date_of_birth = datetime.strptime(json.loads(request.body), "%Y-%m-%d").date()
+        elif field == 'password':
+            user.set_password(json.loads(request.body)['newPassword'])
+            user.save()
+            # needed as django ends session
+            user = authenticate(request, username=user.username, password=json.loads(request.body)['newPassword'])
+            if user is not None:
+                login(request, user) 
+                return JsonResponse(user.as_dict())
         user.save()
-        # needed as django ends session
-        user = authenticate(request, username=user.username, password=json.loads(request.body)['newPassword'])
-        if user is not None:
-            login(request, user) 
-            return JsonResponse(user.as_dict())
-    user.save()
-    return JsonResponse(user.as_dict())
+        return JsonResponse(user.as_dict())
+    return JsonResponse({})
 
 
 def hobby_api_view(request: HttpRequest) -> JsonResponse:
