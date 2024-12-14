@@ -38,22 +38,23 @@
             <div v-if="isEditingPassword" class="d-flex flex-column gap-3 fs-5">
                 <div class="d-flex">
                     <label class="mt-2" style="width: 14rem;">Current Password</label>
-                    <input class="border border-secondary rounded px-2 me-2" :type="!showOldPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.oldPassword" @input="checkPasswords">
+                    <input class="border border-secondary rounded px-2 me-2" :type="showOldPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.oldPassword" @input="validPassword=false">
                     <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showOldPassword = !showOldPassword"><i :class="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
                 </div>
                 <div class="d-flex">
                     <label style="width: 14rem;">New Password</label>
-                    <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingPassword" v-model="password.newPassword" @input="checkPasswords">
+                    <input class="border border-secondary rounded px-2 me-2" :type="showNewPassword ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword" @input="validPassword=false">
                     <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword = !showNewPassword"><i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
                 </div>
                 <div class="d-flex">
                     <label style="width: 14rem;">Re-enter New Password</label>
-                    <input class="border border-secondary rounded px-2 me-2" type="text" :disabled="!isEditingPassword" v-model="password.newPassword2" @input="checkPasswords">
+                    <input class="border border-secondary rounded px-2 me-2" :type="showNewPassword2 ? 'text' : 'password'" :disabled="!isEditingPassword" v-model="password.newPassword2" @input="validPassword=false">
                     <button type="button" class="btn btn-warning fs-5 px-2 py-0 d-flex" @click="showNewPassword2 = !showNewPassword2"><i :class="showNewPassword2 ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></button>
                 </div>
                 <div v-if="errorText.password" class="text-danger fs-5">{{ errorText.password }}</div>
                 <div>
-                    <button type="button" v-if="isEditingPassword" :disabled="!validPassword" class="btn btn-success" @click="(event) => { updateProfile(event); password.newPassword =''; password.oldPassword=''; password.newPassword2=''; isEditingPassword = false}">Save</button>
+                    <button type="button" v-if="isEditingPassword && !validPassword" class="btn btn-secondary" @click="checkPasswords">Check</button>
+                    <button type="button" v-if="isEditingPassword && validPassword" :disabled="!validPassword" class="btn btn-success" @click="(event) => { updateProfile(event); password.newPassword =''; password.oldPassword=''; password.newPassword2=''; isEditingPassword = false}">Save</button>
                     <button type="button" class="btn btn-danger px-2 py-1 ms-1" @click="password.newPassword =''; password.oldPassword=''; password.newPassword2=''; errorText.password=''; isEditingPassword=false;"><i class="bi bi-arrow-counterclockwise fs-5"></i></button>
                 </div>
             </div>
@@ -82,7 +83,7 @@
                 required: true
             }
         },
-            data(): {
+        data(): {
             errorText: {[key: string]: string}, 
             name: string, 
             dob: string,
@@ -98,7 +99,7 @@
             isEditingEmail:boolean, 
             isEditingPassword: boolean, 
             isEditingDateOfBirth: boolean, 
-            isEditingProfilePicture: boolean} {
+            isEditingProfilePicture: boolean } {
             return {
             errorText: {},
             name: '',
@@ -110,9 +111,9 @@
             },
             validPassword: false,
             validName: true,
-            showOldPassword: false,
-            showNewPassword: false,
-            showNewPassword2: false,
+            showOldPassword: true,
+            showNewPassword: true,
+            showNewPassword2: true,
             validEmail: true,
             email: '',
             isEditingName: false,
@@ -124,31 +125,34 @@
             },
             methods: {
             async checkPasswords() {
-                if (this.password.newPassword === '') {
+                if (this.password.oldPassword === '') {
+                    this.errorText.password = 'Enter current pasword'
+                } else if (this.password.newPassword === '') {
                     this.errorText.password = 'Enter new pasword'
                 } else if (this.password.newPassword2 === '') {
                     this.errorText.password = 'Re-enter new pasword'
+                } else if (this.password.newPassword.length < 8 || this.password.newPassword.length > 30) {
+                    this.errorText.password = "New password must be between 8 and 30 characters"
+                } else if (this.password.newPassword2.length < 8 || this.password.newPassword2.length > 30) {
+                    this.errorText.password = "Re-entered password must be between 8 and 30 characters"
                 } else if (this.password.newPassword !== this.password.newPassword2) {
                     this.errorText.password = "New passwords must match"
                 } else if (this.password.oldPassword === this.password.newPassword) {
                     this.errorText.password = "Current and New passwords are the same"
-                } else if (this.password.oldPassword === '') {
-                    this.errorText.password = 'Enter current pasword'
                 }
                 else {
                     let response = await fetch(`http://localhost:8000/api/user/${this.user.id}/checkpass/`, {
-                    method:'PUT', 
-                    credentials: 'include', 
-                    headers: { 
-                        "X-CSRFToken": this.csrf
-                    },
-                    body: JSON.stringify(this.password)
+                        method:'PUT', 
+                        credentials: 'include', 
+                        headers: { 
+                            "X-CSRFToken": this.csrf
+                        },
+                        body: JSON.stringify(this.password)
                     }) 
                     const data = await response.json()
                     if (data.match === false) {
                         this.errorText.password = 'Current Password is Incorrect'
                     } else {
-                        console.log(data)
                         this.validPassword = true
                         this.errorText.password = ''
                         return
