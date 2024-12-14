@@ -2,9 +2,9 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <h1>Friend Requests Sent</h1>
         <hr>
-        <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-5 w-100" v-for="(friend, index) in friends">
+        <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-5 w-100" v-for="friend in friends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
-                <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;" class="rounded-circle" :src="friend.user_profile_picture" alt="">
+                <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;" class="rounded-circle" :src="friend.user_profile_picture">
                 <i v-if="!friend.user_profile_picture" class="bi bi-person-circle p-0" style="font-size: 70px; line-height: 0"></i>
                 <div class="p-2 rounded w-100">{{ friend.user_name }}</div>
             </div>
@@ -23,16 +23,15 @@
 
     export default defineComponent({
         methods: {
-            async unsend(id: number) {
-                if (this.csrf !== '') {
-                    const userStore = useUserStore()
-                    userStore.updateFriendship(id, false)
+            async unsend(id: number): Promise<void> {
+                if (useUserStore().csrf !== '') {
+                    useUserStore().updateFriendship(id, false)
                     await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
                         method:'POST', 
                         credentials: 'include', 
                         headers: { 
                             'Content-Type': 'application/json',
-                            "X-CSRFToken": this.csrf
+                            "X-CSRFToken": useUserStore().csrf
                         },
                         body: JSON.stringify(false),
                     }) 
@@ -47,14 +46,6 @@
                     return this.user.friends.filter(friendship => friendship.status === 'Pending' && friendship.sent)
                 }
                 return []
-            }, csrf() : string {
-                for (let cookie of document.cookie.split(';')) {
-                    const csrftoken = cookie.split('=')
-                    if (csrftoken[0] === 'csrftoken') {
-                        return csrftoken[1]
-                    }
-                }
-                return '';
             }
         }
     })
