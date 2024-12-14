@@ -32,6 +32,16 @@
     export default defineComponent({
         components: { RouterView },
         async mounted() {
+            let userResponse: Response = await fetch("http://localhost:8000/api/user/", {
+                method:'GET', 
+                credentials: 'include'
+            }); 
+            if (!userResponse.ok) {
+                
+            }
+            let userData: { user: CustomUser } = await userResponse.json();
+            let user: CustomUser = userData.user;
+
             let usersResponse: Response = await fetch("http://localhost:8000/api/users/", {
                 method:'GET', 
                 credentials: 'include'
@@ -47,13 +57,6 @@
             let hobbiesData: { hobbies: Hobby[] } = await hobbiesResponse.json();
             let hobbies: Hobby[] = hobbiesData.hobbies;
             useHobbiesStore().setHobbies(hobbies)
-
-            let userResponse: Response = await fetch("http://localhost:8000/api/user/", {
-                method:'GET', 
-                credentials: 'include'
-            }); 
-            let userData: { user: CustomUser } = await userResponse.json();
-            let user: CustomUser = userData.user;
             
             let userHobbies = await fetch(`http://localhost:8000/api/user/hobbies/${user.id}/`, {
                 method:'GET', 

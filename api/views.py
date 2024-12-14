@@ -81,6 +81,12 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
         return JsonResponse({'match': user.check_password(data['oldPassword'])})
     elif field == 'password':
         user.set_password(json.loads(request.body)['newPassword'])
+        user.save()
+        # needed as django ends session
+        user = authenticate(request, username=user.username, password=json.loads(request.body)['newPassword'])
+        if user is not None:
+            login(request, user) 
+            return JsonResponse(user.as_dict())
     user.save()
     return JsonResponse(user.as_dict())
 
