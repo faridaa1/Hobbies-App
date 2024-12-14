@@ -24,7 +24,7 @@
 <script lang="ts">
     import { defineComponent } from "vue";
     import { RouterView } from "vue-router";
-    import { CustomUser, Hobby } from "./types";
+    import { CustomUser, Hobby, UserHobby } from "./types";
     import { useHobbiesStore } from "./stores/hobbies";
     import { useUserStore } from "./stores/user";
     import { useUsersStore } from "./stores/users";
@@ -32,35 +32,45 @@
     export default defineComponent({
         components: { RouterView },
         async mounted() {
-            let usersResponse = await fetch("http://localhost:8000/api/users/");
-            let usersData = await usersResponse.json();
-            let users = usersData.users as CustomUser[];
+            let usersResponse: Response = await fetch("http://localhost:8000/api/users/", {
+                method:'GET', 
+                credentials: 'include'
+            });
+            let usersData: { users: CustomUser[] } = await usersResponse.json();
+            let users: CustomUser[] = usersData.users;
             useUsersStore().saveUsers(users)
 
-            let hobbiesResponse = await fetch("http://localhost:8000/api/hobbies/");
-            let hobbiesData = await hobbiesResponse.json();
-            let hobbies = hobbiesData.hobbies as Hobby[];
-            const hobbiesStore = useHobbiesStore()
-            hobbiesStore.setHobbies(hobbies)
+            let hobbiesResponse: Response = await fetch("http://localhost:8000/api/hobbies/", {
+                method:'GET', 
+                credentials: 'include'
+            }); 
+            let hobbiesData: { hobbies: Hobby[] } = await hobbiesResponse.json();
+            let hobbies: Hobby[] = hobbiesData.hobbies;
+            useHobbiesStore().setHobbies(hobbies)
 
-            let userResponse = await fetch("http://localhost:8000/api/user/", {method:'GET', credentials: 'include',}); 
-            let userData = await userResponse.json();
-            let user = userData.user as CustomUser;
+            let userResponse: Response = await fetch("http://localhost:8000/api/user/", {
+                method:'GET', 
+                credentials: 'include'
+            }); 
+            let userData: { user: CustomUser } = await userResponse.json();
+            let user: CustomUser = userData.user;
+            
             let userHobbies = await fetch(`http://localhost:8000/api/user/hobbies/${user.id}/`, {
                 method:'GET', 
                 credentials: 'include', 
             }) 
-            let userHobbiesResponse = await userHobbies.json();
+            let userHobbiesResponse: { user_hobbies: UserHobby[] } = await userHobbies.json();
             const userStore = useUserStore()
             userStore.saveUser(user)
             userStore.saveHobbies(userHobbiesResponse)
+            
+            // extracting csrf token
             for (let cookie of document.cookie.split(';')) {
                 const csrftoken: string[] = cookie.split('=')
                 if (csrftoken[0] === 'csrftoken') {
                     userStore.csrf = csrftoken[1]
                 }
             }
-            console.log(userStore.csrf)
         }
     });
 </script>
