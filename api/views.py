@@ -61,7 +61,8 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
         return JsonResponse({
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
-    return JsonResponse({'error' : 'unauthorised user'}, staus=401)
+    # redirect unauthenticated user to sign up page
+    return JsonResponse({'Error' : 'Unauthorised user'}, status=401)
 
 
 def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
