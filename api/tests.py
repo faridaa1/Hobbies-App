@@ -4,9 +4,11 @@ from .forms import SignupForm
 from .models import CustomUser
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.webdriver import WebDriver
 
 # https://docs.djangoproject.com/en/5.1/intro/tutorial05/
-
 
 def valid_signup_data() -> dict:
     """Returns a dict of valid data for a Signup Form"""
@@ -116,3 +118,37 @@ class SignupViewTests(TestCase):
             reverse('signup'), data=valid_signup_data())  # Uses url with name 'signup'
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 'http://localhost:5173/profile/')
+
+
+class ProfileSeleniumTests(StaticLiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = WebDriver()
+        cls.selenium.implicitly_wait(100)
+
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.selenium.quit()
+    #     super.tearDownClass()
+    
+    def test_signup(self):
+        password = "testing123"
+        self.selenium.get(f"{self.live_server_url}/signup")
+        full_name = self.selenium.find_element(By.NAME, "name")
+        full_name.send_keys("Farida Addo")
+        email = self.selenium.find_element(By.NAME, "email")
+        email.send_keys("f.addo@se00.qmul.ac.uk")
+        password_input = self.selenium.find_element(By.NAME, "password")
+        password_input.send_keys(password)
+        date_of_birth = self.selenium.find_element(By.NAME, "date_of_birth")
+        date_of_birth.send_keys("2004-01-20")
+        show_password = self.selenium.find_element(By.NAME, "show-password")
+        show_password.click()
+        profile_picture = self.selenium.find_element(By.NAME, "profile_picture")
+        profile_picture.send_keys("C:\\Users\\Farida Uni\\Downloads\\download.png")
+        remove_upload_pic = self.selenium.find_element(By.NAME, "remove-upload-pic")
+        remove_upload_pic.click()
+        profile_picture.send_keys("C:\\Users\\Farida Uni\\Downloads\\flower.png")
+        submit = self.selenium.find_element(By.NAME, "submit")
+        submit.click()
