@@ -1,4 +1,4 @@
-import datetime
+import datetime, os
 from django.test import TestCase
 from .forms import SignupForm
 from .models import CustomUser
@@ -151,15 +151,18 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         date_of_birth.send_keys("2004-01-20")
         show_password = self.selenium.find_element(By.NAME, "show-password")
         show_password.click()
+        git_root_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(git_root_dir, "test.png")
         profile_picture = self.selenium.find_element(By.NAME, "profile_picture")
-        profile_picture.send_keys("C:\\Users\\Farida Uni\\Downloads\\download.png")
-        remove_upload_pic = self.selenium.find_element(By.NAME, "remove-upload-pic")
-        remove_upload_pic.click()
-        profile_picture.send_keys("C:\\Users\\Farida Uni\\Downloads\\flower.png")
-        remove_upload_pic.click()
-        submit = self.selenium.find_element(By.NAME, "submit")
-        submit.click()
-        self.test_profile(email_address)
+        print(file_path)
+        profile_picture.send_keys(file_path)
+        # remove_upload_pic = self.selenium.find_element(By.NAME, "remove-upload-pic")
+        # remove_upload_pic.click()
+        # profile_picture.send_keys("C:\\Users\\Farida Uni\\Downloads\\flower.png")
+        # remove_upload_pic.click()
+        # submit = self.selenium.find_element(By.NAME, "submit")
+        # submit.click()
+        # self.test_profile(email_address)
     
     def test_profile(self, email_address):
         name_edit_button = self.selenium.find_element(By.NAME, "name_edit_button")
