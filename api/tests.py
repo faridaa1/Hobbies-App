@@ -7,6 +7,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions 
 
 # https://docs.djangoproject.com/en/5.1/intro/tutorial05/
 
@@ -119,6 +121,9 @@ class SignupViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 'http://localhost:5173/profile/')
 
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
     @classmethod
@@ -134,11 +139,12 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     
     def test_signup(self):
         password = "testing123"
+        email_address = "test223821@gmail.com"
         self.selenium.get(f"{self.live_server_url}/signup")
         full_name = self.selenium.find_element(By.NAME, "name")
-        full_name.send_keys("Farida Addo")
+        full_name.send_keys(email_address)
         email = self.selenium.find_element(By.NAME, "email")
-        email.send_keys("f.addo@se00.qmul.ac.uk")
+        email.send_keys(email_address)
         password_input = self.selenium.find_element(By.NAME, "password")
         password_input.send_keys(password)
         date_of_birth = self.selenium.find_element(By.NAME, "date_of_birth")
@@ -150,5 +156,15 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         remove_upload_pic = self.selenium.find_element(By.NAME, "remove-upload-pic")
         remove_upload_pic.click()
         profile_picture.send_keys("C:\\Users\\Farida Uni\\Downloads\\flower.png")
+        remove_upload_pic.click()
         submit = self.selenium.find_element(By.NAME, "submit")
         submit.click()
+        self.test_profile(email_address)
+    
+    def test_profile(self, email_address):
+        name_edit_button = self.selenium.find_element(By.NAME, "name_edit_button")
+        name_edit_button.click()
+        name = self.selenium.find_element(By.NAME, "name")
+        name.send_keys("New Name")
+        name_save_button = self.selenium.find_element(By.NAME, "name_save_button")
+        name_save_button.click()

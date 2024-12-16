@@ -36,9 +36,6 @@
                 method:'GET', 
                 credentials: 'include'
             }); 
-            if (!userResponse.ok) {
-                
-            }
             let userData: { user: CustomUser } = await userResponse.json();
             let user: CustomUser = userData.user;
 
@@ -74,7 +71,6 @@
                     userStore.csrf = csrftoken[1]
                 }
             }
-            console.log(document.cookie, useUserStore().csrf)
         }
     });
 </script>

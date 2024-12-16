@@ -68,16 +68,13 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
 def check_password_api_view(request: HttpRequest, id: int, password: str) -> JsonResponse:
     if request == 'GET':
         user = get_object_or_404(CustomUser, pk=id)
-        return JsonResponse({'match': user.check_password(currentPassword)})
+        return JsonResponse({'match': user.check_password(password)})
     return JsonResponse({})
 
 def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
     """Defining PUT request handling for profile data"""
     if request.method == 'PUT':
-        user = get_object_or_404(CustomUser, pk=id)
-        if field == 'pic': 
-            user.profile_picture = request.FILES.get('profile_picture') 
-        elif field == 'name':
+        if field == 'name':
             user.name = json.loads(request.body)
         elif field == 'email':
             user.email = json.loads(request.body) 
@@ -93,6 +90,13 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
                 return JsonResponse(user.as_dict())
         user.save()
         return JsonResponse(user.as_dict())
+    elif request.method == 'POST':
+        user = get_object_or_404(CustomUser, pk=id)
+        if field == 'pic': 
+            user.profile_picture = request.FILES.get('profile_picture') 
+        user.save()
+        return JsonResponse(user.as_dict())
+
     return JsonResponse({})
 
 

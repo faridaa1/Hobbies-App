@@ -17,9 +17,9 @@
             <div class="d-flex flex-column gap-2">
                 <label>Full Name</label>
                 <div class="d-flex">
-                    <input class="border border-secondary rounded px-2 me-2 w-100" type="text" :disabled="!isEditingName" v-model="name" @input="validateName">
-                    <button type="button" v-if="!isEditingName"class="btn btn-primary p-2" @click="isEditingName=true"><i class="bi bi-pencil d-flex"></i></button>
-                    <button type="button" :disabled="!validName" v-if="isEditingName"class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
+                    <input name="name" class="border border-secondary rounded px-2 me-2 w-100" type="text" :disabled="!isEditingName" v-model="name" @input="validateName">
+                    <button name="name_edit_button" type="button" v-if="!isEditingName"class="btn btn-primary p-2" @click="isEditingName=true"><i class="bi bi-pencil d-flex"></i></button>
+                    <button name="name_save_button" type="button" :disabled="!validName" v-if="isEditingName"class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
                     <button type="button" v-if="isEditingName"class="btn btn-danger" @click="reset('name')"><i class="bi bi-arrow-counterclockwise"></i></button>
                 </div>
             </div>
@@ -27,7 +27,7 @@
             <form class="d-flex flex-column gap-2 mt-3" @submit="validateEmail">
                 <label>Email</label>
                 <div class="d-flex">
-                    <input class="border border-secondary rounded px-2 me-2 w-100" type="email" ref="email" :disabled="!isEditingEmail" v-model="email" @input="validEmail=false">
+                    <input name="profile_email" class="border border-secondary rounded px-2 me-2 w-100" type="email" ref="email" :disabled="!isEditingEmail" v-model="email" @input="validEmail=false">
                     <button type="button" v-if="!isEditingEmail" class="btn btn-primary p-2" @click="isEditingEmail=true"><i class="bi bi-pencil d-flex"></i></button>
                     <button type="submit" v-if="isEditingEmail && !validEmail"class="btn btn-secondary me-1">Check</button>
                     <button type="button" v-if="isEditingEmail && validEmail"class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
