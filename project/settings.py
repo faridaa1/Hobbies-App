@@ -67,16 +67,16 @@ ROOT_URLCONF = 'project.urls'
 
 CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = False # only for selenium testing, unless theres another way
+SESSION_COOKIE_SECURE = False 
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'http://127.0.0.1:5173' 
+    'http://127.0.0.1:5173'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173', 
-    'http://127.0.0.1:5173' 
+    'http://127.0.0.1:5173'
 ]
 
 TEMPLATES = [

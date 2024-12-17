@@ -18,7 +18,6 @@ def signup(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         # Create SignupForm instance and populate w/ form data
         form = SignupForm(request.POST, request.FILES)
-        print(request.FILES)
         if form.is_valid():
             # Create user from valid form
             data = form.cleaned_data
@@ -34,6 +33,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 request, username=data['email'], password=data['password'])
             if user is not None:
                 login(request, user)  # logs in user and saves id in session
+                print(request.session.session_key)
             return redirect('http://localhost:5173/profile/')
     else:
         form = SignupForm()
