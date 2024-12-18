@@ -2,8 +2,9 @@ from datetime import datetime
 import json
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib import auth
 from django.contrib.auth import authenticate, login
-from .forms import SignupForm
+from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 
 URL = 'http://localhost:5173/'
@@ -32,13 +33,34 @@ def signup(request: HttpRequest) -> HttpResponse:
             user = authenticate(  # verifies details
                 request, username=data['email'], password=data['password'])
             if user is not None:
-                login(request, user)  # logs in user and saves id in session
+                auth.login(request, user)  # logs in user and saves id in session
                 print(request.session.session_key)
             return redirect('http://localhost:5173/profile/')
     else:
         form = SignupForm()
 
     return render(request, 'api/spa/signup.html', {"form": form})
+
+
+def login(request: HttpRequest) -> HttpResponse:
+    """View for user login (using ssr)"""
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=email, password=password)
+
+            if user is not None:
+                auth.login(request, user)
+                return redirect('http://localhost:5173/profile/')
+            else:
+                form.add_error(None, "Invalid email or password")
+    else:
+        form = LoginForm()
+    
+    return render(request, 'api/spa/login.html', {"form": form})
 
 
 def users_api_view(request: HttpRequest) -> JsonResponse:
