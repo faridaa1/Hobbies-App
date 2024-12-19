@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
+from selenium.webdriver.common.keys import Keys
 
 # https://docs.djangoproject.com/en/5.1/intro/tutorial05/
 
@@ -139,9 +140,10 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     def test_signup(self):
         password = "testing123"
         email_address = "test2231@gmail.com"
+        name = "testing"
         self.selenium.get(f"{self.live_server_url}/signup")
         full_name = self.selenium.find_element(By.NAME, "name")
-        full_name.send_keys(email_address)
+        full_name.send_keys(name)
         email = self.selenium.find_element(By.NAME, "email")
         email.send_keys(email_address)
         password_input = self.selenium.find_element(By.NAME, "password")
@@ -157,12 +159,49 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         file_path = os.path.join(git_root_dir, "test2.png")
         submit = self.selenium.find_element(By.NAME, "submit")
         submit.click()
-        self.test_profile(email_address)
+        self.test_profile(password)
     
-    def test_profile(self, email_address):
-        name_edit_button = self.selenium.find_element(By.NAME, "name_edit_button")
-        name_edit_button.click()
+
+    #login here
+
+
+    def test_profile(self, password):
+        name_edit = self.selenium.find_element(By.NAME, "name_edit")
+        name_edit.click()
         name = self.selenium.find_element(By.NAME, "name")
+        name.clear()
         name.send_keys("New Name")
-        name_save_button = self.selenium.find_element(By.NAME, "name_save_button")
-        name_save_button.click()
+        name_save = self.selenium.find_element(By.NAME, "name_save")
+        name_save.click()
+        email_edit = self.selenium.find_element(By.NAME, "email_edit")
+        email_edit.click()
+        email = self.selenium.find_element(By.NAME, "email")
+        email.send_keys(".uk")
+        email_check = self.selenium.find_element(By.NAME, "email_check")
+        email_check.click()
+        email_save = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "email_save")))
+        email_save.click()
+        password_edit = self.selenium.find_element(By.NAME, "password_edit")
+        password_edit.click()
+        current_password = self.selenium.find_element(By.NAME, "current_password")
+        current_password.send_keys(password)
+        new_password = self.selenium.find_element(By.NAME, "new_password")
+        new_pass = password+"1"
+        new_password.send_keys(new_pass)
+        new_password2 = self.selenium.find_element(By.NAME, "new_password2")
+        new_password2.send_keys(new_pass)
+        password_check = self.selenium.find_element(By.NAME, "password_check")
+        password_check.click()
+        password_save = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "password_save")))
+        password_save.click()
+        dob_edit = self.selenium.find_element(By.NAME, "dob_edit")
+        dob_edit.click()
+        dob = self.selenium.find_element(By.NAME, "dob")
+        dob.send_keys("22-03-2004")
+        dob_save = self.selenium.find_element(By.NAME, "dob_save")
+        dob_save.click()
+
+
+

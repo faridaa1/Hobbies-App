@@ -34,7 +34,6 @@ def signup(request: HttpRequest) -> HttpResponse:
                 request, username=data['email'], password=data['password'])
             if user is not None:
                 auth.login(request, user)  # logs in user and saves id in session
-                print(request.session.session_key)
             return redirect('http://localhost:5173/profile/')
     else:
         form = SignupForm()
