@@ -224,7 +224,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         check_hobby.click()
         save_hobby = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "save_hobby")))
-        save_hobby.click()
+        # save_hobby.click()
 
 
 

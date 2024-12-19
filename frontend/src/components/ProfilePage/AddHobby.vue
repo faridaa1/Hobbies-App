@@ -128,7 +128,7 @@
                         this.errorText.hobby_name = 'Name cannot start or end in space'
                     } else if (this.data.newHobby.hobby_name.includes(".")) {
                         this.errorText.hobby_name = 'Name cannot contain a full stop'
-                    } else if (this.data.newHobby.hobby_name.match(/[^a-zA-Z0-9 ]/)) {
+                    } else if (this.data.newHobby.hobby_name.match(/[^a-zA-Z0-9 .]/)) {
                         this.errorText.hobby_name = 'No special characters'
                     } else if (!this.data.newHobby.hobby_name.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/)) {
                         this.errorText.hobby_name = 'Only one space between words'
@@ -141,15 +141,11 @@
                     // hobby description validation
                     if (!this.data.newHobby.hobby_description || this.data.newHobby.hobby_description.trim().length === 0) {
                         this.errorText.hobby_description = 'Enter a description'
-                    } else if (this.data.newHobby.hobby_description.match(/[^a-zA-Z0-9 ]/)) {
+                    } else if (this.data.newHobby.hobby_description.match(/[^a-zA-Z0-9 \.]/)) {
                         this.errorText.hobby_description = 'No special characters'
-                    } else if (this.data.newHobby.hobby_description.match(/^[ ]+.*[ ]*$|[ ]*.*[ ]+$/)) {
-                        this.errorText.hobby_description = 'Description cannot start or end in space'
-                    } else if (this.data.newHobby.hobby_description.match(/\.[\.]+/)) {
-                        this.errorText.hobby_description = 'Description can only end in one full stop'
                     } 
                     else if (!this.data.newHobby.hobby_description.match(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*\.?$/)) {
-                        this.errorText.hobby_description = 'No special characters.<br>Only one space between words'
+                        this.errorText.hobby_description = 'Invalid format'
                     } else {
                         this.errorText.hobby_description = ''
                     }
