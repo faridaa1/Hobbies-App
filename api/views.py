@@ -62,6 +62,11 @@ def login(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/login.html', {"form": form})
 
 
+def logout(request: HttpRequest) -> JsonResponse:
+    auth.logout(request)
+    return JsonResponse({'login page': 'http://localhost:8000/login/'})
+
+
 def users_api_view(request: HttpRequest) -> JsonResponse:
     """Returns all users for a global store"""
     return JsonResponse({
@@ -162,8 +167,7 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
                 level = POST['newUserHobby']['level'],
                 start_date = POST['newUserHobby']['start_date']
             )
-        return JsonResponse(newUserHobby.as_dict()
-        )
+        return JsonResponse(newUserHobby.as_dict())
     elif request.method == 'DELETE':
         id = id.split('&')
         user = CustomUser.objects.get(pk=id[0])

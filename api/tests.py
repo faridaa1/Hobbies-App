@@ -1,4 +1,5 @@
 import datetime, os
+import django
 from django.test import TestCase
 from .forms import SignupForm
 from .models import CustomUser
@@ -124,7 +125,6 @@ class SignupViewTests(TestCase):
 
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
-    host = "localhost"
     port = 8000
 
     @classmethod
@@ -132,10 +132,10 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         super().setUpClass()
         cls.selenium = WebDriver()
 
-    # @classmethod idk what this does
+    # @classmethod 
     # def tearDownClass(cls):
     #     cls.selenium.quit()
-    #     super.tearDownClass()
+    #     super().tearDownClass()
     
     def test_signup(self):
         password = "testing123"
@@ -224,7 +224,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         check_hobby.click()
         save_hobby = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "save_hobby")))
-        # save_hobby.click()
+        save_hobby.click()
 
 
 

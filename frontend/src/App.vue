@@ -15,7 +15,7 @@
             <router-link :to="{name: 'Profile Page'}">
                 My Profile
             </router-link>
-            <!-- <button type="button" class="btn btn-primary ms-5">Sign Out</button> -->
+            <button type="button" class="btn btn-primary ms-5" @click="signout">Sign Out</button>
         </div>
         <RouterView class="flex-shrink-0" />
     </main>
@@ -70,6 +70,15 @@
                 if (csrftoken[0] === 'csrftoken') {
                     userStore.csrf = csrftoken[1]
                 }
+            }
+        }, 
+        methods: {
+            async signout() : Promise<void> {
+                let logoutPageResponse: Response = await fetch("http://localhost:8000/logout/", {
+                    credentials: 'include', 
+                })
+                let logoutPage: {'login page' : string} = await logoutPageResponse.json()
+                window.location.href = logoutPage["login page"]
             }
         }
     });
