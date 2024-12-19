@@ -125,8 +125,8 @@ class SignupViewTests(TestCase):
 class ProfileSeleniumTests(StaticLiveServerTestCase):
     host = "localhost"
     port = 8000
-    @classmethod
     
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.selenium = WebDriver()
