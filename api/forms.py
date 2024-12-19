@@ -72,3 +72,18 @@ class SignupForm(ModelForm):
             if pic.image.format != 'PNG':
                 raise ValidationError('You can only upload .png files')
         return pic
+    
+
+class LoginForm(forms.Form):
+    """Django form used to log in a user"""
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder':'email'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'password'}))
+    
+    def __init__(self, *args, **kwargs):
+        """Overriding form constructor"""
+        super(LoginForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update(
+                {'class': 'form-control',  # For bootstrap styling
+                 'placeholder': field}  # Allows bootstrap form animation
+            )
