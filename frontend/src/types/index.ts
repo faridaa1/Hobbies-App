@@ -2,11 +2,10 @@ export interface CustomUser {
     id: number;
     name: string;
     email: string;
-    password: string;
-    date_of_birth: Date;
-    hobbies: UserHobby[];
+    date_of_birth: string;
+    hobbies: Hobby[];
     friends: Friendship[];
-    profile_picture: string | null
+    profile_picture: string;
 }
 
 export interface Hobby {
@@ -15,15 +14,17 @@ export interface Hobby {
     hobby_description: string
 }
 
-export interface UserHobby { 
-    user: number;
-    hobby: number;
+export interface UserHobby {
+    user: CustomUser;
+    hobby: Hobby;
     level: 'Beginner' | 'Intermediate' | 'Advanced';
-    start_date: Date
+    start_date: String;
 }
 
 export interface Friendship {
-    user1: number;
-    user2: number;
-    status: 'Pending' | 'Accepted'
+    id: number;
+    user_name: string;
+    user_profile_picture: string;
+    status: 'Pending' | 'Accepted';
+    sent: boolean;
 }

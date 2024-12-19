@@ -1,5 +1,6 @@
 from typing import Any
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.forms import ValidationError
 from django.utils.timezone import now
@@ -27,7 +28,7 @@ class CustomUser(AbstractUser):
     """Defines the custom user model."""
     name = models.CharField(max_length=150, blank=False)
     email = models.EmailField(unique=True, null=False, blank=False)
-    date_of_birth = models.DateField(null=False, blank=False)
+    date_of_birth = models.DateField(null=True, blank=False)
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=False, blank=True)
     hobbies = models.ManyToManyField(Hobby, through='UserHobby', blank=True, related_name="users")
     friends = models.ManyToManyField(to='self', symmetrical=True, through='Friendship', blank=True)
@@ -53,10 +54,9 @@ class CustomUser(AbstractUser):
             "username": self.username,
             "name": self.name,
             "email": self.email,
-            "password": self.password,
             "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
-            "hobbies": [hobby.name for hobby in self.hobbies.all()],
-            "friends": [friendship.user1 for friendship in self.friends.all()],
+            "hobbies": [hobby.as_dict() for hobby in self.hobbies.all()],
+            "friends": [friendship.as_dict(self) for friendship in Friendship.objects.filter(Q(user1=self) | Q(user2=self))],
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
         }
 
@@ -83,12 +83,22 @@ class Friendship(models.Model):
         """Return a string repsentation for Friendship."""
         return f"{self.user1} & {self.user2}: {self.status}"
     
-    def as_dict(self) -> dict[str, Any]:
+    def as_dict(self, current_user) -> dict[str, Any]:
+        user: CustomUser
+        sent:bool = False
+        if self.user1 == current_user:
+            user = self.user2
+            sent = True
+        else:
+            user = self.user1
+
         """Defining dictionary representation of Friendship."""
         return {
-            "user1" : self.user1.id,
-            "user2" : self.user2.id,
-            "status" : self.status
+            "id" : self.id,
+            "user_name" : user.name,
+            "user_profile_picture" : user.profile_picture.url if user.profile_picture else None,
+            "status" : self.status,
+            "sent" : sent
         }
 
     class Meta:
@@ -119,8 +129,8 @@ class UserHobby(models.Model):
     def as_dict(self) -> dict[str, Any]:
         """Defining dictionary representation of UserHobby."""
         return {
-            "user" : self.user.id,
-            "hobby" : self.hobby.id,
+            "user" : self.user.as_dict(),
+            "hobby" : self.hobby.as_dict(),
             "level" : self.level,
             "start_date" : self.start_date
         }

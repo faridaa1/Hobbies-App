@@ -2,13 +2,13 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <h1>Friend Requests Sent</h1>
         <hr>
-        <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-5 w-100" v-for="(friend, index) in friends">
+        <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-5 w-100" v-for="friend in friends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
-                <img v-if="friend.profile_picture" style="width: 70px; height:70px; object-fit: cover;" class="rounded-circle" :src="friend.profile_picture" alt="">
-                <i v-if="!friend.profile_picture" class="bi bi-person-circle p-0" style="font-size: 70px; line-height: 0"></i>
-                <div class="p-2 rounded w-100">{{ friend.name }}</div>
+                <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;" class="rounded-circle" :src="friend.user_profile_picture">
+                <i v-if="!friend.user_profile_picture" class="bi bi-person-circle p-0" style="font-size: 70px; line-height: 0"></i>
+                <div class="p-2 rounded w-100">{{ friend.user_name }}</div>
             </div>
-            <button type="button" class="btn btn-danger px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;">
+            <button type="button" class="btn btn-danger px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;" @click="unsend(friend.id)">
                 Cancel
                 <!-- <i class="bi bi-trash-fill"></i> -->
             </button>
@@ -17,54 +17,38 @@
   </template>
   
   <script lang="ts">
-      import { defineComponent } from "vue";
+    import { defineComponent } from "vue";
+    import { CustomUser, Friendship } from "../../types";
+    import { useUserStore } from "../../stores/user";
 
-      export default defineComponent({
-          data() {
-              return {
-                //   title: "Other Page",
-                friends: [
-                    { 
-                    "name": "Person McPerson",
-                    "profile_picture": "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649"
-                    },
-                    { 
-                    "name": "Alice Wonderland",
-                    "profile_picture": ""
-                    },
-                    { 
-                    "name": "Bob Builder",
-                    "profile_picture": "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649"
-                    },
-                    { 
-                    "name": "Charlie Brown",
-                    "profile_picture": "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649"
-                    },
-                    { 
-                    "name": "Daisy Duck",
-                    "profile_picture": "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649"
-                    },
-                    { 
-                    "name": "Eve Online",
-                    "profile_picture": ""
-                    },
-                    { 
-                    "name": "Frank Castle",
-                    "profile_picture": "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649"
-                    },
-                    { 
-                    "name": "Grace Hopper",
-                    "profile_picture": ""
-                    }
-                ]
+    export default defineComponent({
+        methods: {
+            async unsend(id: number): Promise<void> {
+                if (useUserStore().csrf !== '') {
+                    useUserStore().updateFriendship(id, false)
+                    await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
+                        method:'POST', 
+                        credentials: 'include', 
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            "X-CSRFToken": useUserStore().csrf
+                        },
+                        body: JSON.stringify(false),
+                    }) 
+                }
             }
         },
-        async mounted() {
-            // this.user = data
-            // const store = useUserStore()
-            // store.saveUser(user_id)
-          }
-      })
+        computed: {
+            user(): CustomUser {
+                return useUserStore().user
+            }, friends(): Friendship[] {
+                if (this.user && this.user.friends) {
+                    return this.user.friends.filter(friendship => friendship.status === 'Pending' && friendship.sent)
+                }
+                return []
+            }
+        }
+    })
   </script>
   
   <style scoped>

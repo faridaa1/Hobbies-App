@@ -1,12 +1,16 @@
-import datetime
+import datetime, os
 from django.test import TestCase
 from .forms import SignupForm
 from .models import CustomUser
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions 
 
 # https://docs.djangoproject.com/en/5.1/intro/tutorial05/
-
 
 def valid_signup_data() -> dict:
     """Returns a dict of valid data for a Signup Form"""
@@ -116,3 +120,50 @@ class SignupViewTests(TestCase):
             reverse('signup'), data=valid_signup_data())  # Uses url with name 'signup'
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 'http://localhost:5173/profile/')
+
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+
+
+class ProfileSeleniumTests(StaticLiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = WebDriver()
+        cls.selenium.implicitly_wait(100)
+
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.selenium.quit()
+    #     super.tearDownClass()
+    
+    def test_signup(self):
+        password = "testing123"
+        email_address = "test223821@gmail.com"
+        self.selenium.get(f"{self.live_server_url}/signup")
+        full_name = self.selenium.find_element(By.NAME, "name")
+        full_name.send_keys(email_address)
+        email = self.selenium.find_element(By.NAME, "email")
+        email.send_keys(email_address)
+        password_input = self.selenium.find_element(By.NAME, "password")
+        password_input.send_keys(password)
+        date_of_birth = self.selenium.find_element(By.NAME, "date_of_birth")
+        date_of_birth.send_keys("2004-01-20")
+        show_password = self.selenium.find_element(By.NAME, "show-password")
+        show_password.click()
+        git_root_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(git_root_dir, "test.png")
+        profile_picture = self.selenium.find_element(By.NAME, "profile_picture")
+        profile_picture.send_keys(file_path)
+        file_path = os.path.join(git_root_dir, "test2.png")
+        submit = self.selenium.find_element(By.NAME, "submit")
+        submit.click()
+        self.test_profile(email_address)
+    
+    def test_profile(self, email_address):
+        name_edit_button = self.selenium.find_element(By.NAME, "name_edit_button")
+        # name_edit_button.click()
+        # name = self.selenium.find_element(By.NAME, "name")
+        # name.send_keys("New Name")
+        # name_save_button = self.selenium.find_element(By.NAME, "name_save_button")
+        # name_save_button.click()
