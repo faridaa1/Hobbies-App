@@ -3,18 +3,20 @@
 </style>
 <template>
     <main class="container pt-4">
-        <div>
-            <router-link :to="{name: 'Main Page'}">
-                Main Page
-            </router-link>
-            |
-            <router-link :to="{name: 'Other Page'}">
-                Other Page
-            </router-link>
-            |
-            <router-link :to="{name: 'Profile Page'}">
-                My Profile
-            </router-link>
+        <div class="d-flex justify-content-between">
+            <div>
+                <router-link :to="{name: 'Main Page'}">
+                    Main Page
+                </router-link>
+                |
+                <router-link :to="{name: 'Other Page'}">
+                    Other Page
+                </router-link>
+                |
+                <router-link :to="{name: 'Profile Page'}">
+                    My Profile
+                </router-link>
+            </div>
             <button type="button" class="btn btn-primary ms-5" @click="signout">Sign Out</button>
         </div>
         <RouterView class="flex-shrink-0" />
