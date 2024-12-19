@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
 
@@ -121,25 +121,24 @@ class SignupViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 'http://localhost:5173/profile/')
 
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
+    host = "localhost"
+    port = 8000
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.selenium = WebDriver()
-        cls.selenium.implicitly_wait(100)
 
-    # @classmethod
+    # @classmethod idk what this does
     # def tearDownClass(cls):
     #     cls.selenium.quit()
     #     super.tearDownClass()
     
     def test_signup(self):
         password = "testing123"
-        email_address = "test223821@gmail.com"
+        email_address = "test2231@gmail.com"
         self.selenium.get(f"{self.live_server_url}/signup")
         full_name = self.selenium.find_element(By.NAME, "name")
         full_name.send_keys(email_address)
@@ -162,8 +161,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     
     def test_profile(self, email_address):
         name_edit_button = self.selenium.find_element(By.NAME, "name_edit_button")
-        # name_edit_button.click()
-        # name = self.selenium.find_element(By.NAME, "name")
-        # name.send_keys("New Name")
-        # name_save_button = self.selenium.find_element(By.NAME, "name_save_button")
-        # name_save_button.click()
+        name_edit_button.click()
+        name = self.selenium.find_element(By.NAME, "name")
+        name.send_keys("New Name")
+        name_save_button = self.selenium.find_element(By.NAME, "name_save_button")
+        name_save_button.click()
