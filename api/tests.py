@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
 
@@ -120,9 +120,6 @@ class SignupViewTests(TestCase):
             reverse('signup'), data=valid_signup_data())  # Uses url with name 'signup'
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, 'http://localhost:5173/profile/')
-
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
