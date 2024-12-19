@@ -2,7 +2,8 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <div class="d-flex justify-content-between">
             <h1>My Hobbies</h1>
-            <button 
+            <button
+                name = "add_hobby" 
                 type="button" 
                 class="border-0 bg-transparent text-primary"
                 :data-bs-toggle="'modal'"

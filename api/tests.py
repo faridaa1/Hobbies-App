@@ -199,9 +199,42 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         dob_edit = self.selenium.find_element(By.NAME, "dob_edit")
         dob_edit.click()
         dob = self.selenium.find_element(By.NAME, "dob")
+        dob.click()
         dob.send_keys("22-03-2004")
         dob_save = self.selenium.find_element(By.NAME, "dob_save")
         dob_save.click()
+        hobbies = self.selenium.find_element(By.NAME, "hobbies")
+        hobbies.click()
+        add_hobby = self.selenium.find_element(By.NAME, "add_hobby")
+        add_hobby.click()
+        hobby_name = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "hobby_name")))
+        hobby_name.click()
+        hobby_name.send_keys("Baking")
+        hobby_description = self.selenium.find_element(By.NAME, "hobby_description")
+        hobby_description.send_keys("The art of baking things.")
+        level = self.selenium.find_element(By.NAME, "level")
+        level.click()
+        level_option = self.selenium.find_element(By.NAME, "level_option")
+        level_option.click()
+        hobby_start_date = self.selenium.find_element(By.NAME, "hobby_start_date")
+        hobby_start_date.click()
+        hobby_start_date.send_keys("10-10-2010")
+        check_hobby = self.selenium.find_element(By.NAME, "check_hobby")
+        check_hobby.click()
+        save_hobby = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "save_hobby")))
+        save_hobby.click()
+
+
+
+
+
+
+
+
+
+
 
 
 
