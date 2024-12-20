@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-  </template>
+</template>
   
 <script lang="ts">
     import { defineComponent } from "vue";
@@ -146,7 +146,7 @@
             reset(field: string): void {
                 if (field === 'name') {
                     this.name = this.user.name; 
-                    this.errorText.name=''; 
+                    this.errorText.name = ''; 
                     this.isEditingName = false;
                 } else if (field === 'email') {
                     this.email = this.user.email; 
@@ -154,9 +154,9 @@
                     this.isEditingEmail = false;
                 } else if (field === 'password') {
                     this.password.newPassword =''; 
-                    this.password.oldPassword=''; 
-                    this.password.newPassword2=''; 
-                    this.errorText.password=''; 
+                    this.password.oldPassword = ''; 
+                    this.password.newPassword2 = ''; 
+                    this.errorText.password = ''; 
                     this.isEditingPassword=false;
                 } else if (field === 'dob') {
                     this.dob = this.user.date_of_birth; 
@@ -179,7 +179,7 @@
                     this.errorText.password = "Current and New passwords are the same"
                 } else {
                     let response: Response = await fetch(`http://localhost:8000/api/user/${this.user.id}/password/${this.password.oldPassword}`, {
-                        method:'GET', 
+                        method: 'GET', 
                         credentials: 'include', 
                         headers: { 
                             "X-CSRFToken": useUserStore().csrf
@@ -197,8 +197,7 @@
                 this.validPassword = false
             }, validateEmail(event: Event): void {
                 event.preventDefault()
-                const usersStore = useUsersStore()
-                if (usersStore.users.filter(userX => userX.id !== this.user.id).map(user => user.email).includes(this.email)) {
+                if (useUsersStore().users.filter(userX => userX.id !== this.user.id).map(user => user.email).includes(this.email)) {
                     this.errorText.email = 'Email already exists'
                 } else {
                     this.errorText.email = ''
@@ -266,7 +265,7 @@
                             this.validPassword = false
                         }
                         response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
-                            method:'PUT', 
+                            method: 'PUT', 
                             credentials: 'include', 
                             headers: { 
                                 "Content-Type": 'application/json',
