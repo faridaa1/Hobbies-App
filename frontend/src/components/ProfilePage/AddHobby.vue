@@ -46,7 +46,7 @@
                     <span class="text-danger">*</span> - Required field
                 </div>
             <div class="mt-2" v-if="filteredHobbies.length > 1">
-                <button type="button" class="btn btn-secondary" @click="hobbySelected=!hobbySelected">
+                <button type="button" class="btn btn-secondary" @click="updateHobbySelected">
                     {{ hobbySelected ? 'Add a New Hobby Instead' : 'Select a Hobby Instead' }}
                 </button>
             </div>
@@ -98,6 +98,18 @@
             }
         },
         methods: {
+            updateHobbySelected() : void {
+                this.hobbySelected = !this.hobbySelected
+                if (!this.hobbySelected) {
+                    this.data.newHobby.hobby_description = ""
+                    this.data.newHobby.hobby_name = ""
+                }
+                this.errorText = {
+                    hobby_name: "",
+                    hobby_description: "",
+                    start_date: ""
+                }
+            },
             resetFields() : void {
                 this.errorText = {
                     hobby_name: "",
@@ -189,12 +201,17 @@
                         },
                         body: JSON.stringify(this.data),
                     }) 
-                    let userHobby: UserHobby = await response.json()
+                    let userHobby: {user_hobbies: UserHobby} = await response.json()
+                    if (Object.keys(userHobby.user_hobbies).length === 0) {
+                        window.confirm('Failed to make changes')
+                        return
+                    }
+                    console.log(userHobby.user_hobbies)
                     if (this.data.newHobby.hobby_id === -1) {
                         // update with recently added hobby
-                        useHobbiesStore().addHobby(userHobby.hobby)
+                        useHobbiesStore().addHobby(userHobby.user_hobbies.hobby)
                     } 
-                    useUserStore().addHobby(userHobby)
+                    useUserStore().addHobby(userHobby.user_hobbies)
 
                     // resetting values
                     this.data = {
@@ -212,14 +229,14 @@
                 return useUserStore().user;
             },
             hobbies(): Hobby[] {
-                return useHobbiesStore().hobbies || []
+                return useHobbiesStore().hobbies
             },
             myHobbies(): UserHobby[] {
                 return useUserStore().hobbies.user_hobbies;
-            }, filteredHobbies(): Hobby[] {
+            }, 
+            filteredHobbies(): Hobby[] {
                 if (this.hobbies && this.myHobbies) {
                     let hobbiesFiltered = this.hobbies.filter(hobby => !this.myHobbies.some(myHobby => myHobby.hobby.hobby_id === hobby.hobby_id))
-                    // hobbiesFiltered.forEach(hobby => { console.log(hobby.hobby_id, hobby.hobby_name)})
                     if (hobbiesFiltered.length > 0) {
                         this.data.newHobby.hobby_id = hobbiesFiltered[0].hobby_id
                     }

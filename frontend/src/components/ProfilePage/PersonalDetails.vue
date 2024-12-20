@@ -276,6 +276,11 @@
                         }) 
                     }
                     let data: CustomUser = await response.json()
+                    if (Object.keys(data).length === 0) {
+                        confirm('Unable to save')
+                        this.reset(field)
+                        return
+                    }
                     useUserStore().saveUser(data)
                     if (field === 'password') {
                         // extracting csrf token
