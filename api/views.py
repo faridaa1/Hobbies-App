@@ -64,7 +64,10 @@ def login(request: HttpRequest) -> HttpResponse:
 
 
 def logout(request: HttpRequest) -> JsonResponse:
-    auth.logout(request)
+    try:
+        auth.logout(request)
+    except:
+        pass
     return JsonResponse({'login page': 'http://localhost:8000/login/'})
 
 
@@ -74,7 +77,7 @@ def users_api_view(request: HttpRequest) -> JsonResponse:
         return JsonResponse({
             'users': [user.as_dict() for user in CustomUser.objects.all()],
         })
-    except Exception: 
+    except: 
         return JsonResponse({
                 'users': [],
         })
