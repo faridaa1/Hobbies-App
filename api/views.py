@@ -70,9 +70,14 @@ def logout(request: HttpRequest) -> JsonResponse:
 
 def users_api_view(request: HttpRequest) -> JsonResponse:
     """Returns all users for a global store"""
-    return JsonResponse({
-        'users': [user.as_dict() for user in CustomUser.objects.all()],
-    })
+    try:
+        return JsonResponse({
+            'users': [user.as_dict() for user in CustomUser.objects.all()],
+        })
+    except Exception: 
+        return JsonResponse({
+                'users': [],
+        })
 
 
 def hobbies_api_view(request: HttpRequest) -> JsonResponse:
