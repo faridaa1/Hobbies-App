@@ -254,15 +254,3 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         delete_hobby.click()
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.NAME, "delete_hobby")))
-
-
-
-
-
-
-
-
-
-
-
-
