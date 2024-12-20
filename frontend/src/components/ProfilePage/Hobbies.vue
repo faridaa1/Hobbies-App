@@ -60,7 +60,7 @@
         components: { AddHobby },
         data(): {userHobbies: UserHobby[] } {
             return {
-                userHobbies: [] as UserHobby[]
+                userHobbies: []
             }
         },
         methods: {
