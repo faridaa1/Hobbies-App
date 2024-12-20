@@ -17,7 +17,7 @@
                     My Profile
                 </router-link>
             </div>
-            <button type="button" class="btn btn-primary ms-5" @click="signout">Sign Out</button>
+            <button name="signout" type="button" class="btn btn-primary ms-5" @click="signout">Sign Out</button>
         </div>
         <RouterView class="flex-shrink-0" />
     </main>
@@ -39,6 +39,7 @@
                 credentials: 'include'
             }); 
             let userData: { user: CustomUser } = await userResponse.json();
+            console.log(userData)
             let user: CustomUser = userData.user;
 
             let usersResponse: Response = await fetch("http://localhost:8000/api/users/", {

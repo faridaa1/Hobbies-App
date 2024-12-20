@@ -37,7 +37,7 @@
                 <div>Start Date</div>
                 <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.start_date }}</div>
             </div>
-            <button class="text-primary border-0 bg-white fs-1" @click="deleteHobby(userHobby)">
+            <button name="delete_hobby" class="text-primary border-0 bg-white fs-1" @click="deleteHobby(userHobby)">
                 <i class="bi bi-trash-fill darken-hover bluebtn"></i>
             </button>
         </div>

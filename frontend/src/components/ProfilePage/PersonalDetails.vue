@@ -4,10 +4,10 @@
             <div class="position-relative">
                 <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`http://localhost:8000${user.profile_picture}`">
                 <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
-                <button type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="updatePicture($event)"><i class="bi bi-x fs-1"></i></button>
+                <button name="remove_profile" type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="updatePicture($event)"><i class="bi bi-x fs-1"></i></button>
             </div>
             <div class="d-flex align-items-center">
-                <input class="d-none" type="file" accept=".png" @change="(event) => { isEditingProfilePicture=true; updateProfile(event); }" id="file">
+                <input name="profile_pic" class="d-none" type="file" accept=".png" @change="(event) => { isEditingProfilePicture=true; updateProfile(event); }" id="file">
                 <label for="file" class="btn btn-primary">Select</label>
                 <span v-if="user.profile_picture" class="ms-2 text-success">File Selected</span>
                 <span v-if="!user.profile_picture" class="ms-2 text-danger">No File Selected</span>
