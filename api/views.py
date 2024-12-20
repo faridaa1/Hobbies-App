@@ -64,6 +64,7 @@ def login(request: HttpRequest) -> HttpResponse:
 
 
 def logout(request: HttpRequest) -> JsonResponse:
+    """Handling user logout"""
     try:
         auth.logout(request)
     except:
