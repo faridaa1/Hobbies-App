@@ -17,7 +17,7 @@ export default defineComponent({
   },
   computed: {
     user() {
-      const store = useUserStore()
+      const store: ReturnType<typeof useUserStore> = useUserStore()
       return store
     }
   }

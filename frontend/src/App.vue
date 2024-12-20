@@ -61,12 +61,12 @@
             let hobbies: Hobby[] = hobbiesData.hobbies;
             useHobbiesStore().setHobbies(hobbies)
             
-            let userHobbies = await fetch(`http://localhost:8000/api/user/hobbies/${user.id}/`, {
+            let userHobbies: Response = await fetch(`http://localhost:8000/api/user/hobbies/${user.id}/`, {
                 method:'GET', 
                 credentials: 'include', 
             }) 
             let userHobbiesResponse: { user_hobbies: UserHobby[] } = await userHobbies.json();
-            const userStore = useUserStore()
+            const userStore: ReturnType<typeof useUserStore> = useUserStore()
             userStore.saveUser(user)
             userStore.saveHobbies(userHobbiesResponse)
             

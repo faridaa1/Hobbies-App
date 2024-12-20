@@ -222,7 +222,7 @@
             async updateProfile(event: Event): Promise<void> {
                 let response: Response;
                 if (useUserStore().csrf !== '') {
-                    const input = event.target as HTMLInputElement
+                    const input: HTMLInputElement = event.target as HTMLInputElement
                     let file: FormData = new FormData()
                     let field: string;
                     if (this.isEditingProfilePicture) {
