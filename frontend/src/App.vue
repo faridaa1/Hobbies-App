@@ -39,7 +39,6 @@
                 credentials: 'include'
             }); 
             let userData: { user: CustomUser } = await userResponse.json();
-            console.log(userData)
             let user: CustomUser = userData.user;
 
             let usersResponse: Response = await fetch("http://localhost:8000/api/users/", {

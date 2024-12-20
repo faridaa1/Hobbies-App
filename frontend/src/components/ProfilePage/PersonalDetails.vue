@@ -277,6 +277,15 @@
                     }
                     let data: CustomUser = await response.json()
                     useUserStore().saveUser(data)
+                    if (field === 'password') {
+                        // extracting csrf token
+                        for (let cookie of document.cookie.split(';')) {
+                            const csrftoken: string[] = cookie.split('=')
+                            if (csrftoken[0] === 'csrftoken') {
+                                useUserStore().csrf = csrftoken[1]
+                            }
+                        }
+                    }
                 } 
             }
         },
