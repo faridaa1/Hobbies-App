@@ -45,12 +45,12 @@ def signup(request: HttpRequest) -> HttpResponse:
 def login(request: HttpRequest) -> HttpResponse:
     """View for user login (using ssr)"""
     if request.method == "POST":
-        form = LoginForm(request.POST)
+        form: LoginForm = LoginForm(request.POST)
 
         if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=email, password=password)
+            email: str = form.cleaned_data['email']
+            password: str = form.cleaned_data['password']
+            user: CustomUser | None = authenticate(request, username=email, password=password)
 
             if user is not None:
                 auth.login(request, user)
@@ -58,7 +58,7 @@ def login(request: HttpRequest) -> HttpResponse:
             else:
                 form.add_error(None, "Invalid email or password")
     else:
-        form = LoginForm()
+        form: LoginForm = LoginForm()
     
     return render(request, 'api/spa/login.html', {"form": form})
 
