@@ -54,9 +54,9 @@
             <button name="save_hobby" v-if="valid" type="button" class="mt-3 btn btn-primary mx-auto" data-bs-dismiss="modal" @click="submit">Add Hobby</button>
         </form>
     </div>
-  </template>
-  
-  <script lang="ts">
+</template>
+
+<script lang="ts">
     import { defineComponent } from "vue";
     import { useHobbiesStore } from "../../stores/hobbies";
     import { CustomUser, Hobby, UserHobby } from "../../types";
@@ -119,7 +119,7 @@
                 this.data = {
                     newHobby: {} as Hobby,
                     newUserHobby: {
-                        level: 'Beginner' // setting default level
+                        level: 'Beginner'
                     } as UserHobby,
                 }
             },
@@ -173,8 +173,8 @@
                 }
                 
                 if (this.errorText.hobby_name === '' && this.errorText.hobby_description === '' && this.errorText.start_date === '' 
-                    || this.hobbySelected && this.errorText.start_date === ''
-                ) {
+                    || this.hobbySelected && this.errorText.start_date === '' ) 
+                {
                     this.valid = true
                 } else {
                     this.valid = false
@@ -206,7 +206,6 @@
                         window.confirm('Failed to make changes')
                         return
                     }
-                    console.log(userHobby.user_hobbies)
                     if (this.data.newHobby.hobby_id === -1) {
                         // update with recently added hobby
                         useHobbiesStore().addHobby(userHobby.user_hobbies.hobby)
@@ -236,7 +235,7 @@
             }, 
             filteredHobbies(): Hobby[] {
                 if (this.hobbies && this.myHobbies) {
-                    let hobbiesFiltered = this.hobbies.filter(hobby => !this.myHobbies.some(myHobby => myHobby.hobby.hobby_id === hobby.hobby_id))
+                    let hobbiesFiltered: Hobby[] = this.hobbies.filter(hobby => !this.myHobbies.some(myHobby => myHobby.hobby.hobby_id === hobby.hobby_id))
                     if (hobbiesFiltered.length > 0) {
                         this.data.newHobby.hobby_id = hobbiesFiltered[0].hobby_id
                     }
