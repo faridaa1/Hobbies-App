@@ -2,10 +2,10 @@ import { defineStore } from 'pinia'
 import { CustomUser, Friendship, UserHobby } from '../types'
 
 export const useUserStore = defineStore('user', {
-    state: () => ({
+    state: (): { user: CustomUser, hobbies: { user_hobbies: UserHobby[] }, csrf: string} => ({
         user: {} as CustomUser,
-        hobbies: {} as { user_hobbies: UserHobby[] },
-        csrf: '' as string
+        hobbies: { user_hobbies: [] },
+        csrf: ''
     }),
     actions: {
         saveUser(user: CustomUser) {

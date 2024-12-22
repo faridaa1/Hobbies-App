@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth import authenticate, login
 from requests import Session
@@ -45,12 +45,12 @@ def signup(request: HttpRequest) -> HttpResponse:
 def login(request: HttpRequest) -> HttpResponse:
     """View for user login (using ssr)"""
     if request.method == "POST":
-        form = LoginForm(request.POST)
+        form: LoginForm = LoginForm(request.POST)
 
         if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=email, password=password)
+            email: str = form.cleaned_data['email']
+            password: str = form.cleaned_data['password']
+            user: CustomUser | None = authenticate(request, username=email, password=password)
 
             if user is not None:
                 auth.login(request, user)
@@ -58,7 +58,7 @@ def login(request: HttpRequest) -> HttpResponse:
             else:
                 form.add_error(None, "Invalid email or password")
     else:
-        form = LoginForm()
+        form: LoginForm = LoginForm()
     
     return render(request, 'api/spa/login.html', {"form": form})
 
@@ -109,7 +109,7 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
 def check_password_api_view(request: HttpRequest, id: int, password: str) -> JsonResponse:
     if request.method == 'GET':
         try:
-            user = CustomUser.objects.get(pk=id)
+            user: CustomUser = CustomUser.objects.get(pk=id)
             if user.check_password(password):
                 return JsonResponse({'match': True})
         except:
@@ -120,7 +120,7 @@ def check_password_api_view(request: HttpRequest, id: int, password: str) -> Jso
 def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
     """Defining PUT and POST request handling for profile data"""
     try:
-        user = CustomUser.objects.get(pk=id)
+        user: CustomUser = CustomUser.objects.get(pk=id)
         if request.method == 'PUT':
             if field == 'name':
                 user.name = json.loads(request.body)
@@ -132,7 +132,7 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
                 user.set_password(json.loads(request.body)['newPassword'])
                 user.save()
                 # needed as django ends session
-                user = authenticate(request, username=user.username, password=json.loads(request.body)['newPassword'])
+                user: CustomUser | None = authenticate(request, username=user.username, password=json.loads(request.body)['newPassword'])
                 if user is not None:
                     auth.login(request, user) 
                     return JsonResponse(user.as_dict())
@@ -152,29 +152,29 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
     """Defining GET, POST, and DELETE handling for UserHobby"""
     try:
         if request.method == 'GET':
-            user = get_object_or_404(CustomUser, pk=id)
+            user: CustomUser = CustomUser.objects.get(pk=id)
             return JsonResponse({
                 'user_hobbies' : [user_hobby.as_dict() for user_hobby in UserHobby.objects.filter(user=user)],
             }) 
         elif request.method == 'POST':
-            POST = json.loads(request.body)
+            POST: dict[str, str] = json.loads(request.body)
             if POST['newHobby']['hobby_id'] != -1:
                 # adding existing hobby
-                user1 = CustomUser.objects.get(pk=id)
-                newUserHobby = UserHobby.objects.create(
+                user1: CustomUser = CustomUser.objects.get(pk=id)
+                newUserHobby: UserHobby = UserHobby.objects.create(
                     user = user1,
                     hobby = Hobby.objects.get(pk=POST['newHobby']['hobby_id']),
                     level = POST['newUserHobby']['level'],
                     start_date = POST['newUserHobby']['start_date']
                 )
             else:
-                user1 = get_object_or_404(CustomUser, pk=id)
+                user1: CustomUser = CustomUser.objects.get(pk=id)
                 # creating hobby
-                newHobby = Hobby.objects.create(
+                newHobby: Hobby = Hobby.objects.create(
                     name = POST['newHobby']['hobby_name'],
                     description = POST['newHobby']['hobby_description']
                 )
-                newUserHobby = UserHobby.objects.create(
+                newUserHobby: UserHobby = UserHobby.objects.create(
                     user = user1,
                     hobby = newHobby,
                     level = POST['newUserHobby']['level'],
@@ -182,10 +182,10 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
                 )
             return JsonResponse({'user_hobbies' : newUserHobby.as_dict()})
         elif request.method == 'DELETE':
-            id = id.split('&')
-            user1 = CustomUser.objects.get(pk=id[0])
-            hobby1 = Hobby.objects.get(pk=id[1])
-            user_hobby = UserHobby.objects.get(user=user1, hobby=hobby1)
+            id: list[str] = id.split('&')
+            user1: CustomUser = CustomUser.objects.get(pk=id[0])
+            hobby1: Hobby = Hobby.objects.get(pk=id[1])
+            user_hobby: UserHobby = UserHobby.objects.get(user=user1, hobby=hobby1)
             user_hobby.delete()
     except:
         if request.method == 'DELETE':
@@ -197,7 +197,7 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
 def friendship_api_view(request: HttpRequest, id: int) -> JsonResponse:
     """Defining POST request handling for Friendship."""
     try:
-        friendship = Friendship.objects.get(pk=id)
+        friendship: Friendship = Friendship.objects.get(pk=id)
         if json.loads(request.body):
             # body is boolean related to whether friendship was accepted
             friendship.status = 'Accepted'

@@ -16,9 +16,9 @@
             </button>
         </div>
     </div>
-  </template>
-  
-  <script lang="ts">
+</template>
+
+<script lang="ts">
     import { defineComponent } from "vue";
     import { CustomUser, Friendship } from "../../types";
     import { useUserStore } from "../../stores/user";
@@ -57,7 +57,6 @@
         }
     })
 </script>
-  
+
 <style scoped>
 </style>
-  
