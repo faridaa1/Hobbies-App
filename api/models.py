@@ -45,7 +45,7 @@ class CustomUser(AbstractUser):
     
     def __str__(self) -> str:
         """Returns the username as a string."""
-        return self.username
+        return self.email
     
     def as_dict(self) -> dict[str, Any]:
         """Dictionary representation of the CustomUser object."""

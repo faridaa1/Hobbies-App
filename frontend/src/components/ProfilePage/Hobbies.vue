@@ -2,7 +2,8 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <div class="d-flex justify-content-between">
             <h1>My Hobbies</h1>
-            <button 
+            <button
+                name = "add_hobby" 
                 type="button" 
                 class="border-0 bg-transparent text-primary"
                 :data-bs-toggle="'modal'"
@@ -36,7 +37,7 @@
                 <div>Start Date</div>
                 <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.start_date }}</div>
             </div>
-            <button class="text-primary border-0 bg-white fs-1" @click="deleteHobby(userHobby)">
+            <button name="delete_hobby" class="text-primary border-0 bg-white fs-1" @click="deleteHobby(userHobby)">
                 <i class="bi bi-trash-fill darken-hover bluebtn"></i>
             </button>
         </div>
