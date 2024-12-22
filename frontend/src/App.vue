@@ -38,7 +38,11 @@
                 method:'GET', 
                 credentials: 'include'
             }); 
-            let userData: { user: CustomUser } = await userResponse.json();
+            let userData: { user: CustomUser | string } = await userResponse.json();
+            if (typeof userData.user === "string") {
+                window.location.href = userData.user
+                return
+            }
             let user: CustomUser = userData.user;
 
             let usersResponse: Response = await fetch("http://localhost:8000/api/users/", {

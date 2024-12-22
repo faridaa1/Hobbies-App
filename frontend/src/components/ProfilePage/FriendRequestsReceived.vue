@@ -37,8 +37,7 @@
         methods: {
             async handleResponse(isAccepted: boolean, id: number) {
                 if (useUserStore().csrf !== '') {
-                    useUserStore().updateFriendship(id, isAccepted)
-                    await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
+                    let response: Response = await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
                         method:'POST', 
                         credentials: 'include', 
                         headers: { 
@@ -47,6 +46,12 @@
                         },
                         body: JSON.stringify(isAccepted),
                     }) 
+                    if (!response.ok) {
+                        confirm('Failed to perform action')
+                        return
+                    }
+                    useUserStore().updateFriendship(id, isAccepted)
+
                 }
             }
         }

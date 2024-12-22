@@ -24,8 +24,7 @@
         methods: {
             async removeFriend(id: number): Promise<void> {
                 if (useUserStore().csrf !== '') {
-                    useUserStore().updateFriendship(id, false)
-                    await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
+                    let response: Response = await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
                         method:'POST', 
                         credentials: 'include', 
                         headers: { 
@@ -34,6 +33,11 @@
                         },
                         body: JSON.stringify(false),
                     }) 
+                    if (!response.ok) {
+                        confirm('Error occurred when removing friend')
+                        return
+                    }
+                    useUserStore().updateFriendship(id, false)
                 }
             }
         },
