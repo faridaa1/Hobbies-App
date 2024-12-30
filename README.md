@@ -12,33 +12,33 @@ To run this project in your development machine, follow these steps:
 
 3. Install Pyhton dependencies (main folder):
 
-    ```console
-    $ pip install -r requirements.txt
-    ```
+   ```console
+   $ pip install -r requirements.txt
+   ```
 
 4. Create a development database:
 
-    ```console
-    $ python manage.py migrate
-    ```
+   ```console
+   $ python manage.py migrate
+   ```
 
 5. Install JavaScript dependencies (from 'frontend' folder):
 
-    ```console
-    $ npm install
-    ```
+   ```console
+   $ npm install
+   ```
 
 6. If everything is alright, you should be able to start the Django development server from the main folder:
 
-    ```console
-    $ python manage.py runserver
-    ```
+   ```console
+   $ python manage.py runserver
+   ```
 
 7. and the Vue server from the 'frontend' sub-folder:
 
-    ```console
-    $ npm run dev
-    ```
+   ```console
+   $ npm run dev
+   ```
 
 8. Open your browser and go to http://localhost:5173, you will be greeted with a template page.
 
@@ -46,11 +46,17 @@ To run this project in your development machine, follow these steps:
 
 Once your project is ready to be deployed you will need to 'build' the Vue app and place it in Django's static folder.
 
-1. The build command in package.json and the vite.config.ts files have already been modified so that when running 'npm run build' the generated JavaScript and CSS files will be placed in the mainapp static folder, and the index.html file will be placed in the templates folder:
+1. The build command in package.json and the vite.config.ts files have already been modified so that when running 'npm run build' (on Mac and Linux) the generated JavaScript and CSS files will be placed in the mainapp static folder, and the index.html file will be placed in the templates folder:
 
-    ```console
-    $ npm run build
-    ```
+   ```console
+   $ npm run build
+   ```
+
+   If using Windows run
+
+   ```console
+   $ npm run build-windows
+   ```
 
 2. You should then follow the instruction on QM+ on how to deploy your app on EECS's OpenShift live server.
 
