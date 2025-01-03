@@ -2,7 +2,7 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <h1>Friend Requests Sent</h1>
         <hr>
-        <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-5 w-100" v-for="friend in friends">
+        <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-5 w-100" v-for="friend in displayedFriends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
                 <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;" class="rounded-circle" :src="friend.user_profile_picture">
                 <i v-if="!friend.user_profile_picture" class="bi bi-person-circle p-0" style="font-size: 70px; line-height: 0"></i>
@@ -10,8 +10,11 @@
             </div>
             <button type="button" class="btn btn-danger px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;" @click="unsend(friend.id)">
                 Cancel
-                <!-- <i class="bi bi-trash-fill"></i> -->
             </button>
+        </div>
+        <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary" v-if="friendIndex !== 0" @click="prevPage">Previous</button>
+            <button type="button" class="btn btn-secondary" v-if="friendIndex+10 < friends.length" @click="nextPage">Next</button>
         </div>
     </div>
 </template>
@@ -22,7 +25,18 @@
     import { useUserStore } from "../../stores/user";
 
     export default defineComponent({
+        data(): { friendIndex: number } { 
+            return { friendIndex: 0 }
+        },
         methods: {
+            prevPage() : void {
+                this.friendIndex -= 10
+                console.log(this.friendIndex+10, this.friends.length, this.friendIndex+10 > this.friends.length)
+            },
+            nextPage() : void {
+                this.friendIndex += 10
+
+            },
             async unsend(id: number): Promise<void> {
                 if (useUserStore().csrf !== '') {
                     let response: Response = await fetch(`http://localhost:8000/api/user/friendship/${id}/`, {
@@ -50,6 +64,8 @@
                     return this.user.friends.filter(friendship => friendship.status === 'Pending' && friendship.sent)
                 }
                 return []
+            }, displayedFriends() : Friendship[] {
+                return this.friends.slice(this.friendIndex, this.friendIndex+10)
             }
         }
     })
