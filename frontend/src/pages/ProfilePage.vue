@@ -26,6 +26,12 @@
                     Friend Requests Received
                 </button>
             </li>
+            <!-- New Tab for Potential Matches -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="potential-matches-tab" data-bs-toggle="tab" data-bs-target="#potential-matches-tab-pane" type="button" role="tab" aria-controls="potential-matches-tab-pane" aria-selected="true">
+                    Potential Matches
+                </button>
+            </li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="personal-details-tab-pane" role="tabpanel" aria-labelledby="personal-details-tab" tabindex="0">
@@ -43,30 +49,34 @@
             <div class="tab-pane fade" id="friend-requests-received-tab-pane" role="tabpanel" aria-labelledby="friend-requests-received-tab" tabindex="4">
                 <FriendRequestsReceived />
             </div>
+            <!-- Content Pane for Potential Matches -->
+            <div class="tab-pane fade" id="potential-matches-tab-pane" role="tabpanel" aria-labelledby="potential-matches-tab" tabindex="5">
+                <PotentialMatches />
+            </div>
         </div>
     </div>
-  </template>
-  
-  <script lang="ts">
-    import { defineComponent } from "vue";
-    import PersonalDetails from "../components/ProfilePage/PersonalDetails.vue";
-    import Hobbies from "../components/ProfilePage/Hobbies.vue";
-    import Friends from "../components/ProfilePage/Friends.vue";
-    import FriendRequestsSent from "../components/ProfilePage/FriendRequestsSent.vue";
-    import FriendRequestsReceived from "../components/ProfilePage/FriendRequestsReceived.vue";
-  
-      export default defineComponent({
-          data() {
-              return {
-                  title: "Profile",
-              }
-          },
-          components: {
-            PersonalDetails, Hobbies, Friends, FriendRequestsSent, FriendRequestsReceived
-          },
-      })
-  </script>
-  
-  <style scoped>
-  </style>
-  
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import PersonalDetails from "../components/ProfilePage/PersonalDetails.vue";
+import Hobbies from "../components/ProfilePage/Hobbies.vue";
+import Friends from "../components/ProfilePage/Friends.vue";
+import FriendRequestsSent from "../components/ProfilePage/FriendRequestsSent.vue";
+import FriendRequestsReceived from "../components/ProfilePage/FriendRequestsReceived.vue";
+import PotentialMatches from "../components/ProfilePage/PotentialMatches.vue";
+
+export default defineComponent({
+    data() {
+        return {
+            title: "Profile",
+        }
+    },
+    components: {
+        PersonalDetails, Hobbies, Friends, FriendRequestsSent, FriendRequestsReceived, PotentialMatches
+    },
+})
+</script>
+
+<style scoped>
+</style>
