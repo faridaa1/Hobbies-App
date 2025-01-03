@@ -45,7 +45,7 @@
             }
             let user: CustomUser = userData.user;
 
-            let usersResponse: Response = await fetch("http://localhost:8000/api/users/", {
+            let usersResponse: Response = await fetch("http://localhost:8000/api/all-users/", {
                 method:'GET', 
                 credentials: 'include'
             });

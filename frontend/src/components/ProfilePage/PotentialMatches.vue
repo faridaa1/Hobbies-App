@@ -58,10 +58,12 @@
         </button>
       </div>
     </div>
-  </template>
+</template>
   
-  <script>
-  export default {
+<script lang="ts">
+  import { defineComponent } from "vue";
+
+  export default defineComponent({
     data() {
       return {
         users: [], // All users fetched from the API
@@ -125,10 +127,10 @@
     created() {
       this.fetchUsers(); // Fetch users when the component is created
     },
-  };
-  </script>
+  });
+</script>
   
-  <style scoped>
+<style scoped>
   .potential-matches {
     padding: 20px;
   }
@@ -146,5 +148,5 @@
   .pagination-controls {
     margin-top: 20px;
   }
-  </style>
+</style>
   
