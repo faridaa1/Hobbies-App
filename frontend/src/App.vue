@@ -10,7 +10,7 @@
                 </router-link>
                 |
                 <router-link :to="{name: 'Other Page'}">
-                    Other Page
+                    New Page (needs name)
                 </router-link>
                 |
                 <router-link :to="{name: 'Profile Page'}">
