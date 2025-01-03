@@ -34,7 +34,6 @@
         methods: {
             prevPage() : void {
                 this.friendIndex -= 10
-                console.log(this.friendIndex+10, this.friends.length, this.friendIndex+10 > this.friends.length)
             },
             nextPage() : void {
                 this.friendIndex += 10
