@@ -1,6 +1,5 @@
 <template>
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
-       
         <div class="d-flex justify-content-between">
             <h1>My Hobbies</h1>
             <button
@@ -45,7 +44,7 @@
                 <i class="bi bi-trash-fill darken-hover bluebtn"></i>
             </button>
         </div>
-        <div class="d-flex gap-2 justify-content-center">
+        <div class="mt-4 d-flex gap-2 justify-content-center">
             <button type="button" class="btn btn-secondary" v-if="hobbyIndex > 0" @click="prevPage">Previous</button>
             <button type="button" class="btn btn-secondary" v-if="hobbyIndex+10 < hobbies.length" @click="nextPage">Next</button>
         </div>
@@ -92,7 +91,7 @@
                     }) 
                     if (response.ok) {
                         useUserStore().deleteHobby(userHobby)
-                        if (this.displayedHobbies.length == 0) {
+                        if (this.displayedHobbies.length === 0) {
                             this.hobbyIndex -= 10
                         }
                     } else {
