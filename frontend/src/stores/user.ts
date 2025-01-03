@@ -1,19 +1,34 @@
 import { defineStore } from 'pinia'
-import { CustomUser } from '../types'
+import { CustomUser, Friendship, UserHobby } from '../types'
 
 export const useUserStore = defineStore('user', {
-    state: () => ({
+    state: (): { user: CustomUser, hobbies: { user_hobbies: UserHobby[] }, csrf: string} => ({
         user: {} as CustomUser,
+        hobbies: { user_hobbies: [] },
+        csrf: ''
     }),
     actions: {
         saveUser(user: CustomUser) {
             this.user = user
         },
-        async getUser() {
-            // should probably check that user is signed in before doing this
-            const result = await fetch('http://localhost:8000/api/user/')
-            const data = await result.json()
-            this.saveUser(data)
+        saveHobbies(hobbies: { user_hobbies: UserHobby[] }) {
+            this.hobbies = hobbies
+        },
+        addHobby(hobby: UserHobby) {
+            this.hobbies.user_hobbies.push(hobby)
+        },
+        deleteHobby(hobby : UserHobby) {
+            this.hobbies.user_hobbies = this.hobbies.user_hobbies.filter(myHobby => myHobby.hobby.hobby_id !== hobby.hobby.hobby_id)
+        },
+        updateFriendship(id: number, isAccepted: boolean) {
+            let friendship: Friendship | undefined = this.user.friends.find(fs => fs.id === id) 
+            if (friendship) {
+                if (isAccepted) {
+                    friendship.status = 'Accepted'
+                } else {
+                    this.user.friends = this.user.friends.filter(fs => fs.id !== id)
+                }
+            } 
         }
     }
 })

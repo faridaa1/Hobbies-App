@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 import { Hobby } from '../types'
 
 export const useHobbiesStore = defineStore('hobbies', {
-    state: () => ({
-        hobbies: {} as Hobby[]
+    state: (): { hobbies: Hobby[] } => ({
+        hobbies: []
     }),
     actions: {
         addHobby(hobby: Hobby) {

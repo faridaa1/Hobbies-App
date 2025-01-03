@@ -13,17 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.urls import path
 from django.conf import settings
-from django.contrib import admin
-from django.urls import include, path
-from django.http import HttpResponse
+from django.conf.urls.static import static
 
-from .views import main_spa, signup, hobbies_api_view, user_api_view, all_users_api_view
+from .views import main_spa, signup, login, logout, hobbies_api_view, user_api_view, all_users_api_view, users_api_view, user_hobbies_api_view, friendship_api_view, profile_api_view, check_password_api_view
 
 urlpatterns = [
     path('', main_spa),
     path('signup/', signup, name='signup'),  # Signup user
+    path('login/', login, name='login'),  # Login user
+    path('logout/', logout, name='logout'),  # Logout user
     path('api/hobbies/', hobbies_api_view, name='hobbies'),
     path('api/user/', user_api_view, name='user'),
     path('api/users/', all_users_api_view, name='all_users_api'),
-]
+    path('api/all-users/', users_api_view, name='users'),
+    path('api/user/<int:id>/<str:field>/', profile_api_view, name='profile'),
+    path('api/user/<int:id>/password/<str:password>/', check_password_api_view, name='check password'),
+    path('api/user/hobbies/<str:id>/', user_hobbies_api_view, name='user hobbies'),
+    path('api/user/friendship/<int:id>/', friendship_api_view, name='friendship')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

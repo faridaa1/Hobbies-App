@@ -7,7 +7,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="hobbies-tab" data-bs-toggle="tab" data-bs-target="#hobbies-tab-pane" type="button" role="tab" aria-controls="hobbies-tab-pane" aria-selected="true">
+                <button name="hobbies" class="nav-link" id="hobbies-tab" data-bs-toggle="tab" data-bs-target="#hobbies-tab-pane" type="button" role="tab" aria-controls="hobbies-tab-pane" aria-selected="true">
                     Hobbies
                 </button>
             </li>
@@ -35,10 +35,10 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="personal-details-tab-pane" role="tabpanel" aria-labelledby="personal-details-tab" tabindex="0">
-                <PersonalDetails />
+                <PersonalDetails :today="today()"/>
             </div>
             <div class="tab-pane fade" id="hobbies-tab-pane" role="tabpanel" aria-labelledby="hobbies-tab" tabindex="1">
-                <Hobbies />
+                <Hobbies :today="today()"/>
             </div>
             <div class="tab-pane fade" id="friends-tab-pane" role="tabpanel" aria-labelledby="friends-tab" tabindex="2">
                 <Friends />
@@ -56,27 +56,40 @@
         </div>
     </div>
 </template>
-
+  
 <script lang="ts">
-import { defineComponent } from "vue";
-import PersonalDetails from "../components/ProfilePage/PersonalDetails.vue";
-import Hobbies from "../components/ProfilePage/Hobbies.vue";
-import Friends from "../components/ProfilePage/Friends.vue";
-import FriendRequestsSent from "../components/ProfilePage/FriendRequestsSent.vue";
-import FriendRequestsReceived from "../components/ProfilePage/FriendRequestsReceived.vue";
-import PotentialMatches from "../components/ProfilePage/PotentialMatches.vue";
+    import { defineComponent } from "vue";
+    import PersonalDetails from "../components/ProfilePage/PersonalDetails.vue";
+    import Hobbies from "../components/ProfilePage/Hobbies.vue";
+    import Friends from "../components/ProfilePage/Friends.vue";
+    import FriendRequestsSent from "../components/ProfilePage/FriendRequestsSent.vue";
+    import FriendRequestsReceived from "../components/ProfilePage/FriendRequestsReceived.vue";
 
-export default defineComponent({
-    data() {
-        return {
-            title: "Profile",
+    export default defineComponent({
+        data(): {title: String} {
+            return {
+                title: "Profile",
+            }
+        },
+        components: {
+            PersonalDetails, 
+            Hobbies, 
+            Friends, 
+            FriendRequestsSent, 
+            FriendRequestsReceived
+        },
+        methods: {
+            today(): string {
+                const today: Date = new Date();
+                const year: number = today.getFullYear();
+                const month: string = (today.getMonth()+1).toString().padStart(2, '0')
+                const day: string = today.getDate().toString().padStart(2, '0')
+                return `${year}-${month}-${day}`;
+            }   
         }
-    },
-    components: {
-        PersonalDetails, Hobbies, Friends, FriendRequestsSent, FriendRequestsReceived, PotentialMatches
-    },
-})
+    })
 </script>
-
+  
 <style scoped>
 </style>
+  
