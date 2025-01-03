@@ -2,6 +2,9 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <h1>Friend Requests Received</h1>
         <hr>
+        <div class="text-secondary text-center" v-if="friends.length === 0">
+            <p>No Friend Requests Received</p>
+        </div>
         <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-4 w-100" v-for="friend in displayedFriends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
                 <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;" class="rounded-circle" :src="friend.user_profile_picture">
@@ -15,8 +18,8 @@
                 Decline
             </button>
         </div>
-        <div class="d-flex gap-2 justify-content-center">
-            <button type="button" class="btn btn-secondary" v-if="friendIndex !== 0" @click="prevPage">Previous</button>
+        <div  class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary" v-if="friendIndex > 0" @click="prevPage">Previous</button>
             <button type="button" class="btn btn-secondary" v-if="friendIndex+10 < friends.length" @click="nextPage">Next</button>
         </div>
     </div>
@@ -46,7 +49,6 @@
         methods: {
             prevPage() : void {
                 this.friendIndex -= 10
-                console.log(this.friendIndex+10, this.friends.length, this.friendIndex+10 > this.friends.length)
             },
             nextPage() : void {
                 this.friendIndex += 10
@@ -68,6 +70,9 @@
                         return
                     }
                     useUserStore().updateFriendship(id, isAccepted)
+                    if (this.displayedFriends.length == 0) {
+                        this.friendIndex -= 10
+                    }
                 }
             }
         }

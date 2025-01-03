@@ -1,5 +1,6 @@
 <template>
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
+       
         <div class="d-flex justify-content-between">
             <h1>My Hobbies</h1>
             <button
@@ -13,6 +14,9 @@
             </button>
         </div>
         <hr>
+        <div class="text-secondary text-center" v-if="hobbies.length === 0">
+            <p>No Hobbies</p>
+        </div>
         <div class="modal fade" :id="'addHobby'">
             <div class="modal-dialog">
                 <div class="modal-content">
