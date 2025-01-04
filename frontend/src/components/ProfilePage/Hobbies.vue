@@ -13,6 +13,9 @@
             </button>
         </div>
         <hr>
+        <div class="text-secondary text-center" v-if="hobbies.length === 0">
+            <p>No Hobbies</p>
+        </div>
         <div class="modal fade" :id="'addHobby'">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -20,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="fs-4 mt-4 d-flex flex-row gap-5 w-100" v-if="hobbies.length" v-for="userHobby in hobbies">
+        <div class="fs-4 mt-4 d-flex flex-row gap-5 w-100" v-if="hobbies.length" v-for="userHobby in displayedHobbies">
             <div class="d-flex gap-1 flex-column w-100">
                 <div>Name</div>
                 <div class="p-2 rounded w-100" style="background-color: lightgray;">{{ userHobby.hobby.hobby_name }}</div>
@@ -41,6 +44,10 @@
                 <i class="bi bi-trash-fill darken-hover bluebtn"></i>
             </button>
         </div>
+        <div class="mt-4 d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary" v-if="hobbyIndex > 0" @click="prevPage">Previous</button>
+            <button type="button" class="btn btn-secondary" v-if="hobbyIndex+10 < hobbies.length" @click="nextPage">Next</button>
+        </div>
     </div>
 </template>
   
@@ -58,12 +65,20 @@
             }
         },
         components: { AddHobby },
-        data(): {userHobbies: UserHobby[] } {
+        data(): {userHobbies: UserHobby[], hobbyIndex: number } {
             return {
-                userHobbies: []
+                userHobbies: [],
+                hobbyIndex: 0
             }
         },
         methods: {
+            prevPage() : void {
+                this.hobbyIndex -= 10
+            },
+            nextPage() : void {
+                this.hobbyIndex += 10
+
+            },
             async deleteHobby(userHobby: UserHobby): Promise<void> {
                 if (useUserStore().csrf !== '') {
                     let response: Response = await fetch(`http://localhost:8000/api/user/hobbies/${useUserStore().user.id}&${userHobby.hobby.hobby_id}/`, {
@@ -76,6 +91,9 @@
                     }) 
                     if (response.ok) {
                         useUserStore().deleteHobby(userHobby)
+                        if (this.displayedHobbies.length === 0 && this.hobbies.length !== 0) {
+                            this.hobbyIndex -= 10
+                        }
                     } else {
                         confirm("Error deleting hobby")
                     }
@@ -88,6 +106,8 @@
                 if (hobbies && hobbies.user_hobbies) { 
                     return hobbies.user_hobbies
                 } else return []
+            }, displayedHobbies() : UserHobby[] {
+                return this.hobbies.slice(this.hobbyIndex, this.hobbyIndex+10)
             }
         },
     })
