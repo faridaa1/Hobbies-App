@@ -56,7 +56,7 @@
                         return
                     }
                     useUserStore().updateFriendship(id, false)
-                    if (this.displayedFriends.length === 0 && this.displayedFriends.length !== 0) {
+                    if (this.displayedFriends.length === 0 && this.friends.length !== 0) {
                         this.friendIndex -= 10
                     }
                 }
