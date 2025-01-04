@@ -91,7 +91,7 @@
                     }) 
                     if (response.ok) {
                         useUserStore().deleteHobby(userHobby)
-                        if (this.displayedHobbies.length === 0) {
+                        if (this.displayedHobbies.length === 0 && this.displayedHobbies.length !== 0) {
                             this.hobbyIndex -= 10
                         }
                     } else {
