@@ -13,8 +13,10 @@
   </head>
 
   <body>
+      {% if request.path != '/login/' and request.path != '/signup/' %}
       <div id="app">
       </div>
+      {% endif %}
       <div class="content">
         {% block content %}
         {% endblock %}
