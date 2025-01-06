@@ -19,7 +19,7 @@
           <div>
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
           </div>
-          <button class="btn btn-success" @click="sendRequest(user.username)">
+          <button class="btn btn-success" @click="sendRequest(user.id)">
             Send Request
           </button>
         </li>
@@ -41,9 +41,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { PotentialMatchesData } from "../types";
+
+const url = 'http://localhost:8000/'
 
 export default defineComponent({
-  data() {
+  data(): PotentialMatchesData {
     return {
       users: [], // All users fetched from the API
       minAge: 18, // Default minimum age
@@ -98,9 +101,10 @@ export default defineComponent({
         this.currentPage++;
       }
     },
-    sendRequest(username) {
-      console.log(`Friend request sent to ${username}`);
-      // Add functionality to send a friend request
+    sendRequest(toId: number) {
+      // fetch(`${url}/user/${}/friendship/${toId}/`)
+      // TODO CHANGE BUTTON TEXT ON FRIENDSHIP SENT SUCCESSFULY
+      console.log(`Friend request sent to user with id${toId}`);
     },
   },
   created() {

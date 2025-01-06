@@ -1,11 +1,17 @@
 export interface CustomUser {
     id: number;
     name: string;
+    username: string;
     email: string;
     date_of_birth: string;
     hobbies: Hobby[];
     friends: Friendship[];
     profile_picture: string;
+}
+
+// all_users_api_view returns users w/ age
+interface CustomUserAge extends CustomUser {
+    age: number;
 }
 
 export interface Hobby {
@@ -27,4 +33,13 @@ export interface Friendship {
     user_profile_picture: string;
     status: 'Pending' | 'Accepted';
     sent: boolean;
+}
+
+export interface PotentialMatchesData {
+    users: CustomUserAge[],
+    minAge: number,
+    maxAge: number,
+    filteredUsers: CustomUserAge[],
+    currentPage: number,
+    pageSize: number
 }

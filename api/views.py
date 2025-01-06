@@ -216,7 +216,7 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
 
 
 def friendship_api_view(request: HttpRequest, from_id: int, to_id: int) -> JsonResponse:
-    """Defining POST and PUT? request handling for Friendship."""
+    """Defining POST and PUT request handling for Friendship."""
     try:
         if request.method == 'POST':
             from_user = CustomUser.objects.get(pk=from_id)
