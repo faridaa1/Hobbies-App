@@ -31,5 +31,5 @@ urlpatterns = [
     path('api/user/<int:id>/<str:field>/', profile_api_view, name='profile'),
     path('api/user/<int:id>/password/<str:password>/', check_password_api_view, name='check password'),
     path('api/user/hobbies/<str:id>/', user_hobbies_api_view, name='user hobbies'),
-    path('api/user/friendship/<int:id>/', friendship_api_view, name='friendship')
+    path('api/user/<int:from_id>/friendship/<int:to_id>/', friendship_api_view, name='friendship')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

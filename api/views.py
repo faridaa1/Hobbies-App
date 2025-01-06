@@ -215,18 +215,24 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
     return JsonResponse({'user_hobbies': []})
 
 
-def friendship_api_view(request: HttpRequest, id: int) -> JsonResponse:
-    """Defining POST request handling for Friendship."""
+def friendship_api_view(request: HttpRequest, from_id: int, to_id: int) -> JsonResponse:
+    """Defining POST and PUT? request handling for Friendship."""
     try:
-        friendship: Friendship = Friendship.objects.get(pk=id)
-        if json.loads(request.body):
-            # body is boolean related to whether friendship was accepted
-            friendship.status = 'Accepted'
-            friendship.save()
-            return JsonResponse(friendship.as_dict(request.user.username))
-        else:
-            # if friendship is rejected, delete relationship
-            friendship.delete()
-            return JsonResponse({})
+        if request.method == 'POST':
+            from_user = CustomUser.objects.get(pk=from_id)
+            to_user = CustomUser.objects.get(pk=to_id)
+            friendship = Friendship.objects.create(user1=from_user, user2=to_user,status='Pending')
+            return JsonResponse({'friendship': friendship.as_dict(current_user=from_user)})
+        elif request.method == 'PUT':
+            friendship: Friendship = Friendship.objects.get(pk=id)
+            if json.loads(request.body):
+                # body is boolean related to whether friendship was accepted
+                friendship.status = 'Accepted'
+                friendship.save()
+                return JsonResponse(friendship.as_dict(request.user.username))
+            else:
+                # if friendship is rejected, delete relationship
+                friendship.delete()
+                return JsonResponse({})
     except:
         return JsonResponse({}, status=500)
