@@ -20,8 +20,8 @@
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
           </div>
           <button class="btn btn-success" @click="sendRequest(user.username)"
-            :disabled="userStore.getFriend(user.email) !== undefined"> <!-- Disable button if friendship exists-->
-            {{ userStore.getFriend(user.email)?.status ?? 'Send Request' }}
+            :disabled="userStore.getFriendship(user.email) !== undefined"> <!-- Disable button if friendship exists-->
+            {{ userStore.getFriendship(user.email)?.status ?? 'Send Request' }}
           </button>
         </li>
       </ul>
