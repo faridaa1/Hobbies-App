@@ -19,10 +19,9 @@
           <div>
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
           </div>
-          <!-- Get status of request. don't click-->
-          <!-- If no status, send request button-->
-          <button class="btn btn-success" @click="sendRequest(user.username)">
-            Send Request
+          <button class="btn btn-success" @click="sendRequest(user.username)"
+            :disabled="userStore.getFriend(user.email) !== undefined"> <!-- Disable button if friendship exists-->
+            {{ userStore.getFriend(user.email)?.status ?? 'Send Request' }}
           </button>
         </li>
       </ul>
@@ -45,7 +44,7 @@
 import { defineComponent } from "vue";
 import { PotentialMatchesData } from "../types";
 import { useUserStore } from "../stores/user";
-import { mapState } from 'pinia';
+import { mapStores } from 'pinia';
 
 const url = 'http://localhost:8000'
 
@@ -61,7 +60,7 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapState(useUserStore, ['user', 'csrf']), // Can get/use value of this.user and this.csr
+    ...mapStores(useUserStore),
     totalPages() {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
@@ -69,6 +68,9 @@ export default defineComponent({
       const start = (this.currentPage - 1) * this.pageSize;
       const end = start + this.pageSize;
       return this.filteredUsers.slice(start, end);
+    },
+    friendships() {
+      return this.userStore.user.friends;
     },
   },
   methods: {
@@ -106,20 +108,29 @@ export default defineComponent({
         this.currentPage++;
       }
     },
-    async sendRequest(toUser: string) {
+    getFriendshipStatus(email: string) {
+      console.log(this.userStore.user.friends)
+      this.userStore.user.friends && this.userStore.user.friends.forEach(friendship => {
+        if (friendship.user_email == email) {
+          console.log('found' + friendship.status)
+          return friendship.status;
+        }
+      });
+    },
+    async sendRequest(username: string) {
       try {
-        const req = await fetch(`${url}/api/user/${this.user.id}/friendship/${toUser}/`, {
+        const req = await fetch(`${url}/api/user/${this.userStore.user.id}/friendship/${username}/`, {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            "X-CSRFToken": this.csrf
+            "X-CSRFToken": this.userStore.csrf
           }
         });
         const response = await req.json();
-        console.log(response)
-        // TODO CHANGE BUTTON TEXT ON FRIENDSHIP SENT SUCCESSFULY
-        console.log(`Friend request sent to user with id${toUser}`);
+        console.log(`Friend request sent to user with id${username}`);
+        // Update user store - state change causes button text to change
+        this.userStore.user.friends.push(response.friendship)
       } catch (error) {
         console.log(error)
       }
@@ -127,6 +138,7 @@ export default defineComponent({
   },
   created() {
     this.fetchUsers(); // Fetch users when the component is created
+    // this.friends = 
   },
 })
 </script>

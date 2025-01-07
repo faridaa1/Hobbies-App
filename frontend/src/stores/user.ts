@@ -30,5 +30,10 @@ export const useUserStore = defineStore('user', {
                 }
             } 
         }
+    },
+    getters: {
+        getFriend: (state) => {
+            return (email: string) => state.user.friends?.find(friendship => friendship.user_email === email)
+        },
     }
 })
