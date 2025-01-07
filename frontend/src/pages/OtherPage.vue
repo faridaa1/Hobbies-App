@@ -19,6 +19,8 @@
           <div>
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
           </div>
+          <!-- Get status of request. don't click-->
+          <!-- If no status, send request button-->
           <button class="btn btn-success" @click="sendRequest(user.username)">
             Send Request
           </button>

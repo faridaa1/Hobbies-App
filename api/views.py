@@ -216,11 +216,13 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
 
 
 def friendship_api_view(request: HttpRequest, from_id: int, to_user: str) -> JsonResponse:
-    """Defining POST and PUT request handling for Friendship."""
+    """Defining GET, POST, and PUT request handling for Friendship."""
     try:
-        if request.method == 'POST':
-            from_user = CustomUser.objects.get(pk=from_id)
-            to_user = CustomUser.objects.get(username=to_user)
+        from_user = CustomUser.objects.get(pk=from_id)
+        to_user = CustomUser.objects.get(username=to_user)
+        if request.method == 'GET':
+            return JsonResponse({Friendship.objects.get(user1=from_user, user2=to_user)})
+        elif request.method == 'POST':
             friendship = Friendship.objects.create(user1=from_user, user2=to_user,status='Pending')
             return JsonResponse({'friendship': friendship.as_dict(current_user=from_user)})
         elif request.method == 'PUT':
@@ -234,5 +236,18 @@ def friendship_api_view(request: HttpRequest, from_id: int, to_user: str) -> Jso
                 # if friendship is rejected, delete relationship
                 friendship.delete()
                 return JsonResponse({})
+        else:
+            return JsonResponse({}, status=405)
+    except:
+        return JsonResponse({}, status=500)
+    
+def friendship_delete_api_view(request: HttpRequest, id: int) -> JsonResponse:
+    """Defines DELETE request handling for a friendship"""
+    try:
+        if request.method == 'DELETE':
+            Friendship.objects.get(pk=id).delete()
+            return JsonResponse({}, status=204)
+        else:
+            return JsonResponse({}, status=405)
     except:
         return JsonResponse({}, status=500)
