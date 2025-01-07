@@ -9,7 +9,6 @@
                 <i v-if="!friend.user_profile_picture" class="bi bi-person-circle p-0"
                     style="font-size: 70px; line-height: 0"></i>
                 <div class="p-2 rounded w-100">{{ friend.user_name }}</div>
-                {{ userStore.getFriendship(friend.user_email) }}
             </div>
             <button type="button" class="btn btn-primary px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;"
                 @click="handleResponse(true, friend.id)">

@@ -218,11 +218,8 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
 def friendship_api_view(request: HttpRequest, from_id: int, to_username: str) -> JsonResponse:
     """Defining GET and POST request handling for Friendship."""
     # try:
-    print(CustomUser.objects.get(email='pw@gmail.com').id)
     from_user = CustomUser.objects.get(pk=from_id)
-    print(from_user)
     to_user = CustomUser.objects.get(username=to_username)
-    print(to_user)
     if request.method == 'GET':
         return JsonResponse({Friendship.objects.get(user1=from_user, user2=to_user)})
     elif request.method == 'POST':

@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { PotentialMatchesData } from "../types";
+import { PotentialMatchesData, CustomUserAge } from "../types";
 import { useUserStore } from "../stores/user";
 import { mapStores } from 'pinia';
 
@@ -74,20 +74,24 @@ export default defineComponent({
     },
   },
   methods: {
+    setDefaultResults(users: CustomUserAge[]) {
+      // Filter currently logged in user from results
+      return users.filter(user => user.username !== this.userStore.user.username)
+    },
     fetchUsers() {
       // Fetch users from the API
       fetch("http://127.0.0.1:8000/api/users/")
         .then((response) => response.json())
         .then((data) => {
           this.users = data;
-          this.filteredUsers = data; // Initialize with all users
+          this.filteredUsers = this.setDefaultResults(data); // Initialize with all users
         })
         .catch((error) => console.error("Error fetching users:", error));
     },
     applyFilter() {
-      // Filter users by age range
+      // Filter users by age range and remove currently logged in user
       this.filteredUsers = this.users.filter(
-        (user) => user.age >= this.minAge && user.age <= this.maxAge
+        (user) => user.age >= this.minAge && user.age <= this.maxAge && user.email !== this.userStore.user.email
       );
       this.currentPage = 1; // Reset to the first page after filtering
     },
@@ -95,7 +99,7 @@ export default defineComponent({
       // Reset age filter and show all users
       this.minAge = 18; // Reset to default minimum age
       this.maxAge = 100; // Reset to default maximum age
-      this.filteredUsers = this.users; // Show all users
+      this.filteredUsers = this.setDefaultResults(this.users); // Show all users
       this.currentPage = 1; // Reset to the first page
     },
     prevPage() {
@@ -138,7 +142,6 @@ export default defineComponent({
   },
   created() {
     this.fetchUsers(); // Fetch users when the component is created
-    // this.friends = 
   },
 })
 </script>
