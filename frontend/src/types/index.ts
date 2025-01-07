@@ -10,7 +10,12 @@ export interface CustomUser {
 }
 
 // all_users_api_view returns users w/ age
-interface CustomUserAge extends CustomUser {
+interface CustomUserAge {
+    username: string;
+    name: string;
+    email: string;
+    date_of_birth: string;
+    profile_picture: string;
     age: number;
 }
 

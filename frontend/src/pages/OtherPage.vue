@@ -19,7 +19,7 @@
           <div>
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
           </div>
-          <button class="btn btn-success" @click="sendRequest(user.id)">
+          <button class="btn btn-success" @click="sendRequest(user.username)">
             Send Request
           </button>
         </li>
@@ -42,8 +42,10 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { PotentialMatchesData } from "../types";
+import { useUserStore } from "../stores/user";
+import { mapState } from 'pinia';
 
-const url = 'http://localhost:8000/'
+const url = 'http://localhost:8000'
 
 export default defineComponent({
   data(): PotentialMatchesData {
@@ -57,6 +59,7 @@ export default defineComponent({
     };
   },
   computed: {
+    ...mapState(useUserStore, ['user', 'csrf']), // Can get/use value of this.user and this.csr
     totalPages() {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
@@ -101,10 +104,23 @@ export default defineComponent({
         this.currentPage++;
       }
     },
-    sendRequest(toId: number) {
-      // fetch(`${url}/user/${}/friendship/${toId}/`)
-      // TODO CHANGE BUTTON TEXT ON FRIENDSHIP SENT SUCCESSFULY
-      console.log(`Friend request sent to user with id${toId}`);
+    async sendRequest(toUser: string) {
+      try {
+        const req = await fetch(`${url}/api/user/${this.user.id}/friendship/${toUser}/`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            "X-CSRFToken": this.csrf
+          }
+        });
+        const response = await req.json();
+        console.log(response)
+        // TODO CHANGE BUTTON TEXT ON FRIENDSHIP SENT SUCCESSFULY
+        console.log(`Friend request sent to user with id${toUser}`);
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
   created() {
@@ -133,6 +149,6 @@ export default defineComponent({
 }
 
 .pagination-controls {
-  margin-top: 20px;
+  margin-top: 90px;
 }
 </style>

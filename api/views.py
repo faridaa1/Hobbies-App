@@ -215,12 +215,12 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
     return JsonResponse({'user_hobbies': []})
 
 
-def friendship_api_view(request: HttpRequest, from_id: int, to_id: int) -> JsonResponse:
+def friendship_api_view(request: HttpRequest, from_id: int, to_user: str) -> JsonResponse:
     """Defining POST and PUT request handling for Friendship."""
     try:
         if request.method == 'POST':
             from_user = CustomUser.objects.get(pk=from_id)
-            to_user = CustomUser.objects.get(pk=to_id)
+            to_user = CustomUser.objects.get(username=to_user)
             friendship = Friendship.objects.create(user1=from_user, user2=to_user,status='Pending')
             return JsonResponse({'friendship': friendship.as_dict(current_user=from_user)})
         elif request.method == 'PUT':
