@@ -10,7 +10,7 @@
                 </router-link>
                 |
                 <router-link :to="{name: 'Other Page'}">
-                    Other Page
+                    New Page (needs name)
                 </router-link>
                 |
                 <router-link :to="{name: 'Profile Page'}">
@@ -45,7 +45,7 @@
             }
             let user: CustomUser = userData.user;
 
-            let usersResponse: Response = await fetch("http://localhost:8000/api/users/", {
+            let usersResponse: Response = await fetch("http://localhost:8000/api/all-users/", {
                 method:'GET', 
                 credentials: 'include'
             });

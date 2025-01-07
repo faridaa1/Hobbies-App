@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login
 from requests import Session
 from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
+from datetime import date
 
 URL = 'http://localhost:5173/'
 
@@ -94,6 +95,26 @@ def hobbies_api_view(request: HttpRequest) -> JsonResponse:
         return JsonResponse({
             'hobbies': [],
         })
+    
+def all_users_api_view(request: HttpRequest) -> JsonResponse:
+    """API view to return all users with calculated age."""
+    def calculate_age(dob):
+        today = date.today()
+        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+    users = CustomUser.objects.filter(is_active=True).exclude(is_staff=True)  # Exclude staff users
+    user_data = [
+        {
+            "username": user.username,
+            "name": user.name,
+            "email": user.email,
+            "date_of_birth": user.date_of_birth.isoformat() if user.date_of_birth else None,
+            "profile_picture": user.profile_picture.url if user.profile_picture else None,
+            "age": calculate_age(user.date_of_birth),
+        }
+        for user in users
+    ]
+    return JsonResponse(user_data, safe=False)
 
 
 def user_api_view(request: HttpRequest) -> JsonResponse:
