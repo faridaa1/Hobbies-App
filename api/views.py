@@ -231,6 +231,7 @@ def friendship_api_view(request: HttpRequest, from_id: int, to_username: str) ->
     except:
         return JsonResponse({}, status=500)
     
+    
 def friendship_update_api_view(request: HttpRequest, id: int) -> JsonResponse:
     """Defines DELETE and PUT request handling for a friendship"""
     try:
