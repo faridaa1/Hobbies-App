@@ -217,18 +217,18 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
 
 def friendship_api_view(request: HttpRequest, from_id: int, to_username: str) -> JsonResponse:
     """Defining GET and POST request handling for Friendship."""
-    # try:
-    from_user = CustomUser.objects.get(pk=from_id)
-    to_user = CustomUser.objects.get(username=to_username)
-    if request.method == 'GET':
-        return JsonResponse({Friendship.objects.get(user1=from_user, user2=to_user)})
-    elif request.method == 'POST':
-        friendship = Friendship.objects.create(user1=from_user, user2=to_user,status='Pending')
-        return JsonResponse({'friendship': friendship.as_dict(current_user=from_user)})
-    else:
-        return JsonResponse({}, status=405)
-    # except:
-    #     return JsonResponse({}, status=500)
+    try:
+        from_user = CustomUser.objects.get(pk=from_id)
+        to_user = CustomUser.objects.get(username=to_username)
+        if request.method == 'GET':
+            return JsonResponse({Friendship.objects.get(user1=from_user, user2=to_user)})
+        elif request.method == 'POST':
+            friendship = Friendship.objects.create(user1=from_user, user2=to_user,status='Pending')
+            return JsonResponse({'friendship': friendship.as_dict(current_user=from_user)})
+        else:
+            return JsonResponse({}, status=405)
+    except:
+        return JsonResponse({}, status=500)
     
 def friendship_update_api_view(request: HttpRequest, id: int) -> JsonResponse:
     """Defines DELETE and PUT request handling for a friendship"""
