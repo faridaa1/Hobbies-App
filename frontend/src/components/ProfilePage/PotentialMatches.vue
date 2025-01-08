@@ -19,10 +19,7 @@
           <div>
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
           </div>
-          <button class="btn btn-success" @click="sendRequest(user.username)"
-            :disabled="userStore.getFriendship(user.email) !== undefined"> <!-- Disable button if friendship exists-->
-            {{ userStore.getFriendship(user.email)?.status ?? 'Send Request' }}
-          </button>
+          <FriendRequestButton :otherUser="user" />
         </li>
       </ul>
     </div>
@@ -45,8 +42,7 @@ import { defineComponent } from "vue";
 import { PotentialMatchesData } from "../../types";
 import { useUserStore } from "../../stores/user";
 import { mapStores, mapState } from 'pinia';
-
-const url = 'http://localhost:8000';
+import FriendRequestButton from "./FriendRequestButton.vue";
 
 export default defineComponent({
   data(): PotentialMatchesData {
@@ -58,6 +54,9 @@ export default defineComponent({
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
     };
+  },
+  components: {
+    FriendRequestButton
   },
   watch: {
     user() {
@@ -127,24 +126,6 @@ export default defineComponent({
           return friendship.status;
         }
       });
-    },
-    async sendRequest(username: string) {
-      try {
-        const req = await fetch(`${url}/api/user/${this.user.id}/friendship/${username}/`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            "X-CSRFToken": this.userStore.csrf
-          }
-        });
-        const response = await req.json();
-        console.log(`Friend request sent to user with id${username}`);
-        // Update user store - state change causes button text to change
-        this.user.friends.push(response.friendship)
-      } catch (error) {
-        console.log(error)
-      }
     },
     removeUserFiltered() {
       return this.filteredUsers.filter(user => user.username !== this.user.username)
