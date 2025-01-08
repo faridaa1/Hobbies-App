@@ -2,6 +2,9 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <h1>Friend Requests Received</h1>
         <hr>
+        <div class="text-secondary text-center" v-if="friends.length === 0">
+            <p>No Friend Requests Received</p>
+        </div>
         <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-4 w-100" v-for="friend in friends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
                 <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;"
