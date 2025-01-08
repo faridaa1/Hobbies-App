@@ -40,12 +40,3 @@ export interface Friendship {
     status: 'Pending' | 'Accepted';
     sent: boolean;
 }
-
-export interface PotentialMatchesData {
-    users: CustomUserAge[],
-    minAge: number,
-    maxAge: number,
-    filteredUsers: CustomUserAge[],
-    currentPage: number,
-    pageSize: number
-}

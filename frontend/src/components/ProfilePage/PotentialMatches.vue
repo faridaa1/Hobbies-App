@@ -39,18 +39,18 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { PotentialMatchesData } from "../../types";
+import { CustomUserAge } from "../../types";
 import { useUserStore } from "../../stores/user";
-import { mapStores, mapState } from 'pinia';
+import { mapState } from 'pinia';
 import FriendRequestButton from "./FriendRequestButton.vue";
 
 export default defineComponent({
-  data(): PotentialMatchesData {
+  data() {
     return {
-      users: [], // All users fetched from the API
+      users: [] as CustomUserAge[], // All users fetched from the API
       minAge: 18, // Default minimum age
       maxAge: 100, // Default maximum age
-      filteredUsers: [], // Filtered users based on age
+      filteredUsers: [] as CustomUserAge[], // Filtered users based on age
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
     };
@@ -71,7 +71,6 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapStores(useUserStore),
     ...mapState(useUserStore, ['user', 'csrf']),
     totalPages() {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
@@ -81,9 +80,6 @@ export default defineComponent({
       const end = start + this.pageSize;
       return this.filteredUsers.slice(start, end);
     },
-    friendships() {
-      return this.user.friends;
-    }
   },
   methods: {
     fetchUsers() {
@@ -119,13 +115,6 @@ export default defineComponent({
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
-    },
-    getFriendshipStatus(email: string) {
-      this.user.friends && this.user.friends.forEach(friendship => {
-        if (friendship.user_email == email) {
-          return friendship.status;
-        }
-      });
     },
     removeUserFiltered() {
       return this.filteredUsers.filter(user => user.username !== this.user.username)

@@ -1,7 +1,9 @@
 <template>
-    <button class="btn btn-success" @click="sendRequest(otherUser.username)"
-        :disabled="userStore.getFriendship(otherUser.email) !== undefined"> <!-- Disable button if friendship exists-->
-        {{ userStore.getFriendship(otherUser.email)?.status ?? 'Send Request' }}
+    <button v-if="friendship" :class="buttonClass" disabled>
+        {{ friendship.status }}
+    </button>
+    <button v-else @click="sendRequest(otherUser.username)" class="btn btn-success">
+        Send Request
     </button>
 </template>
 <script lang="ts">
@@ -21,6 +23,12 @@ export default defineComponent({
     },
     computed: {
         ...mapStores(useUserStore),
+        friendship() {
+            return this.userStore.getFriendship(this.otherUser.email);
+        },
+        buttonClass() {
+            return `btn ${this.friendship?.status === 'Accepted' ? 'btn-primary' : 'btn-success'}`;
+        }
     },
     methods: {
         async sendRequest(username: string) {
