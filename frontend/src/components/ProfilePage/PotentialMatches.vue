@@ -42,11 +42,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { PotentialMatchesData, CustomUserAge } from "../../types";
+import { PotentialMatchesData } from "../../types";
 import { useUserStore } from "../../stores/user";
-import { mapStores } from 'pinia';
+import { mapStores, mapState } from 'pinia';
 
-const url = 'http://localhost:8000'
+const url = 'http://localhost:8000';
 
 export default defineComponent({
   data(): PotentialMatchesData {
@@ -59,8 +59,21 @@ export default defineComponent({
       pageSize: 5, // Number of users per page
     };
   },
+  watch: {
+    user() {
+      // User undefined until pinia store is installed
+      this.filteredUsers = this.removeUserFiltered();
+    },
+    filteredUsers() {
+      const newFiltered = this.removeUserFiltered();
+      if (newFiltered.length === this.filteredUsers.length - 1) { // Don't want endless calls when filtered changes
+        this.filteredUsers = newFiltered;
+      }
+    }
+  },
   computed: {
     ...mapStores(useUserStore),
+    ...mapState(useUserStore, ['user', 'csrf']),
     totalPages() {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
@@ -70,28 +83,24 @@ export default defineComponent({
       return this.filteredUsers.slice(start, end);
     },
     friendships() {
-      return this.userStore.user.friends;
-    },
+      return this.user.friends;
+    }
   },
   methods: {
-    setDefaultResults(users: CustomUserAge[]) {
-      // Filter currently logged in user from results
-      return users.filter(user => user.username !== this.userStore.user.username)
-    },
     fetchUsers() {
       // Fetch users from the API
       fetch("http://127.0.0.1:8000/api/users/")
         .then((response) => response.json())
         .then((data) => {
           this.users = data;
-          this.filteredUsers = this.setDefaultResults(data); // Initialize with all users
+          this.filteredUsers = data; // Initialize with all users
         })
         .catch((error) => console.error("Error fetching users:", error));
     },
     applyFilter() {
       // Filter users by age range and remove currently logged in user
       this.filteredUsers = this.users.filter(
-        (user) => user.age >= this.minAge && user.age <= this.maxAge && user.email !== this.userStore.user.email
+        (user) => user.age >= this.minAge && user.age <= this.maxAge && user.email !== this.user.email
       );
       this.currentPage = 1; // Reset to the first page after filtering
     },
@@ -99,7 +108,7 @@ export default defineComponent({
       // Reset age filter and show all users
       this.minAge = 18; // Reset to default minimum age
       this.maxAge = 100; // Reset to default maximum age
-      this.filteredUsers = this.setDefaultResults(this.users); // Show all users
+      this.filteredUsers = this.users; // Show all users
       this.currentPage = 1; // Reset to the first page
     },
     prevPage() {
@@ -113,17 +122,15 @@ export default defineComponent({
       }
     },
     getFriendshipStatus(email: string) {
-      console.log(this.userStore.user.friends)
-      this.userStore.user.friends && this.userStore.user.friends.forEach(friendship => {
+      this.user.friends && this.user.friends.forEach(friendship => {
         if (friendship.user_email == email) {
-          console.log('found' + friendship.status)
           return friendship.status;
         }
       });
     },
     async sendRequest(username: string) {
       try {
-        const req = await fetch(`${url}/api/user/${this.userStore.user.id}/friendship/${username}/`, {
+        const req = await fetch(`${url}/api/user/${this.user.id}/friendship/${username}/`, {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -134,11 +141,14 @@ export default defineComponent({
         const response = await req.json();
         console.log(`Friend request sent to user with id${username}`);
         // Update user store - state change causes button text to change
-        this.userStore.user.friends.push(response.friendship)
+        this.user.friends.push(response.friendship)
       } catch (error) {
         console.log(error)
       }
     },
+    removeUserFiltered() {
+      return this.filteredUsers.filter(user => user.username !== this.user.username)
+    }
   },
   created() {
     this.fetchUsers(); // Fetch users when the component is created
