@@ -5,7 +5,7 @@
         <div class="text-secondary text-center" v-if="friends.length === 0">
             <p>No Friend Requests Received</p>
         </div>
-        <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-4 w-100" v-for="friend in friends">
+        <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-4 w-100" v-for="friend in displayedFriends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
                 <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;"
                     class="rounded-circle" :src="friend.user_profile_picture">
@@ -21,6 +21,11 @@
                 @click="handleResponse(false, friend.id)">
                 Decline
             </button>
+        </div>
+        <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary" v-if="friendIndex > 0" @click="prevPage">Previous</button>
+            <button type="button" class="btn btn-secondary" v-if="friendIndex + 10 < friends.length"
+                @click="nextPage">Next</button>
         </div>
     </div>
 </template>
@@ -54,7 +59,6 @@ export default defineComponent({
         },
         nextPage(): void {
             this.friendIndex += 10
-
         },
         async handleResponse(isAccepted: boolean, id: number) {
             if (this.userStore.csrf !== '') {
