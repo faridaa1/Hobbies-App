@@ -2,8 +2,11 @@
     <div class="fs-4 mt-4 border rounded p-3 ps-5 mb-5 w-100">
         <h1>My Friends</h1>
         <hr>
+        <div class="text-secondary text-center" v-if="friends.length === 0">
+            <p>No Friends</p>
+        </div>
         <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-5 w-100 align-items-center"
-            v-for="friend in friends">
+            v-for="friend in displayedFriends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
                 <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;"
                     class="rounded-circle" :src="friend.user_profile_picture">
@@ -16,6 +19,11 @@
                 Remove
             </button>
         </div>
+        <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-secondary" v-if="friendIndex > 0" @click="prevPage">Previous</button>
+            <button type="button" class="btn btn-secondary" v-if="friendIndex + 10 < friends.length"
+                @click="nextPage">Next</button>
+        </div>
     </div>
 </template>
 
@@ -25,7 +33,17 @@ import { CustomUser, Friendship, } from "../../types";
 import { useUserStore } from "../../stores/user";
 
 export default defineComponent({
+    data(): { friendIndex: number } {
+        return { friendIndex: 0 }
+    },
     methods: {
+        prevPage(): void {
+            this.friendIndex -= 10
+        },
+        nextPage(): void {
+            this.friendIndex += 10
+
+        },
         async removeFriend(id: number): Promise<void> {
             if (useUserStore().csrf !== '') {
                 let response: Response = await fetch(`http://localhost:8000/api/friendship/${id}/`, {
@@ -41,7 +59,10 @@ export default defineComponent({
                     confirm('Error occurred when removing friend')
                     return
                 }
-                useUserStore().updateFriendship(id, false)
+                useUserStore().updateFriendship(id, false);
+                if (this.displayedFriends.length === 0 && this.friends.length !== 0) {
+                    this.friendIndex -= 10
+                }
             }
         }
     },
@@ -54,6 +75,9 @@ export default defineComponent({
             }
             return []
         },
+        displayedFriends(): Friendship[] {
+            return this.friends.slice(this.friendIndex, this.friendIndex + 10)
+        }
     }
 })
 </script>

@@ -147,6 +147,7 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
                 user.name = json.loads(request.body)
             elif field == 'email':
                 user.email = json.loads(request.body) 
+                user.username = json.loads(request.body)
             elif field == 'dob':
                 user.date_of_birth = datetime.strptime(json.loads(request.body), "%Y-%m-%d").date()
             elif field == 'password':

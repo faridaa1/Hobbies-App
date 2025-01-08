@@ -29,6 +29,9 @@ import { useUserStore } from "../../stores/user";
 import { mapStores } from "pinia";
 
 export default defineComponent({
+    data(): { friendIndex: number } {
+        return { friendIndex: 0 }
+    },
     computed: {
         ...mapStores(useUserStore),
         user(): CustomUser {
@@ -38,9 +41,18 @@ export default defineComponent({
                 return this.user.friends.filter(friendship => friendship.status === 'Pending' && !friendship.sent)
             }
             return []
+        }, displayedFriends(): Friendship[] {
+            return this.friends.slice(this.friendIndex, this.friendIndex + 10)
         }
     },
     methods: {
+        prevPage(): void {
+            this.friendIndex -= 10
+        },
+        nextPage(): void {
+            this.friendIndex += 10
+
+        },
         async handleResponse(isAccepted: boolean, id: number) {
             if (this.userStore.csrf !== '') {
                 let response: Response = await fetch(`http://localhost:8000/api/friendship/${id}/`, {
@@ -57,6 +69,9 @@ export default defineComponent({
                     return
                 }
                 this.userStore.updateFriendship(id, isAccepted)
+                if (this.displayedFriends.length === 0 && this.friends.length !== 0) {
+                    this.friendIndex -= 10
+                }
             }
         }
     }
