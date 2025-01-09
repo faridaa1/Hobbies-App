@@ -35,14 +35,6 @@
                     Friend Requests Received
                 </button>
             </li>
-            <!-- New Tab for Potential Matches -->
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="potential-matches-tab" data-bs-toggle="tab"
-                    data-bs-target="#potential-matches-tab-pane" type="button" role="tab"
-                    aria-controls="potential-matches-tab-pane" aria-selected="true">
-                    Potential Matches
-                </button>
-            </li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="personal-details-tab-pane" role="tabpanel"
