@@ -11,12 +11,17 @@ from selenium import webdriver
 
 def valid_signup_data() -> dict:
     """Returns a dict of valid data for a Signup Form"""
+    git_root_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(git_root_dir, "test.png")
+    file_path2 = os.path.join(git_root_dir, "test2.png")
     return {
         'username': 'test_email@test.com',
         'name': 'test name',
         'email': 'test_email@test.com',
         'password': 'test_password',
-        'date_of_birth': datetime.date.today()
+        'date_of_birth': datetime.date.today(),
+        'file_path': file_path,
+        'file_path2': file_path2
     }
 
 
@@ -34,40 +39,34 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     #     super().tearDownClass()
     
     def test_signup(self):
-        password = "testing123"
-        email_address = "test2231@gmail.com"
-        name = "testing"
         self.selenium.get(f"{self.live_server_url}/signup")
         full_name = self.selenium.find_element(By.NAME, "name")
-        full_name.send_keys(name)
+        full_name.send_keys(valid_signup_data()['name'])
         email = self.selenium.find_element(By.NAME, "email")
-        email.send_keys(email_address)
+        email.send_keys(valid_signup_data()['email'])
         password_input = self.selenium.find_element(By.NAME, "password")
-        password_input.send_keys(password)
+        password_input.send_keys(valid_signup_data()['password'])
         date_of_birth = self.selenium.find_element(By.NAME, "date_of_birth")
-        date_of_birth.send_keys("2004-01-20")
+        date_of_birth.send_keys(valid_signup_data()['date_of_birth'].strftime('%d-%m-%Y'))
         show_password = self.selenium.find_element(By.NAME, "show-password")
         show_password.click()
-        git_root_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(git_root_dir, "test.png")
         profile_picture = self.selenium.find_element(By.NAME, "profile_picture")
-        profile_picture.send_keys(file_path)
+        profile_picture.send_keys(valid_signup_data()['file_path'])
         submit = self.selenium.find_element(By.NAME, "submit")
         submit.click()
         # signout = self.selenium.find_element(By.NAME, "signout")
         # signout.click()
-        self.test_profile(email_address, password, git_root_dir)
+        self.test_profile()
 
 
-    def test_profile(self, email_address, password, git_root_dir):
+    def test_profile(self):
         # editing profile fields
         remove_profile = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "remove_profile")))
         remove_profile.click()
         old_src = self.selenium.find_element(By.CSS_SELECTOR, "img.rounded-circle").get_attribute("src")
         profile_pic = self.selenium.find_element(By.NAME, "profile_pic")
-        file_path = os.path.join(git_root_dir, "test2.png")
-        profile_pic.send_keys(file_path)
+        profile_pic.send_keys(valid_signup_data()['file_path2'])
         WebDriverWait(self.selenium, 10).until(
            lambda driver: driver.find_element(By.CSS_SELECTOR, "img.rounded-circle").get_attribute("src") != old_src)
         name_edit = self.selenium.find_element(By.NAME, "name_edit")
@@ -84,7 +83,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         email_edit.click()
         email = self.selenium.find_element(By.NAME, "email")
         email.click()
-        email_address = email_address+".uk"
+        email_address = valid_signup_data()['email']+".uk"
         email.clear()
         email.send_keys(email_address)
         email_check = self.selenium.find_element(By.NAME, "email_check")
@@ -96,10 +95,10 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         password_edit.click()
         current_password = self.selenium.find_element(By.NAME, "current_password")
         current_password.click()
-        current_password.send_keys(password)
+        current_password.send_keys(valid_signup_data()['password'])
         new_password = self.selenium.find_element(By.NAME, "new_password")
         new_password.click()
-        new_pass = password+"1"
+        new_pass = valid_signup_data()['password']+"1"
         new_password.send_keys(new_pass)
         new_password2 = self.selenium.find_element(By.NAME, "new_password2")
         new_password2.click()
@@ -149,3 +148,6 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         delete_hobby.click()
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.NAME, "delete_hobby")))
+        
+        
+    # (5) sending a friend request, (6) login as the other user and accept the friend requests sent. 
