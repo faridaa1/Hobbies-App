@@ -5,8 +5,8 @@
     <main class="container pt-4">
         <div class="d-flex justify-content-between">
             <div>
-                <router-link :to="{ name: 'Search Page' }">
-                    Search
+                <router-link :to="{ name: 'Users Page' }">
+                    Users
                 </router-link>
                 |
                 <router-link :to="{ name: 'Profile Page' }">

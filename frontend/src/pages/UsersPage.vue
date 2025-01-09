@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import PotentialMatches from "../components/SearchPage/PotentialMatches.vue";
+import PotentialMatches from "../components/UsersPage/PotentialMatches.vue";
 
 export default defineComponent({
   components: {

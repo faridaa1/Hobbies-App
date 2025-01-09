@@ -4,7 +4,7 @@ import { Router, createRouter, createWebHistory } from 'vue-router'
 
 // 1. Define route components.
 // These can be imported from other files
-import SearchPage from '../pages/SearchPage.vue';
+import UsersPage from '../pages/UsersPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
 
 let base: string = (import.meta.env.MODE == 'development') ? import.meta.env.BASE_URL : ''
@@ -15,7 +15,7 @@ let base: string = (import.meta.env.MODE == 'development') ? import.meta.env.BAS
 const router: Router = createRouter({
     history: createWebHistory(base),
     routes: [
-        { path: '/search/', name: 'Search Page', component: SearchPage },
+        { path: '/users/', name: 'Users Page', component: UsersPage },
         { path: '/profile/', name: 'Profile Page', component: ProfilePage },
     ]
 })
