@@ -68,21 +68,23 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         profile_picture.send_keys(valid_signup_data()['file_path'])
         
         # submit form
-        self.selenium.find_element(By.NAME, "submit").click()
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.visibility_of_element_located((By.NAME, "submit"))
+        ).click()
         
-        self.test_login()
+        self.login()
     
 
-    def test_login(self):
+    def login(self):
         """Testing login"""
         # sign out
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.NAME, "signout"))
+            expected_conditions.visibility_of_element_located((By.NAME, "signout"))
         ).click()
 
         # enter email
         email = WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.NAME, "email"))
+            expected_conditions.visibility_of_element_located((By.NAME, "email"))
         )
         email.click()
         email.send_keys(valid_signup_data()['email'])
@@ -93,19 +95,21 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         password.send_keys(valid_signup_data()['password'])
 
         # submit form
-        self.selenium.find_element(By.NAME, "submit").click()
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.visibility_of_element_located((By.NAME, "submit"))
+        ).click()
         
-        self.test_profile()
+        self.profile()
 
 
-    def test_profile(self):
+    def profile(self):
         """Testing editing all the user's data on their profile page"""
-        self.test_profile_edit()
-        self.test_add_hobby()
-        self.test_send_friend_request()
+        self.profile_edit()
+        self.add_hobby()
+        self.send_friend_request()
 
     
-    def test_profile_edit(self):
+    def profile_edit(self):
         """Testing editing all profile details"""
         # edit profile picture
         WebDriverWait(self.selenium, 10).until(
@@ -165,7 +169,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             expected_conditions.element_to_be_clickable((By.NAME, "dob_save"))
         ).click()
         
-    def test_add_hobby(self):
+    def add_hobby(self):
         """Testing editing hobbies"""
         # navigate to hobby tab
         self.selenium.find_element(By.NAME, "hobbies").click()
@@ -202,33 +206,37 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
         # delete hobby
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.NAME, "delete_hobby"))
+            expected_conditions.visibility_of_element_located((By.NAME, "delete_hobby"))
         ).click()
 
 
-    def test_send_friend_request(self):
+    def send_friend_request(self):
         """Testing sending a friend request"""
         # navigate to users page
-        self.selenium.find_element(By.LINK_TEXT, "Users").click()
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.visibility_of_element_located((By.LINK_TEXT, "Users"))
+        ).click()
 
         # send friend request
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.NAME, "send-request"))
+            expected_conditions.visibility_of_element_located((By.NAME, "send-request"))
         ).click()
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.NAME, "status")))
+            expected_conditions.visibility_of_element_located((By.NAME, "status")))
         
-        self.test_accept_friend_request()
+        self.accept_friend_request()
 
 
-    def test_accept_friend_request(self):
+    def accept_friend_request(self):
         """Testing login as the other user and accept the freind request sent"""
         # log out
-        self.selenium.find_element(By.NAME, "signout").click()
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.visibility_of_element_located((By.NAME, "signout"))
+        ).click()
         
         # sign in as other user 
         email = WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.NAME, "email"))
+            expected_conditions.visibility_of_element_located((By.NAME, "email"))
         )
         email.click()
         
@@ -252,12 +260,12 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         
         # navigate to friend requests receieved tab
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.ID, "friend-requests-received-tab"))
+            expected_conditions.visibility_of_element_located((By.ID, "friend-requests-received-tab"))
         ).click()
         
         # accept friend request
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.NAME, "accept-request"))
+            expected_conditions.visibility_of_element_located((By.NAME, "accept-request"))
         ).click()
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.invisibility_of_element_located((By.NAME, "accept-request"))
