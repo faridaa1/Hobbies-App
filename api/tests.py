@@ -27,15 +27,15 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     port = 8000
     fixtures = ['users.json']
     
-    # setting password of test user (set in fixtures) manually so it can be hashed using set_password
-    user = CustomUser.objects.get(pk=1)
-    user.set_password("testing123") # so it can be hashed
-    user.save()
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.selenium = WebDriver()
+        # setting password of test user (set in fixtures) manually so it can be hashed using set_password
+        user = CustomUser.objects.get(pk=1)
+        user.set_password("testing123") # so it can be hashed
+        user.save()
 
     # @classmethod 
     # def tearDownClass(cls):
@@ -75,6 +75,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         
         self.test_login()
     
+
     def test_login(self):
         """Testing login"""
         # sign out
