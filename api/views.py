@@ -96,6 +96,7 @@ def hobbies_api_view(request: HttpRequest) -> JsonResponse:
             'hobbies': [],
         })
     
+    
 def all_users_api_view(request: HttpRequest) -> JsonResponse:
     """API view to return all users with calculated age."""
     def calculate_age(dob):
