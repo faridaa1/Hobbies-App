@@ -23,7 +23,7 @@ def valid_signup_data() -> dict:
         'file_path2': file_path2
     }
 
-
+import time
 class ProfileSeleniumTests(StaticLiveServerTestCase):
     port = 8000
     fixtures = ['users.json']
@@ -42,12 +42,16 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # 1 - account creation / signup
         self.selenium.get(f"{self.live_server_url}/signup")
         full_name = self.selenium.find_element(By.NAME, "name")
+        full_name.click()
         full_name.send_keys(valid_signup_data()['name'])
         email = self.selenium.find_element(By.NAME, "email")
+        email.click()
         email.send_keys(valid_signup_data()['email'])
         password_input = self.selenium.find_element(By.NAME, "password")
+        password_input.click()
         password_input.send_keys(valid_signup_data()['password'])
         date_of_birth = self.selenium.find_element(By.NAME, "date_of_birth")
+        date_of_birth.click()
         date_of_birth.send_keys(valid_signup_data()['date_of_birth'].strftime('%d-%m-%Y'))
         show_password = self.selenium.find_element(By.NAME, "show-password")
         show_password.click()
@@ -59,17 +63,18 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     
     def test_login(self):
         # 2 - login
-        signout = self.selenium.find_element(By.NAME, "signout")
-        # signout = WebDriverWait(self.selenium, 10).until(
-        #     expected_conditions.presence_of_element_located((By.NAME, "signout")))
+        signout = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.presence_of_element_located((By.NAME, "signout")))
         signout.click()
         email = WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.NAME, "email")))
+        email.click()
         email.send_keys(valid_signup_data()['email'])
-        # password = self.selenium.find_element(By.NAME, "password")
-        # password.send_keys(valid_signup_data()['password'])
-        # submit = self.selenium.find_element(By.NAME, "submit")
-        # submit.click()
+        password = self.selenium.find_element(By.NAME, "password")
+        password.click()
+        password.send_keys(valid_signup_data()['password'])
+        submit = self.selenium.find_element(By.NAME, "submit")
+        submit.click()
         self.test_profile()
 
 
@@ -179,6 +184,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         signout.click()
         email = WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.NAME, "email")))
+        email.click()
         user = CustomUser.objects.get(pk=1)
         user.set_password("testing123") # so it can be hashed
         user.save()
@@ -186,6 +192,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             email_address = json.load(file)[0]['fields']['email']
         email.send_keys(email_address)
         password = self.selenium.find_element(By.NAME, "password")
+        password.click()
         password.send_keys("testing123")
         submit = self.selenium.find_element(By.NAME, "submit")
         submit.click()
