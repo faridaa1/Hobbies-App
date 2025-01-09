@@ -32,15 +32,12 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.selenium = WebDriver()
-        # setting password of test user (set in fixtures) manually so it can be hashed using set_password
-        user = CustomUser.objects.get(pk=1)
-        user.set_password("testing123") # so it can be hashed
-        user.save()
+        
 
-    # @classmethod 
-    # def tearDownClass(cls):
-    #     cls.selenium.quit()
-    #     super().tearDownClass()
+    @classmethod 
+    def tearDownClass(cls):
+        # cls.selenium.quit()
+        super().tearDownClass()
     
     def test_signup(self):
         """Testing account creation / signup"""
@@ -235,6 +232,11 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         )
         email.click()
         
+        # setting password of test user (set in fixtures) manually so it can be hashed using set_password
+        user = CustomUser.objects.get(pk=1)
+        user.set_password("testing123") # so it can be hashed
+        user.save()
+
         # get test user email
         with open('api/fixtures/users.json', 'r') as file:
             email_address = json.load(file)[0]['fields']['email']
