@@ -80,6 +80,10 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
     def test_profile(self):
         """Testing editing all the user's data on their profile page"""
+        self.test_profile_edit()
+    
+    def test_profile_edit(self):
+        """Testing editing all profile details"""
         remove_profile = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "remove_profile")))
         remove_profile.click()
@@ -135,8 +139,10 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         dob_save = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "dob_save")))
         dob_save.click()
+        self.test_add_hobby()
         
-        # adding hobby
+    def test_add_hobby(self):
+        """Testing editing hobbies"""
         hobbies = self.selenium.find_element(By.NAME, "hobbies")
         hobbies.click()
         add_hobby = self.selenium.find_element(By.NAME, "add_hobby")
