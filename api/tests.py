@@ -44,6 +44,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         full_name = self.selenium.find_element(By.NAME, "name")
         full_name.click()
         full_name.send_keys(valid_signup_data()['name'])
+
         email = self.selenium.find_element(By.NAME, "email")
         email.click()
         email.send_keys(valid_signup_data()['email'])
