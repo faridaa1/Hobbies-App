@@ -199,6 +199,8 @@
                 event.preventDefault()
                 if (useUsersStore().users.filter(userX => userX.id !== this.user.id).map(user => user.email).includes(this.email)) {
                     this.errorText.email = 'Email already exists'
+                } else if (!this.email.match(/[a-zA-Z0-9-\.](\.[a-zA-Z0-9-\.]+)+$/)) {
+                    this.errorText.email = 'Incorrect email ending'
                 } else {
                     this.errorText.email = ''
                     this.validEmail = true;
