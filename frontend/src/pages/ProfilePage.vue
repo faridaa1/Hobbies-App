@@ -74,7 +74,6 @@ import Hobbies from "../components/ProfilePage/Hobbies.vue";
 import Friends from "../components/ProfilePage/Friends.vue";
 import FriendRequestsSent from "../components/ProfilePage/FriendRequestsSent.vue";
 import FriendRequestsReceived from "../components/ProfilePage/FriendRequestsReceived.vue";
-import PotentialMatches from "../components/ProfilePage/PotentialMatches.vue";
 
 export default defineComponent({
     data(): { title: String } {
@@ -88,7 +87,6 @@ export default defineComponent({
         Friends,
         FriendRequestsSent,
         FriendRequestsReceived,
-        PotentialMatches
     },
     methods: {
         today(): string {
