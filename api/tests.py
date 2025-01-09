@@ -198,8 +198,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         with open('api/fixtures/users.json', 'r') as file:
             email_address = json.load(file)[0]['fields']['email']
         email.send_keys(email_address)
-        password = self.selenium.find_element(By.NAME, "password")
-        password.click()
+        password = self.selenium.find_element(By.NAME, "password").click()
         password.send_keys("testing123")
         submit = self.selenium.find_element(By.NAME, "submit")
         submit.click()
