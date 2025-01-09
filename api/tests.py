@@ -1,4 +1,4 @@
-import datetime, os
+import datetime, os, json
 from django.urls import reverse
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.by import By
@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
 from selenium import webdriver
+
+from api.models import CustomUser
 
 # https://docs.djangoproject.com/en/5.1/intro/tutorial05/
 
@@ -27,6 +29,7 @@ def valid_signup_data() -> dict:
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
     port = 8000
+    fixtures = ['users.json']
 
     @classmethod
     def setUpClass(cls):
@@ -39,6 +42,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     #     super().tearDownClass()
     
     def test_signup(self):
+        # 1 - account creation / signup
         self.selenium.get(f"{self.live_server_url}/signup")
         full_name = self.selenium.find_element(By.NAME, "name")
         full_name.send_keys(valid_signup_data()['name'])
@@ -54,13 +58,26 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         profile_picture.send_keys(valid_signup_data()['file_path'])
         submit = self.selenium.find_element(By.NAME, "submit")
         submit.click()
-        # signout = self.selenium.find_element(By.NAME, "signout")
-        # signout.click()
+        self.test_login()
+    
+    def test_login(self):
+        # 2 - login
+        signout = self.selenium.find_element(By.NAME, "signout")
+        # signout = WebDriverWait(self.selenium, 10).until(
+        #     expected_conditions.presence_of_element_located((By.NAME, "signout")))
+        signout.click()
+        email = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.presence_of_element_located((By.NAME, "email")))
+        email.send_keys(valid_signup_data()['email'])
+        # password = self.selenium.find_element(By.NAME, "password")
+        # password.send_keys(valid_signup_data()['password'])
+        # submit = self.selenium.find_element(By.NAME, "submit")
+        # submit.click()
         self.test_profile()
 
 
     def test_profile(self):
-        # editing profile fields
+        # 3 - editing all the user's data on their profile page
         remove_profile = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "remove_profile")))
         remove_profile.click()
@@ -146,8 +163,42 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         delete_hobby = WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.NAME, "delete_hobby")))
         delete_hobby.click()
+        self.test_send_friend_request()
+
+    def test_send_friend_request(self):
+        # 5 - sending a friend request
+        users = self.selenium.find_element(By.LINK_TEXT, "Users")
+        users.click()
+        send_request = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.presence_of_element_located((By.NAME, "send-request")))
+        send_request.click()
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.presence_of_element_located((By.NAME, "delete_hobby")))
-        
-        
-    # (5) sending a friend request, (6) login as the other user and accept the friend requests sent. 
+            expected_conditions.presence_of_element_located((By.NAME, "status")))
+        self.test_accept_friend_request()
+
+    def test_accept_friend_request(self):
+        # 6 - login as the other user and accept the freind request sent
+        signout = self.selenium.find_element(By.NAME, "signout")
+        signout.click()
+        email = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.presence_of_element_located((By.NAME, "email")))
+        user = CustomUser.objects.get(pk=1)
+        user.set_password("testing123") # so it can be hashed
+        user.save()
+        with open('api/fixtures/users.json', 'r') as file:
+            email_address = json.load(file)[0]['fields']['email']
+        email.send_keys(email_address)
+        password = self.selenium.find_element(By.NAME, "password")
+        password.send_keys("testing123")
+        submit = self.selenium.find_element(By.NAME, "submit")
+        submit.click()
+        tab = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.presence_of_element_located((By.ID, "friend-requests-received-tab")))
+        tab.click()
+        accept_request = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.presence_of_element_located((By.NAME, "accept-request"))
+        )
+        accept_request.click()
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.invisibility_of_element_located((By.NAME, "accept-request"))
+        )
