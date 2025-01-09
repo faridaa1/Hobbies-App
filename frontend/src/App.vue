@@ -5,12 +5,12 @@
     <main class="container pt-4">
         <div class="d-flex justify-content-between">
             <div>
-                <router-link :to="{ name: 'Other Page' }">
-                    New Page (needs name)
+                <router-link :to="{ name: 'Search Page' }">
+                    Search
                 </router-link>
                 |
                 <router-link :to="{ name: 'Profile Page' }">
-                    My Profile
+                    Profile
                 </router-link>
             </div>
             <button name="signout" type="button" class="btn btn-primary ms-5" @click="signout">Sign Out</button>
