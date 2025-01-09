@@ -39,7 +39,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     #     super().tearDownClass()
     
     def test_signup(self):
-        # 1 - account creation / signup
+        """Testing account creation / signup"""
         self.selenium.get(f"{self.live_server_url}/signup")
         full_name = self.selenium.find_element(By.NAME, "name")
         full_name.click()
@@ -62,7 +62,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.test_login()
     
     def test_login(self):
-        # 2 - login
+        """Testing login"""
         signout = WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.NAME, "signout")))
         signout.click()
@@ -79,7 +79,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
 
     def test_profile(self):
-        # 3 - editing all the user's data on their profile page
+        """Testing editing all the user's data on their profile page"""
         remove_profile = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "remove_profile")))
         remove_profile.click()
@@ -168,7 +168,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.test_send_friend_request()
 
     def test_send_friend_request(self):
-        # 5 - sending a friend request
+        """Testing sending a friend request"""
         users = self.selenium.find_element(By.LINK_TEXT, "Users")
         users.click()
         send_request = WebDriverWait(self.selenium, 10).until(
@@ -179,7 +179,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.test_accept_friend_request()
 
     def test_accept_friend_request(self):
-        # 6 - login as the other user and accept the freind request sent
+        """Testing login as the other user and accept the freind request sent"""
         signout = self.selenium.find_element(By.NAME, "signout")
         signout.click()
         email = WebDriverWait(self.selenium, 10).until(
