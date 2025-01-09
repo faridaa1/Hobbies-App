@@ -52,7 +52,6 @@ def login(request: HttpRequest) -> HttpResponse:
             email: str = form.cleaned_data['email']
             password: str = form.cleaned_data['password']
             user: CustomUser | None = authenticate(request, username=email, password=password)
-            print(CustomUser.objects.get(pk=1).password)
 
             if user is not None:
                 auth.login(request, user)
