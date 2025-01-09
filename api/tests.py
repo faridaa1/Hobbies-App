@@ -1,12 +1,9 @@
 import datetime, os, json
-from django.urls import reverse
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
-from selenium import webdriver
-
 from api.models import CustomUser
 
 # https://docs.djangoproject.com/en/5.1/intro/tutorial05/
