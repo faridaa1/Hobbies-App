@@ -46,20 +46,24 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         """Testing account creation / signup"""
         # enter name
         self.selenium.get(f"{self.live_server_url}/signup")
-        full_name = self.selenium.find_element(By.NAME, "name").click()
+        full_name = self.selenium.find_element(By.NAME, "name")
+        full_name.click()
         full_name.send_keys(valid_signup_data()['name'])
 
         # enter email
-        email = self.selenium.find_element(By.NAME, "email").click()
+        email = self.selenium.find_element(By.NAME, "email")
+        email.click()
         email.send_keys(valid_signup_data()['email'])
 
         # enter password
-        password_input = self.selenium.find_element(By.NAME, "password").click()
+        password_input = self.selenium.find_element(By.NAME, "password")
+        password_input.click()
         password_input.send_keys(valid_signup_data()['password'])
         self.selenium.find_element(By.NAME, "show-password").click()
 
         # enter dob
-        date_of_birth = self.selenium.find_element(By.NAME, "date_of_birth").click()
+        date_of_birth = self.selenium.find_element(By.NAME, "date_of_birth")
+        date_of_birth.click()
         date_of_birth.send_keys(valid_signup_data()['date_of_birth'].strftime('%d-%m-%Y'))
 
         # enter profile picture
@@ -81,11 +85,13 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # enter email
         email = WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.NAME, "email"))
-        ).click()
+        )
+        email.click()
         email.send_keys(valid_signup_data()['email'])
 
         # enter password
-        password = self.selenium.find_element(By.NAME, "password").click()
+        password = self.selenium.find_element(By.NAME, "password")
+        password.click()
         password.send_keys(valid_signup_data()['password'])
 
         # submit form
@@ -115,7 +121,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         
         # edit name
         self.selenium.find_element(By.NAME, "name_edit").click()
-        name = self.selenium.find_element(By.NAME, "name").click()
+        name = self.selenium.find_element(By.NAME, "name")
+        name.click()
         name.clear()
         name.send_keys("New Name")
         WebDriverWait(self.selenium, 10).until(
@@ -124,7 +131,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         
         # edit email
         self.selenium.find_element(By.NAME, "email_edit").click()
-        email = self.selenium.find_element(By.NAME, "email").click()
+        email = self.selenium.find_element(By.NAME, "email")
+        email.click()
         email_address = valid_signup_data()['email']+".uk"
         email.clear()
         email.send_keys(email_address)
@@ -135,12 +143,15 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         
         # edit password
         self.selenium.find_element(By.NAME, "password_edit").click()
-        current_password = self.selenium.find_element(By.NAME, "current_password").click()
+        current_password = self.selenium.find_element(By.NAME, "current_password")
+        current_password.click()
         current_password.send_keys(valid_signup_data()['password'])
-        new_password = self.selenium.find_element(By.NAME, "new_password").click()
+        new_password = self.selenium.find_element(By.NAME, "new_password")
+        new_password.click()
         new_pass = valid_signup_data()['password']+"1"
         new_password.send_keys(new_pass)
-        new_password2 = self.selenium.find_element(By.NAME, "new_password2").click()
+        new_password2 = self.selenium.find_element(By.NAME, "new_password2")
+        new_password2.click()
         new_password2.send_keys(new_pass)
         self.selenium.find_element(By.NAME, "password_check").click()
         WebDriverWait(self.selenium, 10).until(
@@ -149,7 +160,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         
         # edit dob
         self.selenium.find_element(By.NAME, "dob_edit").click()
-        dob = self.selenium.find_element(By.NAME, "dob").click()
+        dob = self.selenium.find_element(By.NAME, "dob")
+        dob.click()
         dob.send_keys("22-03-2004")
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "dob_save"))
@@ -164,11 +176,13 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # enter name
         hobby_name = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "hobby_name"))
-        ).click()
+        )
+        hobby_name.click()
         hobby_name.send_keys("Baking")
         
         # enter description
-        hobby_description = self.selenium.find_element(By.NAME, "hobby_description").click()
+        hobby_description = self.selenium.find_element(By.NAME, "hobby_description")
+        hobby_description.click()
         hobby_description.send_keys("The art of baking things.")
 
         # select level
@@ -176,7 +190,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element(By.NAME, "level_option").click()
 
         # select start date
-        hobby_start_date = self.selenium.find_element(By.NAME, "hobby_start_date").click()
+        hobby_start_date = self.selenium.find_element(By.NAME, "hobby_start_date")
+        hobby_start_date.click()
         hobby_start_date.send_keys("10-10-2010")
 
         # validate hobby details 
@@ -216,7 +231,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # sign in as other user 
         email = WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.NAME, "email"))
-        ).click()
+        )
+        email.click()
         
         # get test user email
         with open('api/fixtures/users.json', 'r') as file:
@@ -224,7 +240,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         email.send_keys(email_address)
 
         # enter test user password
-        password = self.selenium.find_element(By.NAME, "password").click()
+        password = self.selenium.find_element(By.NAME, "password")
+        password.click()
         password.send_keys("testing123")
 
         # submit form
