@@ -63,11 +63,6 @@
                 aria-labelledby="friend-requests-received-tab" tabindex="4">
                 <FriendRequestsReceived />
             </div>
-            <!-- Content Pane for Potential Matches -->
-            <div class="tab-pane fade" id="potential-matches-tab-pane" role="tabpanel"
-                aria-labelledby="potential-matches-tab" tabindex="5">
-                <PotentialMatches />
-            </div>
         </div>
     </div>
 </template>
