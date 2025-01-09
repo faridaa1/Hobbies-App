@@ -21,6 +21,7 @@ export const useUserStore = defineStore('user', {
             this.hobbies.user_hobbies = this.hobbies.user_hobbies.filter(myHobby => myHobby.hobby.hobby_id !== hobby.hobby.hobby_id)
         },
         updateFriendship(id: number, isAccepted: boolean) {
+            // Accept or delete friendship
             let friendship: Friendship | undefined = this.user.friends.find(fs => fs.id === id) 
             if (friendship) {
                 if (isAccepted) {
@@ -30,5 +31,10 @@ export const useUserStore = defineStore('user', {
                 }
             } 
         }
+    },
+    getters: {
+        getFriendship: (state) => {
+            return (email: string) => state.user.friends?.find(friendship => friendship.user_email === email)
+        },
     }
 })

@@ -96,6 +96,7 @@ def hobbies_api_view(request: HttpRequest) -> JsonResponse:
             'hobbies': [],
         })
     
+    
 def all_users_api_view(request: HttpRequest) -> JsonResponse:
     """API view to return all users with calculated age."""
     def calculate_age(dob):
@@ -216,18 +217,39 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
     return JsonResponse({'user_hobbies': []})
 
 
-def friendship_api_view(request: HttpRequest, id: int) -> JsonResponse:
+def friendship_api_view(request: HttpRequest, from_id: int, to_username: str) -> JsonResponse:
     """Defining POST request handling for Friendship."""
     try:
-        friendship: Friendship = Friendship.objects.get(pk=id)
-        if json.loads(request.body):
-            # body is boolean related to whether friendship was accepted
-            friendship.status = 'Accepted'
-            friendship.save()
-            return JsonResponse(friendship.as_dict(request.user.username))
+        from_user = CustomUser.objects.get(pk=from_id)
+        to_user = CustomUser.objects.get(username=to_username)
+        if request.method == 'POST':
+            friendship = Friendship.objects.create(user1=from_user, user2=to_user,status='Pending')
+            return JsonResponse({'friendship': friendship.as_dict(current_user=from_user)})
         else:
-            # if friendship is rejected, delete relationship
+            return JsonResponse({}, status=405)
+    except:
+        return JsonResponse({}, status=500)
+    
+    
+def friendship_update_api_view(request: HttpRequest, id: int) -> JsonResponse:
+    """Defines DELETE and PUT request handling for a friendship"""
+    try:
+        friendship = Friendship.objects.get(pk=id)
+        if request.method == 'DELETE':
             friendship.delete()
-            return JsonResponse({})
+            return JsonResponse({}, status=204)
+        elif request.method == 'PUT':
+            # Update friendship status
+            if json.loads(request.body):
+                # body is boolean related to whether friendship was accepted
+                friendship.status = 'Accepted'
+                friendship.save()
+                return JsonResponse(friendship.as_dict(request.user.username))
+            else:
+                # if friendship is rejected, delete relationship
+                friendship.delete()
+                return JsonResponse({})
+        else:
+            return JsonResponse({}, status=405)
     except:
         return JsonResponse({}, status=500)

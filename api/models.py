@@ -96,9 +96,10 @@ class Friendship(models.Model):
         return {
             "id" : self.id,
             "user_name" : user.name,
+            "user_email": user.email,
             "user_profile_picture" : user.profile_picture.url if user.profile_picture else None,
             "status" : self.status,
-            "sent" : sent
+            "sent" : sent # If user is one who sent request
         }
 
     class Meta:
