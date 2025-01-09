@@ -5,10 +5,6 @@
     <main class="container pt-4">
         <div class="d-flex justify-content-between">
             <div>
-                <router-link :to="{ name: 'Main Page' }">
-                    Main Page
-                </router-link>
-                |
                 <router-link :to="{ name: 'Other Page' }">
                     New Page (needs name)
                 </router-link>
