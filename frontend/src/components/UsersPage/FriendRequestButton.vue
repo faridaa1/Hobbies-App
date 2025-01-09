@@ -1,6 +1,6 @@
 <template>
     <button v-if="friendship" :class="buttonClass" disabled>
-        {{ friendship.status }}
+        {{ buttonText }}
     </button>
     <button v-else @click="sendRequest(otherUser.username)" class="btn btn-success">
         Send Request
@@ -26,9 +26,21 @@ export default defineComponent({
         friendship() {
             return this.userStore.getFriendship(this.otherUser.email);
         },
+        userSentRequest() {
+            return this.friendship?.sent;
+        },
         buttonClass() {
             return `btn ${this.friendship?.status === 'Accepted' ? 'btn-primary' : 'btn-success'}`;
-        }
+        },
+        buttonText() {
+            if (this.friendship?.status === 'Accepted') {
+                return 'Accepted'
+            } else if (!this.friendship?.sent) {
+                return 'Check Profile'
+            } else {
+                return 'Request Sent'
+            }
+        },
     },
     methods: {
         async sendRequest(username: string) {
@@ -48,7 +60,7 @@ export default defineComponent({
             } catch (error) {
                 console.log(error)
             }
-        },
+        }
     }
 })
 </script>
