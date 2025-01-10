@@ -69,11 +69,8 @@ export default defineComponent({
         // extracting csrf token
         for (let cookie of document.cookie.split(';')) {
             const csrftoken: string[] = cookie.split('=')
-            console.log(csrftoken, csrftoken[0])
-            if (csrftoken[0] === 'csrftoken') {
-                console.log("should be stored")
+            if (csrftoken[0].trim() === 'csrftoken') {
                 userStore.csrf = csrftoken[1]
-                console.log(useUserStore().csrf)
             }
         }
     },
