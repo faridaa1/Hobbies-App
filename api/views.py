@@ -42,8 +42,6 @@ def signup(request: HttpRequest) -> HttpResponse:
 
 def login(request: HttpRequest) -> HttpResponse:
     """View for user login (using ssr)"""
-    return render(request, 'api/spa/login.html', {"form": LoginForm()})
-
     if request.method == "POST":
         form: LoginForm = LoginForm(request.POST)
 
