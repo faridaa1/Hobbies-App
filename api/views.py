@@ -42,7 +42,7 @@ def signup(request: HttpRequest) -> HttpResponse:
 
 def login(request: HttpRequest) -> HttpResponse:
     """View for user login (using ssr)"""
-    return render(request, 'templates/api/spa/login.html')
+    return render(request, 'api/spa/login.html', {"form": LoginForm()})
 
     if request.method == "POST":
         form: LoginForm = LoginForm(request.POST)
@@ -124,8 +124,7 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
     # redirect unauthenticated user to login page
-    form: LoginForm = LoginForm()
-    return render(request, 'api/spa/login.html', {"form": form})
+    return render(request, 'api/spa/login.html', {"form": LoginForm()})
     # return JsonResponse({'user' : '/login/'})
 
 
