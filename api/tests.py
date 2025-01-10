@@ -61,6 +61,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # enter dob
         date_of_birth = self.selenium.find_element(By.NAME, "date_of_birth")
         date_of_birth.click()
+        date_of_birth.clear()
         date_of_birth.send_keys(valid_signup_data()['date_of_birth'].strftime('%d-%m-%Y'))
 
         # enter profile picture
