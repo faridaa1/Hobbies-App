@@ -84,7 +84,7 @@ export default defineComponent({
   methods: {
     fetchUsers() {
       // Fetch users from the API
-      fetch("http://127.0.0.1:8000/api/users/")
+      fetch("/api/users/")
         .then((response) => response.json())
         .then((data) => {
           this.users = data;
