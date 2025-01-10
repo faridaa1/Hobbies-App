@@ -186,6 +186,7 @@
                         },
                     }) 
                     const data: { match: boolean } = await response.json()
+                    console.log(data)
                     if (data.match === false) {
                         this.errorText.password = 'Current Password is Incorrect'
                     } else {
