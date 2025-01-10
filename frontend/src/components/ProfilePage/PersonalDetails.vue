@@ -178,8 +178,7 @@
                 } else if (this.password.oldPassword === this.password.newPassword) {
                     this.errorText.password = "Current and New passwords are the same"
                 } else {
-                    console.log('making call')
-                    let response: Response = await fetch(`/api/user/${this.user.id}/password/${this.password.oldPassword}`, {
+                    let response: Response = await fetch(`/api/user/${this.user.id}/password/${this.password.oldPassword}/`, {
                         method: 'GET', 
                         credentials: 'include', 
                         headers: { 
@@ -187,8 +186,6 @@
                         },
                     }) 
                     const data: { match: boolean } = await response.json()
-                    console.log("call finished")
-                    console.log(data)
                     if (data.match === false) {
                         this.errorText.password = 'Current Password is Incorrect'
                     } else {
