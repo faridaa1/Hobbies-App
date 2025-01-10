@@ -192,6 +192,7 @@
                     this.data.newHobby.hobby_id = -1
                 }
                 if (useUserStore().csrf !== '') {
+                    console.log("calling")
                     let response: Response = await fetch(`/api/user/hobbies/${this.user.id}/`, {
                         method:'POST', 
                         credentials: 'include', 
@@ -201,6 +202,7 @@
                         },
                         body: JSON.stringify(this.data),
                     }) 
+                    console.log("should be done")
                     let userHobby: {user_hobbies: UserHobby} = await response.json()
                     if (Object.keys(userHobby.user_hobbies).length === 0) {
                         window.confirm('Failed to make changes')
