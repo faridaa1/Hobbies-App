@@ -223,6 +223,8 @@
             },
             async updateProfile(event: Event): Promise<void> {
                 let response: Response;
+                console.log("HERE")
+                console.log("HERE1", useUserStore().csrf)
                 if (useUserStore().csrf !== '') {
                     const input: HTMLInputElement = event.target as HTMLInputElement
                     let file: FormData = new FormData()
