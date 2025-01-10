@@ -3,8 +3,7 @@ import json
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import auth
-from django.contrib.auth import authenticate, login
-from requests import Session
+from django.contrib.auth import authenticate
 from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
