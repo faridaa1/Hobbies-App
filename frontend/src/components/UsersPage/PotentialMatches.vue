@@ -5,8 +5,12 @@
     <!-- Age Filter -->
     <div class="filters mb-4">
       <label for="age-filter">Filter by Age:</label>
-      <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" />
-      <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" />
+      <div class="age-range d-flex align-items-center mb-3">
+        <span class="me-2">Min: </span>
+        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" />
+        <span class="me-2">Max: </span>
+        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" />
+      </div>
       <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
       <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
     </div>
@@ -14,10 +18,14 @@
     <!-- User List -->
     <div class="user-list">
       <ul class="list-group">
-        <li v-for="user in paginatedUsers" :key="user.username"
-          class="list-group-item d-flex justify-content-between align-items-center">
+        <li
+          v-for="user in paginatedUsers"
+          :key="user.username"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
           <div>
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
+            <p>Hobbies: {{ user.hobbies.length ? user.hobbies.join(', ') : "No hobbies listed" }}</p>
           </div>
           <FriendRequestButton :otherUser="user" />
         </li>
@@ -26,11 +34,19 @@
 
     <!-- Pagination Controls -->
     <div class="pagination-controls mt-4 d-flex justify-content-center">
-      <button class="btn btn-secondary me-2" :disabled="currentPage === 1" @click="prevPage">
+      <button
+        class="btn btn-secondary me-2"
+        :disabled="currentPage === 1"
+        @click="prevPage"
+      >
         Previous
       </button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button class="btn btn-secondary ms-2" :disabled="currentPage === totalPages" @click="nextPage">
+      <button
+        class="btn btn-secondary ms-2"
+        :disabled="currentPage === totalPages"
+        @click="nextPage"
+      >
         Next
       </button>
     </div>
@@ -41,7 +57,7 @@
 import { defineComponent } from "vue";
 import { CustomUserAge } from "../../types";
 import { useUserStore } from "../../stores/user";
-import { mapState } from 'pinia';
+import { mapState } from "pinia";
 import FriendRequestButton from "./FriendRequestButton.vue";
 
 export default defineComponent({
@@ -56,22 +72,10 @@ export default defineComponent({
     };
   },
   components: {
-    FriendRequestButton
-  },
-  watch: {
-    user() {
-      // User undefined until pinia store is installed
-      this.filteredUsers = this.removeUserFiltered();
-    },
-    filteredUsers() {
-      const newFiltered = this.removeUserFiltered();
-      if (newFiltered.length === this.filteredUsers.length - 1) { // Don't want endless calls when filtered changes
-        this.filteredUsers = newFiltered;
-      }
-    }
+    FriendRequestButton,
   },
   computed: {
-    ...mapState(useUserStore, ['user', 'csrf']),
+    ...mapState(useUserStore, ["user", "csrf"]),
     totalPages() {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
@@ -87,15 +91,21 @@ export default defineComponent({
       fetch("http://127.0.0.1:8000/api/users/")
         .then((response) => response.json())
         .then((data) => {
-          this.users = data;
-          this.filteredUsers = data; // Initialize with all users
+          this.users = data.map((user) => ({
+            ...user,
+            hobbies: user.hobbies || [], // Ensure hobbies is an array
+          }));
+          this.filteredUsers = this.users; // Initialize with all users
         })
         .catch((error) => console.error("Error fetching users:", error));
     },
     applyFilter() {
       // Filter users by age range and remove currently logged in user
       this.filteredUsers = this.users.filter(
-        (user) => user.age >= this.minAge && user.age <= this.maxAge && user.email !== this.user.email
+        (user) =>
+          user.age >= this.minAge &&
+          user.age <= this.maxAge &&
+          user.email !== this.user.email
       );
       this.currentPage = 1; // Reset to the first page after filtering
     },
@@ -116,14 +126,11 @@ export default defineComponent({
         this.currentPage++;
       }
     },
-    removeUserFiltered() {
-      return this.filteredUsers.filter(user => user.username !== this.user.username)
-    }
   },
   created() {
     this.fetchUsers(); // Fetch users when the component is created
   },
-})
+});
 </script>
 
 <style scoped>

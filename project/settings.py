@@ -157,3 +157,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 INTERNAL_IPS = ['127.0.0.1']
+
+# Cookies settings
+SESSION_COOKIE_SAMESITE = "None"  # Allows cross-site cookies
+SESSION_COOKIE_SECURE = False     # Set this to True in production with HTTPS

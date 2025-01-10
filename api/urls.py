@@ -17,7 +17,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import main_spa, signup, login, logout, hobbies_api_view, user_api_view, all_users_api_view, users_api_view, user_hobbies_api_view, friendship_api_view, profile_api_view, check_password_api_view, friendship_update_api_view
+from .views import main_spa, signup, login, logout, hobbies_api_view, user_api_view, all_users_api_view, users_api_view, user_hobbies_api_view, friendship_api_view, profile_api_view, check_password_api_view, friendship_update_api_view, potential_matches_api_view
 
 urlpatterns = [
     path('', main_spa),
@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/hobbies/', hobbies_api_view, name='hobbies'),
     path('api/friendship/<int:id>/', friendship_update_api_view, name='edit friendship'),
     path('api/user/', user_api_view, name='user'),
+    path("api/potential-matches/", potential_matches_api_view, name="potential_matches"),
     path('api/users/', all_users_api_view, name='all_users_api'),
     path('api/all-users/', users_api_view, name='users'),
     path('api/user/<int:id>/<str:field>/', profile_api_view, name='profile'),
