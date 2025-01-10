@@ -191,7 +191,6 @@
                 } else {
                     this.data.newHobby.hobby_id = -1
                 }
-                console.log("here", useUserStore().csrf)
                 if (useUserStore().csrf !== '') {
                     console.log("calling")
                     let response: Response = await fetch(`/api/user/hobbies/${this.user.id}/`, {

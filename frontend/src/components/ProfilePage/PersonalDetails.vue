@@ -2,7 +2,7 @@
     <div class="fs-5 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
             <div class="position-relative">
-                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`/media/profile_pictures/${user.profile_picture}`">
+                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`/media/${user.profile_picture}`">
                 <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
                 <button name="remove_profile" type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="updatePicture($event)"><i class="bi bi-x fs-1"></i></button>
             </div>
@@ -223,7 +223,6 @@
             },
             async updateProfile(event: Event): Promise<void> {
                 let response: Response;
-                console.log("HERE1", useUserStore().csrf)
                 if (useUserStore().csrf !== '') {
                     const input: HTMLInputElement = event.target as HTMLInputElement
                     let file: FormData = new FormData()
@@ -293,6 +292,7 @@
                             }
                         }
                     }
+                    console.log(this.user.profile_picture)
                 } 
             }
         },
