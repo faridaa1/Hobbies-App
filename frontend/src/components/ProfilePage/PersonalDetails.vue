@@ -20,7 +20,7 @@
                     <input name="name" class="border border-secondary rounded px-2 me-2 w-100" type="text" :disabled="!isEditingName" v-model="name" @input="validateName">
                     <button name="name_edit" type="button" v-if="!isEditingName"class="btn btn-primary p-2" @click="isEditingName=true"><i class="bi bi-pencil d-flex"></i></button>
                     <button name="name_save" type="button" :disabled="!validName" v-if="isEditingName"  @click="updateProfile($event)" class="btn btn-success me-1">Save</button>
-                    <button type="button" v-if="isEditingName" class="btn btn-danger" @click="updateProfile($event)"><i class="bi bi-arrow-counterclockwise"></i></button>
+                    <button type="button" v-if="isEditingName" class="btn btn-danger" @click="reset('name')"><i class="bi bi-arrow-counterclockwise"></i></button>
                 </div>
             </div>
             <div v-if="errorText.name" class="text-danger fs-5">{{ errorText.name }}</div>
