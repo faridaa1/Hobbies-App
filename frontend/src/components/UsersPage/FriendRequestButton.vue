@@ -12,8 +12,6 @@ import { CustomUserAge } from '../../types';
 import { useUserStore } from '../../stores/user';
 import { mapStores } from 'pinia';
 
-const url = 'http://localhost:8000';
-
 export default defineComponent({
     props: {
         otherUser: {
@@ -45,7 +43,7 @@ export default defineComponent({
     methods: {
         async sendRequest(username: string) {
             try {
-                const req = await fetch(`${url}/api/user/${this.userStore.user.id}/friendship/${username}/`, {
+                const req = await fetch(`/api/user/${this.userStore.user.id}/friendship/${username}/`, {
                     method: 'POST',
                     credentials: 'include',
                     headers: {

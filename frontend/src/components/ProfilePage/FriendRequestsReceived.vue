@@ -62,7 +62,7 @@ export default defineComponent({
         },
         async handleResponse(isAccepted: boolean, id: number) {
             if (this.userStore.csrf !== '') {
-                let response: Response = await fetch(`http://localhost:8000/api/friendship/${id}/`, {
+                let response: Response = await fetch(`/api/friendship/${id}/`, {
                     method: 'PUT',
                     credentials: 'include',
                     headers: {
