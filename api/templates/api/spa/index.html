@@ -11,7 +11,19 @@
 </head>
 
 <body>
-    <div id="app"></div>
-</body>
+    <div id="app"></div>
 
+</body>
+  <body>
+      {% if request.path != '/login/' and request.path != '/signup/' and request.path != '/' %}
+      <div id="app">
+      </div>
+      {% endif %}
+      <div class="content">
+        {% block content %}
+        {% endblock %}
+        {% block js %}
+        {% endblock %}
+      </div>
+  </body>
 </html>

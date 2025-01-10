@@ -30,7 +30,6 @@ import { useUsersStore } from "./stores/users";
 export default defineComponent({
     components: { RouterView },
     async mounted(): Promise<void> {
-        console.log(window.location.href)
         let userResponse: Response = await fetch("http://localhost:8000/api/user/", {
             method: 'GET',
             credentials: 'include'
