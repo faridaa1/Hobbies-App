@@ -8,8 +8,6 @@ from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
 
-URL = 'http://localhost:5173/'
-
 
 def main_spa(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/index.html', {})
@@ -35,7 +33,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 request, username=data['email'], password=data['password'])
             if user is not None:
                 auth.login(request, user)  # logs in user and saves id in session
-            return redirect('http://localhost:5173/profile/')
+            return redirect('/profile/')
     else:
         form = SignupForm()
 
@@ -54,7 +52,7 @@ def login(request: HttpRequest) -> HttpResponse:
 
             if user is not None:
                 auth.login(request, user)
-                return redirect('http://localhost:5173/profile/')
+                return redirect('/profile/')
             else:
                 form.add_error(None, "Invalid email or password")
     else:
@@ -69,7 +67,7 @@ def logout(request: HttpRequest) -> JsonResponse:
         auth.logout(request)
     except:
         pass
-    return JsonResponse({'login page': 'http://localhost:8000/login/'})
+    return JsonResponse({'login page': '/login/'})
 
 
 def users_api_view(request: HttpRequest) -> JsonResponse:
@@ -124,7 +122,7 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
     # redirect unauthenticated user to login page
-    return JsonResponse({'user' : 'http://localhost:8000/login/'})
+    return JsonResponse({'user' : '/login/'})
 
 
 def check_password_api_view(request: HttpRequest, id: int, password: str) -> JsonResponse:
