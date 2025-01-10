@@ -121,9 +121,9 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
         return JsonResponse({
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
+    
     # redirect unauthenticated user to login page
-    return render(request, 'api/spa/login.html', {"form": LoginForm()})
-    # return JsonResponse({'user' : '/login/'})
+    return JsonResponse({'user' : '/login/'})
 
 
 def check_password_api_view(request: HttpRequest, id: int, password: str) -> JsonResponse:

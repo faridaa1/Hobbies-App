@@ -64,7 +64,7 @@
                 <div v-if="errorText.password" class="text-danger fs-5">{{ errorText.password }}</div>
                 <div>
                     <button name="password_check" type="button" v-if="isEditingPassword && !validPassword" class="btn btn-secondary me-1" @click="checkPasswords">Check</button>
-                    <button name="password_save" type="button" v-if="isEditingPassword && validPassword" :disabled="!validPassword" class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
+                    <button name="password_save" type="button" v-if="isEditingPassword && validPassword" class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
                     <button type="button" class="btn btn-danger" @click="reset('password')"><i class="bi bi-arrow-counterclockwise"></i></button>
                 </div>
             </div>
@@ -178,6 +178,7 @@
                 } else if (this.password.oldPassword === this.password.newPassword) {
                     this.errorText.password = "Current and New passwords are the same"
                 } else {
+                    console.log('making call')
                     let response: Response = await fetch(`/api/user/${this.user.id}/password/${this.password.oldPassword}`, {
                         method: 'GET', 
                         credentials: 'include', 
@@ -186,6 +187,7 @@
                         },
                     }) 
                     const data: { match: boolean } = await response.json()
+                    console.log("call finished")
                     console.log(data)
                     if (data.match === false) {
                         this.errorText.password = 'Current Password is Incorrect'
