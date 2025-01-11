@@ -1,64 +1,35 @@
 # Template for ECS639U Group Coursework
 
-This template should be used as the starting point for your group coursework in the module ECS639U Web Programming (at Queen Mary University of London). Use Git (github.qmul.ac.uk) to collaborate on the coursework with your group members. Module leader: Paulo Oliva <[p.oliva@qmul.ac.uk](mailto:p.oliva@qmul.ac.uk)>
 
-## Local development
+list of group members, with a short description (one sentence) of what each member was assigned to do, and what they actually did in terms of contributing to the final deliverable
 
-To run this project in your development machine, follow these steps:
+# URL of deployed application 
+https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk
 
-1. Create and activate a conda environment
+# Username and password for the admin user
+Username: mfccadmin@gmail.com
+Password: mfcc1234
 
-2. Download this repo as a zip and add the files to your own private repo.
+# Username and passwords of at least 5 of the test users
+## User 1
+Username: personmcp1@gmail.com
+Password: personmcp12345
 
-3. Install Pyhton dependencies (main folder):
+## User 2
+Username: isabella123@hotmail.com
+Password: reed.isa543
 
-   ```console
-   $ pip install -r requirements.txt
-   ```
+## User 3
+Username: 
+Password: 
 
-4. Create a development database:
+## User 4
+Username: 
+Password: 
 
-   ```console
-   $ python manage.py migrate
-   ```
-
-5. Install JavaScript dependencies (from 'frontend' folder):
-
-   ```console
-   $ npm install
-   ```
-
-6. If everything is alright, you should be able to start the Django development server from the main folder:
-
-   ```console
-   $ python manage.py runserver
-   ```
-
-7. and the Vue server from the 'frontend' sub-folder:
-
-   ```console
-   $ npm run dev
-   ```
-
-8. Open your browser and go to http://localhost:5173, you will be greeted with a template page.
-
-## OpenShift deployment
-
-Once your project is ready to be deployed you will need to 'build' the Vue app and place it in Django's static folder.
-
-1. The build command in package.json and the vite.config.ts files have already been modified so that when running 'npm run build' (on Mac and Linux) the generated JavaScript and CSS files will be placed in the mainapp static folder, and the index.html file will be placed in the templates folder:
-
-   ```console
-   $ npm run build
-   ```
-
-   If using Windows run
-
-   ```console
-   $ npm run build-windows
-   ```
-
-2. You should then follow the instruction on QM+ on how to deploy your app on EECS's OpenShift live server.
+## User 5
+Username: 
+Password: 
 
 ## License
 
