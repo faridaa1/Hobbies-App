@@ -79,7 +79,7 @@ def users_api_view(request: HttpRequest) -> JsonResponse:
         })
     except: 
         return JsonResponse({
-                'users': [],
+            'users': [],
         })
 
 

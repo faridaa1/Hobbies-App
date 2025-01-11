@@ -1,6 +1,7 @@
 <template>
     <button name="status" v-if="friendship" :class="buttonClass" disabled>
-        {{ buttonText }}
+        {{ buttonText }}ok
+        {{ friendship }}
     </button>
     <button name="send-request" v-else @click="sendRequest(otherUser.username)" class="btn btn-success">
         Send Request
@@ -8,7 +9,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { CustomUserAge } from '../../types';
+import { CustomUserAge, Friendship } from '../../types';
 import { useUserStore } from '../../stores/user';
 import { mapStores } from 'pinia';
 
@@ -21,16 +22,13 @@ export default defineComponent({
     },
     computed: {
         ...mapStores(useUserStore),
-        friendship() {
+        friendship(): Friendship | undefined {
             return this.userStore.getFriendship(this.otherUser.email);
         },
-        userSentRequest() {
-            return this.friendship?.sent;
-        },
-        buttonClass() {
+        buttonClass(): string {
             return `btn ${this.friendship?.status === 'Accepted' ? 'btn-primary' : 'btn-success'}`;
         },
-        buttonText() {
+        buttonText(): string {
             if (this.friendship?.status === 'Accepted') {
                 return 'Accepted'
             } else if (!this.friendship?.sent) {
@@ -41,9 +39,9 @@ export default defineComponent({
         },
     },
     methods: {
-        async sendRequest(username: string) {
+        async sendRequest(username: string): Promise<void> {
             try {
-                const req = await fetch(`/api/user/${this.userStore.user.id}/friendship/${username}/`, {
+                const req: Response = await fetch(`/api/user/${this.userStore.user.id}/friendship/${username}/`, {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -51,8 +49,8 @@ export default defineComponent({
                         "X-CSRFToken": this.userStore.csrf
                     }
                 });
-                const response = await req.json();
-                console.log(`Friend request sent to user with id${username}`);
+                const response: {'friendship' : Friendship} = await req.json();
+                console.log(`Friend request sent to user with id ${username}`);
                 // Update user store - state change causes button text to change
                 this.userStore.user.friends.push(response.friendship)
             } catch (error) {

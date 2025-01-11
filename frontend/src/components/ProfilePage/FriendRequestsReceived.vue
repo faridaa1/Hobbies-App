@@ -60,7 +60,7 @@ export default defineComponent({
         nextPage(): void {
             this.friendIndex += 10
         },
-        async handleResponse(isAccepted: boolean, id: number) {
+        async handleResponse(isAccepted: boolean, id: number): Promise<void> {
             if (this.userStore.csrf !== '') {
                 let response: Response = await fetch(`/api/friendship/${id}/`, {
                     method: 'PUT',
