@@ -11,23 +11,23 @@ Username: mfccadmin@gmail.com
 Password: mfcc1234
 
 # Username and passwords of at least 5 of the test users
-## User 1
+### User 1
 Username: personmcp1@gmail.com
 Password: personmcp12345
 
-## User 2
+### User 2
 Username: isabella123@hotmail.com
 Password: reed.isa543
 
-## User 3
+### User 3
 Username: 
 Password: 
 
-## User 4
+### User 4
 Username: 
 Password: 
 
-## User 5
+### User 5
 Username: 
 Password: 
 
