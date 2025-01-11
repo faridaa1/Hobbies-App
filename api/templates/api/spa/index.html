@@ -6,7 +6,7 @@
     <link rel="icon" type="image/svg+xml" href="/static/api/spa/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECS639 Web Programming - Group CW</title>
-  <script type="module" crossorigin src="/static/api/spa/assets/index-DOSc9LUb.js"></script>
+  <script type="module" crossorigin src="/static/api/spa/assets/index-D8ZBUvUg.js"></script>
   <link rel="stylesheet" crossorigin href="/static/api/spa/assets/index-BDqW2so5.css">
 </head>
 
@@ -20,6 +20,16 @@
     {% endblock %}
     {% block js %}
     {% endblock %}
+  </div>
+  {% if request.path != '/login/' and request.path != '/signup/' and request.path != '/profile/' and request.path != '/users/' %}
+  <div style="display: flex; flex-direction: column; height: 100vh; align-items: center; justify-content: center;">
+    <p style="font-size: 2rem;">Page Not Found</p>
+    <div style="font-size: 1.5rem;">
+      <button style="border-radius: 0.5rem; border: none; background-color: rgb(13, 110, 253); color: white; padding: 0.5rem; margin-right:0.5rem" onclick="window.location = window.location.hostname === 'localhost' ? 'http://localhost:8000/login/' : '/login/'" onmouseover = "this.style.backgroundColor='blue'" onmouseout = "this.style.backgroundColor='rgb(13, 110, 253)'"> Log In </button>
+      <button style="border-radius: 0.5rem; border: none; background-color: rgb(13, 110, 253); color: white; padding: 0.5rem; margin-right:0.5rem" onclick="window.location = window.location.hostname === 'localhost' ? 'http://localhost:8000/login/' : '/signup/'" onmouseover = "this.style.backgroundColor='blue'" onmouseout = "this.style.backgroundColor='rgb(13, 110, 253)'"> Sign Up </button>
+    </div>
+  </div>
+  {% endif %}
 </body>
 
 </html>

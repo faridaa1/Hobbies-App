@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth import authenticate
+from django.conf import settings
 from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
@@ -33,7 +34,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 request, username=data['email'], password=data['password'])
             if user is not None:
                 auth.login(request, user)  # logs in user and saves id in session
-            return redirect('/profile/')
+            return redirect(f'{settings.FRONTEND_URL}/profile/')
     else:
         form = SignupForm()
 
@@ -52,7 +53,7 @@ def login(request: HttpRequest) -> HttpResponse:
 
             if user is not None:
                 auth.login(request, user)
-                return redirect('/profile/')
+                return redirect(f'{settings.FRONTEND_URL}/profile/')
             else:
                 form.add_error(None, "Invalid email or password")
     else:
@@ -67,7 +68,7 @@ def logout(request: HttpRequest) -> JsonResponse:
         auth.logout(request)
     except:
         pass
-    return JsonResponse({'login page': '/login/'})
+    return JsonResponse({'login page': f'{settings.BACKEND_URL}/login/'})
 
 
 def users_api_view(request: HttpRequest) -> JsonResponse:

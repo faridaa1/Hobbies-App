@@ -20,7 +20,6 @@ from django.conf.urls.static import static
 from .views import main_spa, signup, login, logout, hobbies_api_view, user_api_view, all_users_api_view, users_api_view, user_hobbies_api_view, friendship_api_view, profile_api_view, check_password_api_view, friendship_update_api_view
 
 urlpatterns = [
-    path('', login),
     path('signup/', signup, name='signup'),  # Signup user
     path('login/', login, name='login'),  # Login user
     path('logout/', logout, name='logout'),  # Logout user
