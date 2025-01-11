@@ -1,36 +1,31 @@
-# Template for ECS639U Group Coursework
-
-
-list of group members, with a short description (one sentence) of what each member was assigned to do, and what they actually did in terms of contributing to the final deliverable
+# Group members
+list of group members, 
+What each member was assigned to do, and what they actually did in terms of contributing to the final deliverable
 
 # URL of deployed application 
 https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk
 
-# Username and password for the admin user
-Username: mfccadmin@gmail.com
+# Admin user
+Username: mfccadmin@gmail.com <br>
 Password: mfcc1234
 
-# Username and passwords of at least 5 of the test users
+# Test users
 ### User 1
-Username: personmcp1@gmail.com
+Username: personmcp1@gmail.com <br>
 Password: personmcp12345
 
 ### User 2
-Username: isabella123@hotmail.com
+Username: isabella123@hotmail.com <br>
 Password: reed.isa543
 
 ### User 3
-Username: 
+Username: <br>
 Password: 
 
 ### User 4
-Username: 
+Username: <br>
 Password: 
 
 ### User 5
-Username: 
+Username: <br>
 Password: 
-
-## License
-
-This code is dedicated to the public domain to the maximum extent permitted by applicable law, pursuant to [CC0](http://creativecommons.org/publicdomain/zero/1.0/).
