@@ -82,7 +82,7 @@
             }, 
             valid: boolean 
         }{ return {
-                hobbySelected: true,
+                hobbySelected: false,
                 errorText: {
                     hobby_name: "",
                     hobby_description: "",

@@ -16,7 +16,6 @@
         <div class="d-flex flex-column w-100">
             <div class="d-flex flex-column gap-2">
                 <label>Full Name</label>
-                {{ user.profile_picture }}
                 <div class="d-flex">
                     <input name="name" class="border border-secondary rounded px-2 me-2 w-100" type="text" :disabled="!isEditingName" v-model="name" @input="validateName">
                     <button name="name_edit" type="button" v-if="!isEditingName"class="btn btn-primary p-2" @click="isEditingName=true"><i class="bi bi-pencil d-flex"></i></button>
