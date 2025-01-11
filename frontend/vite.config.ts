@@ -18,4 +18,11 @@ export default defineConfig(({ mode }) => ({
             '@': path.resolve(__dirname, './src'),
         },
     },
+    server: {
+        proxy: {
+            '/': mode == "development"
+            ? "http://localhost:8000"
+            : "https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk"
+        }
+    }
 }));
