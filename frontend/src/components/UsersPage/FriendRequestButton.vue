@@ -2,13 +2,13 @@
     <button v-if="friendship" :class="buttonClass" disabled>
         {{ buttonText }}
     </button>
-    <button v-else @click="sendRequest(otherUser.username)" class="btn btn-success">
+    <button v-else @click="sendRequest(otherUser.email)" class="btn btn-success">
         Send Request
     </button>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { CustomUserAge } from '../../types';
+import { MatchesUser } from '../../types';
 import { useUserStore } from '../../stores/user';
 import { mapStores } from 'pinia';
 
@@ -17,7 +17,7 @@ const url = 'http://localhost:8000';
 export default defineComponent({
     props: {
         otherUser: {
-            type: Object as PropType<CustomUserAge>,
+            type: Object as PropType<MatchesUser>,
             required: true
         },
     },

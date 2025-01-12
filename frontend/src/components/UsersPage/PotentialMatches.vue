@@ -18,7 +18,7 @@
     <!-- User List -->
     <div class="user-list">
       <ul class="list-group">
-        <li v-for="user in paginatedUsers" :key="user.username"
+        <li v-for="user in paginatedUsers" :key="user.email"
           class="list-group-item d-flex justify-content-between align-items-center">
           <div>
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { CustomUserAge } from "../../types";
+import { MatchesUser } from "../../types";
 import { useUserStore } from "../../stores/user";
 import { mapState } from "pinia";
 import FriendRequestButton from "./FriendRequestButton.vue";
@@ -52,10 +52,10 @@ import FriendRequestButton from "./FriendRequestButton.vue";
 export default defineComponent({
   data() {
     return {
-      users: [] as CustomUserAge[], // All users fetched from the API
+      users: [] as MatchesUser[], // All users fetched from the API
       minAge: 18, // Default minimum age
       maxAge: 100, // Default maximum age
-      filteredUsers: [] as CustomUserAge[], // Filtered users based on age
+      filteredUsers: [] as MatchesUser[], // Filtered users based on age
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
     };
@@ -68,7 +68,7 @@ export default defineComponent({
     totalPages() {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
-    paginatedUsers() {
+    paginatedUsers(): MatchesUser[] {
       const start = (this.currentPage - 1) * this.pageSize;
       const end = start + this.pageSize;
       return this.filteredUsers.slice(start, end);
@@ -88,8 +88,7 @@ export default defineComponent({
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
-          this.users = data.matches.map((user) => ({
+          this.users = data.matches.map((user: MatchesUser) => ({
             ...user,
             hobbies: user.hobbies || [], // Ensure hobbies is an array
           }));

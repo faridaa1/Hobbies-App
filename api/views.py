@@ -13,6 +13,11 @@ from django.db.models import Count, Q
 URL = 'http://localhost:5173/'
 
 
+def calculate_age(dob):
+        today = date.today()
+        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+
 def main_spa(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/index.html', {})
 
@@ -100,9 +105,6 @@ def hobbies_api_view(request: HttpRequest) -> JsonResponse:
     
 def all_users_api_view(request: HttpRequest) -> JsonResponse:
     """API view to return all users with calculated age."""
-    def calculate_age(dob):
-        today = date.today()
-        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
     users = CustomUser.objects.filter(is_active=True).exclude(is_staff=True)  # Exclude staff users
     user_data = [
@@ -151,6 +153,7 @@ def potential_matches_api_view(request: HttpRequest) -> JsonResponse:
                 "common_hobbies_count": user.common_hobbies_count,
                 "hobbies": list(user.hobbies.values_list("name", flat=True)),
                 "profile_picture": user.profile_picture.url if user.profile_picture else None,
+                "age": calculate_age(user.date_of_birth)
             }
             for user in potential_matches
         ]
