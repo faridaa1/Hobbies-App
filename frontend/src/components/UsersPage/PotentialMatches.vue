@@ -18,11 +18,8 @@
     <!-- User List -->
     <div class="user-list">
       <ul class="list-group">
-        <li
-          v-for="user in paginatedUsers"
-          :key="user.username"
-          class="list-group-item d-flex justify-content-between align-items-center"
-        >
+        <li v-for="user in paginatedUsers" :key="user.username"
+          class="list-group-item d-flex justify-content-between align-items-center">
           <div>
             <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
             <p>Hobbies: {{ user.hobbies.length ? user.hobbies.join(', ') : "No hobbies listed" }}</p>
@@ -34,19 +31,11 @@
 
     <!-- Pagination Controls -->
     <div class="pagination-controls mt-4 d-flex justify-content-center">
-      <button
-        class="btn btn-secondary me-2"
-        :disabled="currentPage === 1"
-        @click="prevPage"
-      >
+      <button class="btn btn-secondary me-2" :disabled="currentPage === 1" @click="prevPage">
         Previous
       </button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button
-        class="btn btn-secondary ms-2"
-        :disabled="currentPage === totalPages"
-        @click="nextPage"
-      >
+      <button class="btn btn-secondary ms-2" :disabled="currentPage === totalPages" @click="nextPage">
         Next
       </button>
     </div>
@@ -88,10 +77,19 @@ export default defineComponent({
   methods: {
     fetchUsers() {
       // Fetch users from the API
-      fetch("http://127.0.0.1:8000/api/users/")
+      fetch("http://localhost:8000/api/potential-matches",
+        {
+          method: 'GET',
+          headers: {
+            "X-CSRFToken": this.csrf,
+          },
+          credentials: 'include'
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
-          this.users = data.map((user) => ({
+          console.log(data)
+          this.users = data.matches.map((user) => ({
             ...user,
             hobbies: user.hobbies || [], // Ensure hobbies is an array
           }));
