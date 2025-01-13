@@ -148,9 +148,11 @@ export default defineComponent({
     }, watch: {
         minAge(newMinAge) {
             this.minimumAge = newMinAge
+            this.min = newMinAge
             this.scaleFactor = 13.3/(this.maxAge-this.minAge)
         }, maxAge(newMaxAge) {
             this.maximumAge = newMaxAge
+            this.max = newMaxAge
             this.scaleFactor = 13.3/(this.maxAge-this.minAge)
         }
     }
