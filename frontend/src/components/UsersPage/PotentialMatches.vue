@@ -89,7 +89,7 @@ export default defineComponent({
   methods: {
     fetchUsers(): void {
       // Fetch users from the API
-      fetch("http://localhost:8000/api/potential-matches",
+      fetch("http://localhost:8000/api/potential-matches/",
         {
           method: 'GET',
           headers: {
