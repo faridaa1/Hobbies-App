@@ -81,8 +81,8 @@ export default defineComponent({
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
     paginatedUsers(): MatchesUser[] {
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
+      const start: number = (this.currentPage - 1) * this.pageSize;
+      const end: number = start + this.pageSize;
       return this.filteredUsers.slice(start, end);
     },
   },
