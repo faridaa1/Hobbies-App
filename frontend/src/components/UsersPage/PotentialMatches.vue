@@ -135,8 +135,8 @@ export default defineComponent({
         this.currentPage++;
       }
     },
-    removeUserFiltered(): CustomUserAge[] {
-      return this.filteredUsers.filter(user => user.username !== this.user.username)
+    removeUserFiltered(): MatchesUser[] {
+      return this.filteredUsers.filter(user => user.email !== this.user.email)
     }
   },
   created(): void {

@@ -3,13 +3,13 @@
         {{ buttonText }}ok
         {{ friendship }}
     </button>
-    <button name="send-request" v-else @click="sendRequest(otherUser.username)" class="btn btn-success">
+    <button name="send-request" v-else @click="sendRequest(otherUser.email)" class="btn btn-success">
         Send Request
     </button>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MatchesUser, CustomUserAge, Friendship } from '../../types';
+import { MatchesUser, Friendship } from '../../types';
 import { useUserStore } from '../../stores/user';
 import { mapStores } from 'pinia';
 
@@ -49,7 +49,7 @@ export default defineComponent({
                         "X-CSRFToken": this.userStore.csrf
                     }
                 });
-                const response: {'friendship' : Friendship} = await req.json();
+                const response: { 'friendship': Friendship } = await req.json();
                 console.log(`Friend request sent to user with id ${username}`);
                 // Update user store - state change causes button text to change
                 this.userStore.user.friends.push(response.friendship)
