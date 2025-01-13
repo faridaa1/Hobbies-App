@@ -12,13 +12,14 @@ from django.db.models import Count, Q, Min, Max
 
 
 def calculate_age(dob):
-        today = date.today()
-        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    """Calculate age from date"""
+    today = date.today()
+    return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
 
 def main_spa(request: HttpRequest) -> HttpResponse:
+    """View for main page"""
     return render(request, 'api/spa/index.html', {})
-
 
 def signup(request: HttpRequest) -> HttpResponse:
     """View for user signup (using ssr)"""
