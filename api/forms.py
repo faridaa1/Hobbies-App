@@ -3,7 +3,6 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from .models import CustomUser
-from typing import Field
 
 
 class PasswordField(forms.CharField):
@@ -25,7 +24,7 @@ class SignupForm(ModelForm):
             'name', 'email', 'password',
             'date_of_birth', 'profile_picture'
         ]
-        field_classes: dict[str, type[Field]] = {
+        field_classes: dict[str, any] = {
             "password": PasswordField,
             "date_of_birth": DatePickerField
         }
