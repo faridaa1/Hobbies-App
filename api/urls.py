@@ -17,7 +17,7 @@ from django.urls import path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import main_spa, signup, login, logout, hobbies_api_view, user_api_view, all_users_api_view, users_api_view, user_hobbies_api_view, friendship_api_view, profile_api_view, check_password_api_view, friendship_update_api_view, potential_matches_api_view
+from .views import main_spa, signup, login, logout, hobbies_api_view, user_api_view, all_users_api_view, users_api_view, user_hobbies_api_view, friendship_api_view, profile_api_view, check_password_api_view, friendship_update_api_view, potential_matches_api_view, min_max_view
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('signup/', signup, name='signup'),  # Signup user
@@ -33,5 +33,6 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('api/user/<int:id>/password/<str:password>/', check_password_api_view, name='check password'),
     path('api/user/hobbies/<str:id>/', user_hobbies_api_view, name='user hobbies'),
     path('api/user/<int:from_id>/friendship/<str:to_username>/', friendship_api_view, name='friendship'),
+    path('api/min-max-age/', min_max_view, name='min_max_age'),
     re_path(r'.*', main_spa),
 ]
