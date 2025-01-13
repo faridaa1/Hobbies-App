@@ -8,6 +8,12 @@ from django.conf import settings
 from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
+from django.db.models import Count, Q
+
+
+def calculate_age(dob):
+        today = date.today()
+        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
 
 def main_spa(request: HttpRequest) -> HttpResponse:
@@ -68,7 +74,7 @@ def logout(request: HttpRequest) -> JsonResponse:
         auth.logout(request)
     except:
         pass
-    return JsonResponse({'login page': f'{settings.BACKEND_URL}/login/'})
+    return JsonResponse({'login page': '/login/'})
 
 
 def users_api_view(request: HttpRequest) -> JsonResponse:
@@ -97,9 +103,6 @@ def hobbies_api_view(request: HttpRequest) -> JsonResponse:
     
 def all_users_api_view(request: HttpRequest) -> JsonResponse:
     """API view to return all users with calculated age."""
-    def calculate_age(dob):
-        today = date.today()
-        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
     users = CustomUser.objects.filter(is_active=True).exclude(is_staff=True)  # Exclude staff users
     user_data = [
@@ -110,11 +113,54 @@ def all_users_api_view(request: HttpRequest) -> JsonResponse:
             "date_of_birth": user.date_of_birth.isoformat() if user.date_of_birth else None,
             "profile_picture": user.profile_picture.url if user.profile_picture else None,
             "age": calculate_age(user.date_of_birth),
+            "hobbies": list(user.hobbies.values_list('name', flat=True)),
         }
         for user in users
     ]
     return JsonResponse(user_data, safe=False)
 
+
+def potential_matches_api_view(request: HttpRequest) -> JsonResponse:
+    """
+    Returns a list of users sorted by the number of shared hobbies with the logged-in user.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "User not authenticated"}, status=401)
+
+    try:
+        logged_in_user = request.user
+        user_hobbies = set(logged_in_user.hobbies.values_list("id", flat=True))
+
+        # Get other users with the number of shared hobbies
+        potential_matches = (
+            CustomUser.objects.exclude(id=logged_in_user.id)
+            .annotate(
+                common_hobbies_count=Count(
+                    "hobbies", filter=Q(hobbies__id__in=user_hobbies)
+                )
+            )
+            .order_by("-common_hobbies_count")  # Order by shared hobbies (descending)
+        )
+
+        # Prepare the data to send to the frontend
+        matches_data = [
+            {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "common_hobbies_count": user.common_hobbies_count,
+                "hobbies": list(user.hobbies.values_list("name", flat=True)),
+                "profile_picture": user.profile_picture.url if user.profile_picture else None,
+                "age": calculate_age(user.date_of_birth)
+            }
+            for user in potential_matches
+        ]
+
+        return JsonResponse({"matches": matches_data}, safe=False, status=200)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    
 
 def user_api_view(request: HttpRequest) -> JsonResponse:
     """Returning logged in user for a global store"""
