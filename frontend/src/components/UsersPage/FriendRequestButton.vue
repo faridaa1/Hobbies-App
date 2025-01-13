@@ -1,7 +1,6 @@
 <template>
     <button name="status" v-if="friendship" :class="buttonClass" disabled>
-        {{ buttonText }}ok
-        {{ friendship }}
+        {{ buttonText }}
     </button>
     <button name="send-request" v-else @click="sendRequest(otherUser.email)" class="btn btn-success">
         Send Request

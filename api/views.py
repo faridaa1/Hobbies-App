@@ -74,7 +74,7 @@ def logout(request: HttpRequest) -> JsonResponse:
         auth.logout(request)
     except:
         pass
-    return JsonResponse({'login page': f'{settings.BACKEND_URL}/login/'})
+    return JsonResponse({'login page': '/login/'})
 
 
 def users_api_view(request: HttpRequest) -> JsonResponse:
