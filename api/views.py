@@ -305,10 +305,17 @@ def min_max_view(request: HttpRequest) -> JsonResponse:
         if request.method == 'GET':
             min_age = CustomUser.objects.aggregate(Min('date_of_birth'))
             max_age = CustomUser.objects.aggregate(Max('date_of_birth'))
+
             if min_age['date_of_birth__min'] is not None:
                 min_age = calculate_age(min_age['date_of_birth__min'])
+            else:
+                # Otherwise min_age would be a dictionary
+                min_age = 0
+                
             if max_age['date_of_birth__max'] is not None:
                 max_age = calculate_age(max_age['date_of_birth__max'])
+            else: 
+                max_age = 0
             return JsonResponse({'min_age': min_age, 'max_age': max_age})
         else:
             return JsonResponse({}, status=405)
