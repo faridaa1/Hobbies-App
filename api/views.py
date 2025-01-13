@@ -8,7 +8,7 @@ from django.conf import settings
 from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Min, Max
 
 
 def calculate_age(dob):
@@ -294,6 +294,22 @@ def friendship_update_api_view(request: HttpRequest, id: int) -> JsonResponse:
                 # if friendship is rejected, delete relationship
                 friendship.delete()
                 return JsonResponse({})
+        else:
+            return JsonResponse({}, status=405)
+    except:
+        return JsonResponse({}, status=500)
+    
+def min_max_view(request: HttpRequest) -> JsonResponse:
+    """Defines GET request handling for minimum and maximum age of all users"""
+    try:
+        if request.method == 'GET':
+            min_age = CustomUser.objects.aggregate(Min('date_of_birth'))
+            max_age = CustomUser.objects.aggregate(Max('date_of_birth'))
+            if min_age['date_of_birth__min'] is not None:
+                min_age = calculate_age(min_age['date_of_birth__min'])
+            if max_age['date_of_birth__max'] is not None:
+                max_age = calculate_age(max_age['date_of_birth__max'])
+            return JsonResponse({'min_age': min_age, 'max_age': max_age})
         else:
             return JsonResponse({}, status=405)
     except:
