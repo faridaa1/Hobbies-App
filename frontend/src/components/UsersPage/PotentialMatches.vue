@@ -4,14 +4,8 @@
 
     <!-- Age Filter -->
     <div class="filters mb-4">
-      <label for="age-filter">Filter by Age:</label>
-      <div class="age-range d-flex align-items-center mb-3">
-        <span class="me-2">Min: </span>
-        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" />
-        <span class="me-2">Max: </span>
-        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" />
-      </div>
-      <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
+      <label for="age-filter">Filter by Age</label>
+      <FilterButton :min="minAge" :max="maxAge" class="my-5" @changeMinAge="changeMinAge" @changeMaxAge="changeMaxAge"/>
       <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
     </div>
 
@@ -48,12 +42,13 @@ import { MatchesUser } from "../../types";
 import { useUserStore } from "../../stores/user";
 import { mapState } from "pinia";
 import FriendRequestButton from "./FriendRequestButton.vue";
+import FilterButton from "./FilterButton.vue";
 
 export default defineComponent({
   data() {
     return {
       users: [] as MatchesUser[], // All users fetched from the API
-      minAge: 18, // Default minimum age
+      minAge: 0, // Default minimum age
       maxAge: 100, // Default maximum age
       filteredUsers: [] as MatchesUser[], // Filtered users based on age
       currentPage: 1, // Current page
@@ -61,7 +56,7 @@ export default defineComponent({
     };
   },
   components: {
-    FriendRequestButton
+    FriendRequestButton, FilterButton
   },
   watch: {
     user(): void {
@@ -87,6 +82,12 @@ export default defineComponent({
     },
   },
   methods: {
+    changeMinAge(newMin: number): void {
+      this.minAge += newMin
+    },
+    changeMaxAge(newMax: number): void {
+      this.maxAge += newMax
+    },
     fetchUsers(): void {
       // Fetch users from the API
       fetch("/api/potential-matches/",
@@ -148,10 +149,6 @@ export default defineComponent({
 <style scoped>
 .potential-matches {
   padding: 20px;
-}
-
-.filters input {
-  width: 100px;
 }
 
 .user-list {
