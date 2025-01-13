@@ -9,14 +9,14 @@ export interface CustomUser {
     profile_picture: string;
 }
 
-// all_users_api_view returns users w/ age
-export interface CustomUserAge {
-    username: string;
-    name: string;
-    email: string;
-    date_of_birth: string;
-    profile_picture: string;
-    age: number;
+export interface MatchesUser {
+    id: number,
+    name: string,
+    email: string,
+    common_hobbies_count: number,
+    hobbies: Hobby[],
+    profile_picture: string | null,
+    age: number
 }
 
 export interface Hobby {

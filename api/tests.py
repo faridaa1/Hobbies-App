@@ -39,10 +39,18 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # cls.selenium.quit()
         super().tearDownClass()
     
-    def test_signup(self):
+    def test_app(self):
+        self.signup()
+        self.login()
+        self.profile()
+        self.send_friend_request()
+        self.accept_friend_request()
+
+
+    def signup(self):
         """Testing account creation / signup"""
         # enter name
-        self.selenium.get(f"{self.live_server_url}/signup")
+        self.selenium.get(f"{self.live_server_url}/signup/")
         full_name = self.selenium.find_element(By.NAME, "name")
         full_name.click()
         full_name.send_keys(valid_signup_data()['name'])
@@ -73,8 +81,6 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             expected_conditions.visibility_of_element_located((By.NAME, "submit"))
         ).click()
         
-        self.login()
-    
 
     def login(self):
         """Testing login"""
@@ -97,17 +103,14 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
         # submit form
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.NAME, "submit"))
+            expected_conditions.element_to_be_clickable((By.NAME, "submit"))
         ).click()
         
-        self.profile()
-
 
     def profile(self):
         """Testing editing all the user's data on their profile page"""
         self.profile_edit()
         self.add_hobby()
-        self.send_friend_request()
 
     
     def profile_edit(self):
@@ -225,8 +228,6 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "status")))
         
-        self.accept_friend_request()
-
 
     def accept_friend_request(self):
         """Testing login as the other user and accept the freind request sent"""
