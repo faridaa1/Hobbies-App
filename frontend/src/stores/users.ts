@@ -6,10 +6,10 @@ export const useUsersStore = defineStore('users', {
         users: [],
     }),
     actions: {
-        saveUsers(users: CustomUser[]) {
+        saveUsers(users: CustomUser[]): void {
             this.users = users
         },
-        addUser(user: CustomUser) {
+        addUser(user: CustomUser): void {
             this.users.push(user)
         },
     }

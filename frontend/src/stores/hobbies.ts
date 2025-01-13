@@ -6,10 +6,10 @@ export const useHobbiesStore = defineStore('hobbies', {
         hobbies: []
     }),
     actions: {
-        addHobby(hobby: Hobby) {
+        addHobby(hobby: Hobby): void {
             this.hobbies.push(hobby)
         }, 
-        setHobbies(hobbies: Hobby[]) {
+        setHobbies(hobbies: Hobby[]): void {
             this.hobbies = hobbies;
         }
     }
