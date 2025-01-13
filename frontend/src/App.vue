@@ -30,7 +30,7 @@ import { useUsersStore } from "./stores/users";
 export default defineComponent({
     components: { RouterView },
     async mounted(): Promise<void> {
-        let userResponse: Response = await fetch("http://localhost:8000/api/user/", {
+        let userResponse: Response = await fetch("/api/user/", {
             method: 'GET',
             credentials: 'include'
         });
@@ -41,7 +41,7 @@ export default defineComponent({
         }
         let user: CustomUser = userData.user;
 
-        let usersResponse: Response = await fetch("http://localhost:8000/api/all-users/", {
+        let usersResponse: Response = await fetch("/api/all-users/", {
             method: 'GET',
             credentials: 'include'
         });
@@ -49,7 +49,7 @@ export default defineComponent({
         let users: CustomUser[] = usersData.users;
         useUsersStore().saveUsers(users)
 
-        let hobbiesResponse: Response = await fetch("http://localhost:8000/api/hobbies/", {
+        let hobbiesResponse: Response = await fetch("/api/hobbies/", {
             method: 'GET',
             credentials: 'include'
         });
@@ -57,7 +57,7 @@ export default defineComponent({
         let hobbies: Hobby[] = hobbiesData.hobbies;
         useHobbiesStore().setHobbies(hobbies)
 
-        let userHobbies: Response = await fetch(`http://localhost:8000/api/user/hobbies/${user.id}/`, {
+        let userHobbies: Response = await fetch(`/api/user/hobbies/${user.id}/`, {
             method: 'GET',
             credentials: 'include',
         })
@@ -69,14 +69,14 @@ export default defineComponent({
         // extracting csrf token
         for (let cookie of document.cookie.split(';')) {
             const csrftoken: string[] = cookie.split('=')
-            if (csrftoken[0] === 'csrftoken') {
+            if (csrftoken[0].trim() === 'csrftoken') {
                 userStore.csrf = csrftoken[1]
             }
         }
     },
     methods: {
         async signout(): Promise<void> {
-            let logoutPageResponse: Response = await fetch("http://localhost:8000/logout/", {
+            let logoutPageResponse: Response = await fetch("/logout/", {
                 credentials: 'include',
             })
             let logoutPage: { 'login page': string } = await logoutPageResponse.json()

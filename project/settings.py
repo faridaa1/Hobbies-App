@@ -35,7 +35,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+if DEBUG:
+    FRONTEND_URL = 'http://localhost:5173'
+    BACKEND_URL = 'http://localhost:8000'
+else:
+   FRONTEND_URL = 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+   BACKEND_URL = 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+    
 ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -71,12 +79,14 @@ SESSION_COOKIE_SECURE = False
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'http://127.0.0.1:5173'
+    'http://127.0.0.1:5173',
+    'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173', 
-    'http://127.0.0.1:5173'
+    'http://127.0.0.1:5173',
+    'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
 ]
 
 TEMPLATES = [

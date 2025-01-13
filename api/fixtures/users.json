@@ -1,0 +1,16 @@
+
+[
+    {
+        "model" : "api.CustomUser",
+        "pk" : 1,
+        "fields" : {
+            "name" : "Person McPerson",
+            "username" : "personmc@gmail.com",
+            "email" : "personmc@gmail.com",
+            "date_of_birth" : "2025-01-01",
+            "profile_picture" : "",
+            "hobbies" : [],
+            "friends" : []   
+        }
+    }
+]

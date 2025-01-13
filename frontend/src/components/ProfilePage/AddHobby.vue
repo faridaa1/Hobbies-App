@@ -82,7 +82,7 @@
             }, 
             valid: boolean 
         }{ return {
-                hobbySelected: true,
+                hobbySelected: false,
                 errorText: {
                     hobby_name: "",
                     hobby_description: "",
@@ -192,7 +192,7 @@
                     this.data.newHobby.hobby_id = -1
                 }
                 if (useUserStore().csrf !== '') {
-                    let response: Response = await fetch(`http://localhost:8000/api/user/hobbies/${this.user.id}/`, {
+                    let response: Response = await fetch(`/api/user/hobbies/${this.user.id}/`, {
                         method:'POST', 
                         credentials: 'include', 
                         headers: { 

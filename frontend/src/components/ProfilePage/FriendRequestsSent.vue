@@ -45,7 +45,7 @@ export default defineComponent({
         },
         async unsend(id: number): Promise<void> {
             if (useUserStore().csrf !== '') {
-                let response: Response = await fetch(`http://localhost:8000/api/friendship/${id}/`, {
+                let response: Response = await fetch(`/api/friendship/${id}/`, {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {

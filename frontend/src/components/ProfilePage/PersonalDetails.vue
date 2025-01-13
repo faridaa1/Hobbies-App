@@ -2,7 +2,7 @@
     <div class="fs-5 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
             <div class="position-relative">
-                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`http://localhost:8000${user.profile_picture}`">
+                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`${user.profile_picture}`">
                 <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
                 <button name="remove_profile" type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="updatePicture($event)"><i class="bi bi-x fs-1"></i></button>
             </div>
@@ -19,8 +19,8 @@
                 <div class="d-flex">
                     <input name="name" class="border border-secondary rounded px-2 me-2 w-100" type="text" :disabled="!isEditingName" v-model="name" @input="validateName">
                     <button name="name_edit" type="button" v-if="!isEditingName"class="btn btn-primary p-2" @click="isEditingName=true"><i class="bi bi-pencil d-flex"></i></button>
-                    <button name="name_save" type="button" :disabled="!validName" v-if="isEditingName"class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
-                    <button type="button" v-if="isEditingName"class="btn btn-danger" @click="reset('name')"><i class="bi bi-arrow-counterclockwise"></i></button>
+                    <button name="name_save" type="button" :disabled="!validName" v-if="isEditingName"  @click="updateProfile($event)" class="btn btn-success me-1">Save</button>
+                    <button type="button" v-if="isEditingName" class="btn btn-danger" @click="reset('name')"><i class="bi bi-arrow-counterclockwise"></i></button>
                 </div>
             </div>
             <div v-if="errorText.name" class="text-danger fs-5">{{ errorText.name }}</div>
@@ -64,7 +64,7 @@
                 <div v-if="errorText.password" class="text-danger fs-5">{{ errorText.password }}</div>
                 <div>
                     <button name="password_check" type="button" v-if="isEditingPassword && !validPassword" class="btn btn-secondary me-1" @click="checkPasswords">Check</button>
-                    <button name="password_save" type="button" v-if="isEditingPassword && validPassword" :disabled="!validPassword" class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
+                    <button name="password_save" type="button" v-if="isEditingPassword && validPassword" class="btn btn-success me-1" @click="updateProfile($event)">Save</button>
                     <button type="button" class="btn btn-danger" @click="reset('password')"><i class="bi bi-arrow-counterclockwise"></i></button>
                 </div>
             </div>
@@ -178,7 +178,7 @@
                 } else if (this.password.oldPassword === this.password.newPassword) {
                     this.errorText.password = "Current and New passwords are the same"
                 } else {
-                    let response: Response = await fetch(`http://localhost:8000/api/user/${this.user.id}/password/${this.password.oldPassword}`, {
+                    let response: Response = await fetch(`/api/user/${this.user.id}/password/${this.password.oldPassword}/`, {
                         method: 'GET', 
                         credentials: 'include', 
                         headers: { 
@@ -234,7 +234,7 @@
                             file.append('profile_picture', '')
                         }
                         field = 'pic'
-                        response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
+                        response = await fetch(`/api/user/${this.user.id}/${field}/`, {
                             method:'POST', 
                             credentials: 'include', 
                             headers: { 
@@ -266,7 +266,7 @@
                             this.reset('password')
                             this.validPassword = false
                         }
-                        response = await fetch(`http://localhost:8000/api/user/${this.user.id}/${field}/`, {
+                        response = await fetch(`/api/user/${this.user.id}/${field}/`, {
                             method: 'PUT', 
                             credentials: 'include', 
                             headers: { 

@@ -3,14 +3,12 @@ import json
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import auth
-from django.contrib.auth import authenticate, login
-from requests import Session
+from django.contrib.auth import authenticate
+from django.conf import settings
 from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
 from django.db.models import Count, Q
-
-URL = 'http://localhost:5173/'
 
 
 def calculate_age(dob):
@@ -42,7 +40,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 request, username=data['email'], password=data['password'])
             if user is not None:
                 auth.login(request, user)  # logs in user and saves id in session
-            return redirect('http://localhost:5173/profile/')
+            return redirect(f'{settings.FRONTEND_URL}/profile/')
     else:
         form = SignupForm()
 
@@ -61,7 +59,7 @@ def login(request: HttpRequest) -> HttpResponse:
 
             if user is not None:
                 auth.login(request, user)
-                return redirect('http://localhost:5173/profile/')
+                return redirect(f'{settings.FRONTEND_URL}/profile/')
             else:
                 form.add_error(None, "Invalid email or password")
     else:
@@ -76,7 +74,7 @@ def logout(request: HttpRequest) -> JsonResponse:
         auth.logout(request)
     except:
         pass
-    return JsonResponse({'login page': 'http://localhost:8000/login/'})
+    return JsonResponse({'login page': f'{settings.BACKEND_URL}/login/'})
 
 
 def users_api_view(request: HttpRequest) -> JsonResponse:
@@ -170,8 +168,9 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
         return JsonResponse({
             'user': CustomUser.objects.get(username=request.user.username).as_dict(),
         })
+    
     # redirect unauthenticated user to login page
-    return JsonResponse({'user' : 'http://localhost:8000/login/'})
+    return JsonResponse({'user' : '/login/'})
 
 
 def check_password_api_view(request: HttpRequest, id: int, password: str) -> JsonResponse:

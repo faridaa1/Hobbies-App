@@ -5,12 +5,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ECS639 Web Programming - Group CW Template</title>
+    <title>ECS639 Web Programming - Group CW</title>
 </head>
 
 <body>
-    <div id="app"></div>
+    {% if request.path == '/profile/' or request.path == '/users/' %}
+    <div id="app">
     <script type="module" src="/src/main.ts"></script>
-</body>
+    </div>
+    {% endif %}
+    <div class="content">
+      {% block content %}
+      {% endblock %}
+      {% block js %}
+      {% endblock %}
+    </div>
+    {% if request.path != '/profile/' and request.path != '/users/' and request.path != '/login/' and request.path != '/signup/' %}
+    <div style="font-size: 2rem; display: flex; flex-direction: column; height: 100vh; align-items: center; justify-content: center;">
+      <p>Welcome to our Hobbies Web App!</p>
+      <div style="font-size: 1.7rem;">
+        <button style="border-radius: 0.5rem; border: none; background-color: rgb(13, 110, 253); color: white; padding: 0.5rem; margin-right: 2rem" onclick="window.location = window.location.hostname === 'localhost' ? 'http://localhost:8000/login/' : '/login/'" onmouseover = "this.style.backgroundColor='blue'" onmouseout = "this.style.backgroundColor='rgb(13, 110, 253)'"> Log In </button>
+        <button style="border-radius: 0.5rem; border: none; background-color: rgb(13, 110, 253); color: white; padding: 0.5rem;" onclick="window.location = window.location.hostname === 'localhost' ? 'http://localhost:8000/signup/' : '/signup/'" onmouseover = "this.style.backgroundColor='blue'" onmouseout = "this.style.backgroundColor='rgb(13, 110, 253)'"> Sign Up </button>
+      </div>
+    </div>
+    {% endif %}
+  </body>
 
 </html>

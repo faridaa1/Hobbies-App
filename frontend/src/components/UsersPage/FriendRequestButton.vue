@@ -1,8 +1,8 @@
 <template>
-    <button v-if="friendship" :class="buttonClass" disabled>
+    <button name="status" v-if="friendship" :class="buttonClass" disabled>
         {{ buttonText }}
     </button>
-    <button v-else @click="sendRequest(otherUser.email)" class="btn btn-success">
+    <button name="send-request" v-else @click="sendRequest(otherUser.username)" class="btn btn-success">
         Send Request
     </button>
 </template>
@@ -11,8 +11,6 @@ import { defineComponent, PropType } from 'vue';
 import { MatchesUser } from '../../types';
 import { useUserStore } from '../../stores/user';
 import { mapStores } from 'pinia';
-
-const url = 'http://localhost:8000';
 
 export default defineComponent({
     props: {
@@ -45,7 +43,7 @@ export default defineComponent({
     methods: {
         async sendRequest(username: string) {
             try {
-                const req = await fetch(`${url}/api/user/${this.userStore.user.id}/friendship/${username}/`, {
+                const req = await fetch(`/api/user/${this.userStore.user.id}/friendship/${username}/`, {
                     method: 'POST',
                     credentials: 'include',
                     headers: {

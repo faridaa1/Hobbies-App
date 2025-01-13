@@ -13,7 +13,7 @@
                     style="font-size: 70px; line-height: 0"></i>
                 <div class="p-2 rounded w-100">{{ friend.user_name }}</div>
             </div>
-            <button type="button" class="btn btn-primary px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;"
+            <button name="accept-request" type="button" class="btn btn-primary px-3 fw-semibold" style="font-size: 1.1rem; height: 2.4rem;"
                 @click="handleResponse(true, friend.id)">
                 Accept
             </button>
@@ -62,7 +62,7 @@ export default defineComponent({
         },
         async handleResponse(isAccepted: boolean, id: number) {
             if (this.userStore.csrf !== '') {
-                let response: Response = await fetch(`http://localhost:8000/api/friendship/${id}/`, {
+                let response: Response = await fetch(`/api/friendship/${id}/`, {
                     method: 'PUT',
                     credentials: 'include',
                     headers: {
