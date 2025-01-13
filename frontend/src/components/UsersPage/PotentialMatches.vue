@@ -3,10 +3,9 @@
     <h1>Users</h1>
 
     <!-- Age Filter -->
-    <div class="filters mb-4">
-      <label for="age-filter">Filter by Age</label>
-      <FilterButton :min="minAge" :max="maxAge" class="my-5" @changeMinAge="changeMinAge" @changeMaxAge="changeMaxAge"/>
-      <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
+    <div class="filters mb-4 mt-2 d-flex flex-column gap-4">
+      <label for="age-filter" class="fs-5">Filter by Age</label>
+      <FilterButton :minAge="min" :maxAge="max" @changeMinAge="changeMinAge" @changeMaxAge="changeMaxAge" @applyFilter="applyFilter" @clearFilter="clearFilter"/>
     </div>
 
     <!-- User List -->
@@ -51,12 +50,23 @@ import FriendRequestButton from "./FriendRequestButton.vue";
 import FilterButton from "./FilterButton.vue";
 
 export default defineComponent({
-  data() {
+  data(): {
+    users: MatchesUser[],
+    minAge: number,
+    maxAge: number,
+    filteredUsers: MatchesUser[],
+    currentPage: number,
+    pageSize: number,
+    min: number,
+    max: number
+  } {
     return {
-      users: [] as MatchesUser[], // All users fetched from the API
+      users: [], // All users fetched from the API
+      min: 0,
+      max: 0,
       minAge: 0, // Default minimum age
-      maxAge: 100, // Default maximum age
-      filteredUsers: [] as MatchesUser[], // Filtered users based on age
+      maxAge: 0, // Default maximum age
+      filteredUsers: [], // Filtered users based on age
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
     };
@@ -74,7 +84,7 @@ export default defineComponent({
       if (newFiltered.length === this.filteredUsers.length - 1) { // Don't want endless calls when filtered changes
         this.filteredUsers = newFiltered;
       }
-    }
+    }, 
   },
   computed: {
     ...mapState(useUserStore, ['user', 'csrf']),
@@ -89,10 +99,10 @@ export default defineComponent({
   },
   methods: {
     changeMinAge(newMin: number): void {
-      this.minAge += newMin
+      this.minAge = newMin
     },
     changeMaxAge(newMax: number): void {
-      this.maxAge += newMax
+      this.maxAge = newMax
     },
     fetchUsers(): void {
       // Fetch users from the API
@@ -125,10 +135,10 @@ export default defineComponent({
       );
       this.currentPage = 1; // Reset to the first page after filtering
     },
-    clearFilter(): void {
+    clearFilter(min: number, max: number): void {
       // Reset age filter and show all users
-      this.minAge = 18; // Reset to default minimum age
-      this.maxAge = 100; // Reset to default maximum age
+      this.minAge = min; // Reset to default minimum age
+      this.maxAge = max; // Reset to default maximum age
       this.filteredUsers = this.users; // Show all users
       this.currentPage = 1; // Reset to the first page
     },
@@ -149,6 +159,20 @@ export default defineComponent({
   created(): void {
     this.fetchUsers(); // Fetch users when the component is created
   },
+  async mounted(): Promise<void> {
+    let response: Response = await fetch("/api/min-max-age/", {
+        method: 'GET',
+        headers: { "X-CSRFToken": this.csrf, },
+        credentials: 'include'
+    })
+    if (response.ok) {
+      let data: {'min_age': number, 'max_age': number} = await response.json()
+      this.minAge = data.min_age
+      this.min = data.min_age
+      this.maxAge = data.max_age
+      this.max = data.max_age
+    }
+  }, 
 });
 </script>
 
