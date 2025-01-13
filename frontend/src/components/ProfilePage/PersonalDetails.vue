@@ -2,7 +2,7 @@
     <div class="fs-5 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
             <div class="position-relative">
-                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`${user.profile_picture}`">
+                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="profile_url">
                 <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
                 <button name="remove_profile" type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="updatePicture($event)"><i class="bi bi-x fs-1"></i></button>
             </div>
@@ -296,6 +296,15 @@
             }
         },
         computed: {
+            profile_url(): string {
+                console.log(window.location.href, window.location.href.includes("localhost"))
+                if (window.location.href.includes("localhost")) {
+                    console.log(`http://localhost:8000${this.user.profile_picture}`)
+                    return `http://localhost:8000${this.user.profile_picture}`
+                } else {
+                    return `https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk${this.user.profile_picture}`
+                }
+            },
             user(): CustomUser {
                 let user:CustomUser = useUserStore().user
                 this.name = user.name
