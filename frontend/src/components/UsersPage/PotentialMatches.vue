@@ -1,6 +1,6 @@
 <template>
   <div class="potential-matches">
-    <h1>Potential Matches</h1>
+    <h1>Users</h1>
 
     <!-- Age Filter -->
     <div class="filters mb-4">
@@ -14,9 +14,15 @@
       <ul class="list-group">
         <li v-for="user in paginatedUsers" :key="user.email"
           class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <p><strong>{{ user.name }}</strong> ({{ user.age }} years old)</p>
-            <p>Hobbies: {{ user.hobbies.length ? user.hobbies.join(', ') : "No hobbies listed" }}</p>
+          <div class="d-flex gap-3">
+            <img v-if="user.profile_picture" :src="user.profile_picture"
+              class="rounded-circle" style="width: 70px; height:70px; object-fit: cover;">
+            <i v-if="!user.profile_picture" class="bi bi-person-circle p-0"
+              style="font-size: 70px; line-height: 0"></i>
+            <div class="d-flex flex-column gap-2 justify-content-center">
+              <div><strong>{{ user.name }}</strong> ({{ user.age }} years old)</div>
+              <div>Hobbies: {{ user.hobbies.length ? user.hobbies.join(', ') : "No hobbies listed" }}</div>
+            </div>
           </div>
           <FriendRequestButton :otherUser="user" />
         </li>
