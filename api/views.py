@@ -40,7 +40,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 request, username=data['email'], password=data['password'])
             if user is not None:
                 auth.login(request, user)  # logs in user and saves id in session
-            return redirect(f'{settings.FRONTEND_URL}/profile/')
+            return redirect('/profile/')
     else:
         form = SignupForm()
 
@@ -59,7 +59,7 @@ def login(request: HttpRequest) -> HttpResponse:
 
             if user is not None:
                 auth.login(request, user)
-                return redirect(f'{settings.FRONTEND_URL}/profile/')
+                return redirect('/profile/')
             else:
                 form.add_error(None, "Invalid email or password")
     else:
@@ -85,7 +85,7 @@ def users_api_view(request: HttpRequest) -> JsonResponse:
         })
     except: 
         return JsonResponse({
-                'users': [],
+            'users': [],
         })
 
 

@@ -8,19 +8,19 @@ export const useUserStore = defineStore('user', {
         csrf: ''
     }),
     actions: {
-        saveUser(user: CustomUser) {
+        saveUser(user: CustomUser): void {
             this.user = user
         },
-        saveHobbies(hobbies: { user_hobbies: UserHobby[] }) {
+        saveHobbies(hobbies: { user_hobbies: UserHobby[] }): void {
             this.hobbies = hobbies
         },
-        addHobby(hobby: UserHobby) {
+        addHobby(hobby: UserHobby): void {
             this.hobbies.user_hobbies.push(hobby)
         },
-        deleteHobby(hobby : UserHobby) {
+        deleteHobby(hobby : UserHobby): void {
             this.hobbies.user_hobbies = this.hobbies.user_hobbies.filter(myHobby => myHobby.hobby.hobby_id !== hobby.hobby.hobby_id)
         },
-        updateFriendship(id: number, isAccepted: boolean) {
+        updateFriendship(id: number, isAccepted: boolean): void {
             // Accept or delete friendship
             let friendship: Friendship | undefined = this.user.friends.find(fs => fs.id === id) 
             if (friendship) {
@@ -34,7 +34,7 @@ export const useUserStore = defineStore('user', {
     },
     getters: {
         getFriendship: (state) => {
-            return (email: string) => state.user.friends?.find(friendship => friendship.user_email === email)
+            return (email: string): Friendship | undefined => state.user.friends?.find(friendship => friendship.user_email === email)
         },
     }
 })

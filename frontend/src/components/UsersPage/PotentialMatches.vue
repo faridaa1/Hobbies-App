@@ -61,11 +61,23 @@ export default defineComponent({
     };
   },
   components: {
-    FriendRequestButton,
+    FriendRequestButton
+  },
+  watch: {
+    user(): void {
+      // User undefined until pinia store is installed
+      this.filteredUsers = this.removeUserFiltered();
+    },
+    filteredUsers(): void {
+      const newFiltered = this.removeUserFiltered();
+      if (newFiltered.length === this.filteredUsers.length - 1) { // Don't want endless calls when filtered changes
+        this.filteredUsers = newFiltered;
+      }
+    }
   },
   computed: {
-    ...mapState(useUserStore, ["user", "csrf"]),
-    totalPages() {
+    ...mapState(useUserStore, ['user', 'csrf']),
+    totalPages(): number {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
     paginatedUsers(): MatchesUser[] {
@@ -75,7 +87,7 @@ export default defineComponent({
     },
   },
   methods: {
-    fetchUsers() {
+    fetchUsers(): void {
       // Fetch users from the API
       fetch("http://localhost:8000/api/potential-matches",
         {
@@ -96,7 +108,7 @@ export default defineComponent({
         })
         .catch((error) => console.error("Error fetching users:", error));
     },
-    applyFilter() {
+    applyFilter(): void {
       // Filter users by age range and remove currently logged in user
       this.filteredUsers = this.users.filter(
         (user) =>
@@ -106,25 +118,28 @@ export default defineComponent({
       );
       this.currentPage = 1; // Reset to the first page after filtering
     },
-    clearFilter() {
+    clearFilter(): void {
       // Reset age filter and show all users
       this.minAge = 18; // Reset to default minimum age
       this.maxAge = 100; // Reset to default maximum age
       this.filteredUsers = this.users; // Show all users
       this.currentPage = 1; // Reset to the first page
     },
-    prevPage() {
+    prevPage(): void {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
     },
-    nextPage() {
+    nextPage(): void {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
     },
+    removeUserFiltered(): CustomUserAge[] {
+      return this.filteredUsers.filter(user => user.username !== this.user.username)
+    }
   },
-  created() {
+  created(): void {
     this.fetchUsers(); // Fetch users when the component is created
   },
 });
