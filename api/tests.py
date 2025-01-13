@@ -42,7 +42,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     def test_signup(self):
         """Testing account creation / signup"""
         # enter name
-        self.selenium.get(f"{self.live_server_url}/signup")
+        self.selenium.get(f"{self.live_server_url}/signup/")
         full_name = self.selenium.find_element(By.NAME, "name")
         full_name.click()
         full_name.send_keys(valid_signup_data()['name'])
