@@ -46,7 +46,7 @@
         </div>
         <div class="mt-4 d-flex gap-2 justify-content-center">
             <button type="button" class="btn btn-secondary" v-if="hobbyIndex > 0" @click="prevPage">Previous</button>
-            <button type="button" class="btn btn-secondary" v-if="hobbyIndex+10 < hobbies.length" @click="nextPage">Next</button>
+            <button type="button" class="btn btn-secondary" v-if="hobbyIndex+pageSize < hobbies.length" @click="nextPage">Next</button>
         </div>
     </div>
 </template>
@@ -69,18 +69,19 @@
             }
         },
         components: { AddHobby },
-        data(): {userHobbies: UserHobby[], hobbyIndex: number } {
+        data(): {userHobbies: UserHobby[], hobbyIndex: number, pageSize: number } {
             return {
                 userHobbies: [],
-                hobbyIndex: 0
+                hobbyIndex: 0,
+                pageSize: 5
             }
         },
         methods: {
             prevPage() : void {
-                this.hobbyIndex -= 10
+                this.hobbyIndex -= this.pageSize
             },
             nextPage() : void {
-                this.hobbyIndex += 10
+                this.hobbyIndex += this.pageSize
             },
             async deleteHobby(userHobby: UserHobby): Promise<void> {
                 if (useUserStore().csrf !== '') {
@@ -95,7 +96,7 @@
                     if (response.ok) {
                         useUserStore().deleteHobby(userHobby)
                         if (this.displayedHobbies.length === 0 && this.hobbies.length !== 0) {
-                            this.hobbyIndex -= 10
+                            this.hobbyIndex -= this.pageSize
                         }
                     } else {
                         confirm("Error deleting hobby")
@@ -110,7 +111,7 @@
                     return hobbies.user_hobbies
                 } else return []
             }, displayedHobbies() : UserHobby[] {
-                return this.hobbies.slice(this.hobbyIndex, this.hobbyIndex+10)
+                return this.hobbies.slice(this.hobbyIndex, this.hobbyIndex+this.pageSize)
             }
         },
     })

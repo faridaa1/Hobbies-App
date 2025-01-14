@@ -25,7 +25,7 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('api/hobbies/', hobbies_api_view, name='hobbies'),
     path('api/friendship/<int:id>/', friendship_update_api_view, name='edit friendship'),
     path('api/user/', user_api_view, name='user'),
-    path("api/potential-matches/", potential_matches_api_view, name="potential_matches"),
+    path("api/potential-matches/<int:min>/<int:max>", potential_matches_api_view, name="potential_matches"),
     path('api/users/', all_users_api_view, name='all_users_api'),
     path('api/all-users/', users_api_view, name='users'),
     path('api/user/<int:id>/<str:field>/', profile_api_view, name='profile'),
