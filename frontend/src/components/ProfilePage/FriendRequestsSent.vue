@@ -32,6 +32,12 @@ import { CustomUser, Friendship } from "../../types";
 import { useUserStore } from "../../stores/user";
 
 export default defineComponent({
+    props: {
+        base_url: {
+            type: String,
+            required: true
+        }
+    },
     data(): { friendIndex: number } {
         return { friendIndex: 0 }
     },
@@ -44,7 +50,7 @@ export default defineComponent({
         },
         async unsend(id: number): Promise<void> {
             if (useUserStore().csrf !== '') {
-                let response: Response = await fetch(`/api/friendship/${id}/`, {
+                let response: Response = await fetch(`${this.base_url}/api/friendship/${id}/`, {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
