@@ -161,6 +161,7 @@ export default defineComponent({
       this.currentPage = 1; // Reset to the first page after filtering
     },
     
+
     clearFilter(): void {
       // Reset age filter and show all users
       this.minAge = this.min; // Reset to default minimum age
