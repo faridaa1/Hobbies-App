@@ -18,7 +18,7 @@
     <!-- User List -->
     <div class="user-list">
       <ul class="list-group">
-        <li v-for="user in paginatedUsers" :key="user.email"
+        <li v-for="user in filteredUsers" :key="user.email"
           class="list-group-item d-flex justify-content-between align-items-center">
           <div class="d-flex gap-3">
             <img v-if="user.profile_picture" :src="user.profile_picture"
@@ -100,11 +100,6 @@ export default defineComponent({
     totalPages(): number {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
-    paginatedUsers(): MatchesUser[] {
-      const start: number = (this.currentPage - 1) * this.pageSize;
-      const end: number = start + this.pageSize;
-      return this.filteredUsers.slice(start, end);
-    },
   },
   methods: {
     changeMinAge(newMin: number): void {
@@ -113,9 +108,8 @@ export default defineComponent({
     changeMaxAge(newMax: number): void {
       this.maxAge = newMax
     },
-    fetchUsers(): void {
-      // Fetch users from the API
-      fetch(`${this.base_url}/api/potential-matches/`,
+    applyFilter(): void {
+      fetch(`${this.base_url}/api/potential-matches/${this.minAge}/${this.maxAge}`,
         {
           method: 'GET',
           headers: {
@@ -133,15 +127,6 @@ export default defineComponent({
           this.filteredUsers = this.users; // Initialize with all users
         })
         .catch((error) => console.error("Error fetching users:", error));
-    },
-    applyFilter(): void {
-      // Filter users by age range and remove currently logged in user
-      this.filteredUsers = this.users.filter(
-        (user) =>
-          user.age >= this.minAge &&
-          user.age <= this.maxAge &&
-          user.email !== this.user.email
-      );
       this.currentPage = 1; // Reset to the first page after filtering
     },
     clearFilter(): void {
@@ -165,9 +150,6 @@ export default defineComponent({
       return this.filteredUsers.filter(user => user.email !== this.user.email)
     }
   },
-  created(): void {
-    this.fetchUsers(); // Fetch users when the component is created
-  },
   async mounted(): Promise<void> {
     let response: Response = await fetch(`${this.base_url}/api/min-max-age/`, {
         method: 'GET',
@@ -180,6 +162,7 @@ export default defineComponent({
       this.min = data.min_age
       this.maxAge = data.max_age
       this.max = data.max_age
+      this.applyFilter()
     }
   }, 
 });
