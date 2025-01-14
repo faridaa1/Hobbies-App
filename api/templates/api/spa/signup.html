@@ -9,7 +9,8 @@
 
     .preview-img {
         object-fit: cover;
-        width: 16.2rem; /* Roughly aligns the two columns */
+        width: 16.2rem;
+        /* Roughly aligns the two columns */
         height: 16.2rem;
         border-radius: 100%;
     }
@@ -27,7 +28,6 @@
         align-items: center;
         justify-content: center;
     }
-
 </style>
 {% endblock %}
 
@@ -40,35 +40,38 @@
                 <div class="col d-flex flex-column align-self-center">
                     {% csrf_token %}
                     {% for field in form %}
-                        <!-- Profile pic - Want to render input on other side of div -->
-                        {% if field.label != 'Profile picture (*.png)' %} 
-                            <div class="mb-3">
-                                <label id="{{field.id_for_label}}" class="form-label">{{field.label}}</label> 
-                                {{field}}
-                                {% if field.label == 'Password' %}
-                                    <div class="form-check mt-1">
-                                        <input type="checkbox" id="show-password" name="show-password" class="form-check-input"/>
-                                        <label for="show-password" class="form-check-inputs">Show Password</label>
-                                    </div>
-                                {% endif %}
-                                {% for error in field.errors %}
-                                    <p class="field-error">{{error}}</p>
-                                {% endfor %}
-                            </div>
+                    <!-- Profile pic - Want to render input on other side of div -->
+                    {% if field.label != 'Profile picture (*.png)' %}
+                    <div class="mb-3">
+                        <label id="{{field.id_for_label}}" class="form-label">{{field.label}}</label>
+                        {{field}}
+                        {% if field.label == 'Password' %}
+                        <div class="form-check mt-1">
+                            <input type="checkbox" id="show-password" name="show-password" class="form-check-input" />
+                            <label for="show-password" class="form-check-inputs">Show Password</label>
+                        </div>
                         {% endif %}
+                        {% for error in field.errors %}
+                        <p class="field-error">{{error}}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     {% endfor %}
                 </div>
                 <div class="col d-flex flex-column justify-content-center align-items-center">
                     <div class="position-relative">
-                        <img src="" id="profile-preview" class="preview-img hidden"/>
-                        <button type="button" class="btn btn-danger remove-upload-pic position-absolute rounded-circle hidden"><i class="bi bi-x"></i></button>
+                        <img src="" id="profile-preview" class="preview-img hidden" />
+                        <button type="button"
+                            class="btn btn-danger remove-upload-pic position-absolute rounded-circle hidden"><i
+                                class="bi bi-x"></i></button>
                         <i class="bi bi-person-circle" style="font-size: 16rem;" id="profile-preview-placeholder"></i>
-                     </div>
+                    </div>
                     <div class="mb-3">
-                        <label id="{{form.profile_picture.id_for_label}}" class="form-label">{{form.profile_picture.label}}</label> 
+                        <label id="{{form.profile_picture.id_for_label}}"
+                            class="form-label">{{form.profile_picture.label}}</label>
                         {{form.profile_picture}}
                         {% for error in form.profile_picture.errors %}
-                            <p class="field-error">{{error}}</p>
+                        <p class="field-error">{{error}}</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -84,7 +87,7 @@
 
 {% block js %}
 <script>
-    const form = document.getElementById('signup')
+    const form = document.getElementById('signup-form')
     const passwordInput = document.querySelector('input#id_password')
     const passwordToggle = document.getElementById('show-password')
     const deleteUploadBtn = document.querySelector('button.remove-upload-pic')
