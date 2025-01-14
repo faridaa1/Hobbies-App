@@ -122,7 +122,7 @@ export default defineComponent({
                             element.style.right = (currentPos - this.scaleFactor)+"rem"
                             this.max += 1
                         } else return
-                        this.$emit(range === 'min' ? 'changeMinAge' : 'changeMaxAge', range === 'min' ? this.min+1 : this.max+1)
+                        this.$emit(range === 'min' ? 'changeMinAge' : 'changeMaxAge', range === 'min' ? this.min : this.max)
                     } else if (startMousePosition > event.clientX){
                         if (range === 'min' && this.min > this.minAge) {
                             element.style.left = (currentPos - this.scaleFactor)+"rem"
@@ -135,7 +135,7 @@ export default defineComponent({
                                 element.style.zIndex = '2'
                             } 
                         } else return
-                        this.$emit(range === 'min' ? 'changeMinAge' : 'changeMaxAge', range === 'min' ? this.min-1 : this.min+1)
+                        this.$emit(range === 'min' ? 'changeMinAge' : 'changeMaxAge', range === 'min' ? this.min : this.max)
                     }
                 } 
                 if (range === 'min') {

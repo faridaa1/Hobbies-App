@@ -102,9 +102,11 @@ export default defineComponent({
   },
   methods: {
     changeMinAge(newMin: number): void {
+      console.log("min changed",this.minAge, this.maxAge)
       this.minAge = newMin
     },
     changeMaxAge(newMax: number): void {
+      console.log("max changed",this.minAge, this.maxAge)
       this.maxAge = newMax
     },
     fetchUsers(): void {
@@ -129,6 +131,7 @@ export default defineComponent({
         .catch((error) => console.error("Error fetching users:", error));
     },
     applyFilter(): void {
+      console.log(this.minAge, this.maxAge)
       // Filter users by age range and remove currently logged in user
       this.filteredUsers = this.users.filter(
         (user) =>
