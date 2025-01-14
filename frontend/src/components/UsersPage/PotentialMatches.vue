@@ -109,7 +109,7 @@ export default defineComponent({
     },
     fetchUsers(): void {
       // Fetch users from the API
-      fetch("/api/potential-matches/",
+      fetch(`${this.base_url}/api/potential-matches/`,
         {
           method: 'GET',
           headers: {
@@ -163,7 +163,7 @@ export default defineComponent({
     this.fetchUsers(); // Fetch users when the component is created
   },
   async mounted(): Promise<void> {
-    let response: Response = await fetch("/api/min-max-age/", {
+    let response: Response = await fetch(`${this.base_url}/api/min-max-age/`, {
         method: 'GET',
         headers: { "X-CSRFToken": this.csrf, },
         credentials: 'include'
