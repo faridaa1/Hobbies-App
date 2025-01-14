@@ -141,7 +141,7 @@ export default defineComponent({
       //Check if either minAge or maxAge is negative 
       if (this.minAge < 0 || this.maxAge < 0) {
         this.inputError = true; // Show error message
-        alert("Age cannot be less than 0"); // Optional: Display alert
+        alert("Age cannot be less than 0"); // Display alert
         return; // Stop further execution
       }
 
