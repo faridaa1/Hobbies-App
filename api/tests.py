@@ -39,6 +39,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # cls.selenium.quit()
         super().tearDownClass()
     
+    
     def test_app(self):
         self.signup()
         self.login()
