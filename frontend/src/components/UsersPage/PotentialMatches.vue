@@ -111,7 +111,7 @@ export default defineComponent({
     changeMaxAge(newMax: number): void {
       this.maxAge = newMax
     },
-    applyFilter(): void {
+    async applyFilter(): Promise<void> {
       //Check if either minAge or maxAge is negative 
       if (this.minAge < 0 || this.maxAge < 0) {
           alert("Age cannot be less than 0"); // Display alert
@@ -122,7 +122,7 @@ export default defineComponent({
       } else {
           this.inputError = false
       }
-      fetch(`${this.base_url}/api/potential-matches/${this.minAge}/${this.maxAge}`,
+      await fetch(`${this.base_url}/api/potential-matches/${this.minAge}/${this.maxAge}`,
         {
           method: 'GET',
           headers: {
