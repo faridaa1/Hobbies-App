@@ -19,7 +19,7 @@
     <!-- User List -->
     <div class="user-list">
       <ul class="list-group">
-        <li v-for="user in filteredUsers" :key="user.email"
+        <li v-for="user in paginatedUsers" :key="user.email"
           class="list-group-item d-flex justify-content-between align-items-center">
           <div class="d-flex gap-3">
             <img v-if="user.profile_picture" :src="user.profile_picture"
@@ -102,6 +102,10 @@ export default defineComponent({
     ...mapState(useUserStore, ['user', 'csrf']),
     totalPages(): number {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
+    }, paginatedUsers(): MatchesUser[] {
+      const start: number = (this.currentPage - 1) * this.pageSize;
+      const end: number = start + this.pageSize;
+      return this.filteredUsers.slice(start, end);
     },
   },
   methods: {
@@ -142,8 +146,6 @@ export default defineComponent({
         .catch((error) => console.error("Error fetching users:", error));      
       this.currentPage = 1; // Reset to the first page after filtering
     },
-    
-
     clearFilter(): void {
       // Reset age filter and show all users
       this.minAge = this.min; // Reset to default minimum age
