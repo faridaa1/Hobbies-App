@@ -39,21 +39,21 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="personal-details-tab-pane" role="tabpanel"
                 aria-labelledby="personal-details-tab" tabindex="0">
-                <PersonalDetails :today="today()" />
+                <PersonalDetails :today="today()" :base_url="base_url" />
             </div>
             <div class="tab-pane fade" id="hobbies-tab-pane" role="tabpanel" aria-labelledby="hobbies-tab" tabindex="1">
-                <Hobbies :today="today()" />
+                <Hobbies :today="today()" :base_url="base_url" />
             </div>
             <div class="tab-pane fade" id="friends-tab-pane" role="tabpanel" aria-labelledby="friends-tab" tabindex="2">
-                <Friends />
+                <Friends :base_url="base_url" />
             </div>
             <div class="tab-pane fade" id="friend-requests-sent-tab-pane" role="tabpanel"
                 aria-labelledby="friend-requests-sent-tab" tabindex="3">
-                <FriendRequestsSent />
+                <FriendRequestsSent :base_url="base_url" />
             </div>
             <div class="tab-pane fade" id="friend-requests-received-tab-pane" role="tabpanel"
                 aria-labelledby="friend-requests-received-tab" tabindex="4">
-                <FriendRequestsReceived />
+                <FriendRequestsReceived :base_url="base_url" />
             </div>
         </div>
     </div>
@@ -68,9 +68,10 @@ import FriendRequestsSent from "../components/ProfilePage/FriendRequestsSent.vue
 import FriendRequestsReceived from "../components/ProfilePage/FriendRequestsReceived.vue";
 
 export default defineComponent({
-    data(): { title: String } {
+    data(): { title: String, base_url: string } {
         return {
             title: "Profile",
+            base_url: window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
         }
     },
     components: {

@@ -37,6 +37,12 @@ import { useUserStore } from "../../stores/user";
 import { mapStores } from "pinia";
 
 export default defineComponent({
+    props: {
+        base_url: {
+            type: String,
+            required: true
+        }
+    },
     data(): { friendIndex: number } {
         return { friendIndex: 0 }
     },
@@ -62,7 +68,7 @@ export default defineComponent({
         },
         async handleResponse(isAccepted: boolean, id: number): Promise<void> {
             if (this.userStore.csrf !== '') {
-                let response: Response = await fetch(`/api/friendship/${id}/`, {
+                let response: Response = await fetch(`${this.base_url}/api/friendship/${id}/`, {
                     method: 'PUT',
                     credentials: 'include',
                     headers: {

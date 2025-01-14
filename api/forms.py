@@ -7,26 +7,28 @@ from .models import CustomUser
 
 class PasswordField(forms.CharField):
     """Password field for Django form - uses type password"""
-    widget = forms.PasswordInput
+    widget: type[forms.Widget] = forms.PasswordInput
 
 
 class DatePickerField(forms.DateField):
     """Date field for Djano form with a date picker input"""
-    widget = forms.widgets.DateInput(attrs={'type': 'date'})
+    widget: type[forms.Widget] = forms.widgets.DateInput(attrs={'type': 'date'})
 
 
 class SignupForm(ModelForm):
     """Django form used to sign up a user."""
     class Meta:
         """Form based on CustomUser model and has specified fields from that model"""
-        model = CustomUser
-        fields = ['name', 'email', 'password',
-                  'date_of_birth', 'profile_picture']
-        field_classes = {
+        model: CustomUser = CustomUser
+        fields: list[str] = [
+            'name', 'email', 'password',
+            'date_of_birth', 'profile_picture'
+        ]
+        field_classes: dict[str, any] = {
             "password": PasswordField,
             "date_of_birth": DatePickerField
         }
-        labels = {
+        labels: dict[str, str] = {
             'name': 'Full Name',
             'profile_picture': 'Profile picture (*.png)'
         }
@@ -42,15 +44,15 @@ class SignupForm(ModelForm):
 
     def clean_email(self):
         """Cleans email field - checks that there's no user with that email"""
-        email = self.cleaned_data['email']
-        email_exists = CustomUser.objects.filter(email=email).exists()
+        email: str = self.cleaned_data['email']
+        email_exists: bool = CustomUser.objects.filter(email=email).exists()
         if email_exists:
             raise ValidationError('An account with that email already exists')
         return email
 
     def clean_password(self):
         """Cleans password field - checks that password is between 8 and 30 chars"""
-        password = self.cleaned_data['password']
+        password: str = self.cleaned_data['password']
         if len(password) < 8 or len(password) > 30:
             raise ValidationError(
                 "Your password must be between 8 and 30 characters")
@@ -58,7 +60,7 @@ class SignupForm(ModelForm):
 
     def clean_date_of_birth(self):
         """Cleans d.o.b. field - checks that it's not in the future"""
-        dob = self.cleaned_data['date_of_birth']
+        dob: str = self.cleaned_data['date_of_birth']
         if dob is None:
             raise ValidationError("This field is required.")
         elif dob > datetime.date.today():
@@ -67,7 +69,7 @@ class SignupForm(ModelForm):
 
     def clean_profile_picture(self):
         """Cleans profile picture field - checks that it's a png"""
-        pic = self.cleaned_data['profile_picture']
+        pic: str = self.cleaned_data['profile_picture']
         if pic:
             if pic.image.format != 'PNG':
                 raise ValidationError('You can only upload .png files')
@@ -76,8 +78,8 @@ class SignupForm(ModelForm):
 
 class LoginForm(forms.Form):
     """Django form used to log in a user"""
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder':'email'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'password'}))
+    email: forms.EmailField = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder':'email'}))
+    password: forms.CharField = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'password'}))
     
     def __init__(self, *args, **kwargs):
         """Overriding form constructor"""

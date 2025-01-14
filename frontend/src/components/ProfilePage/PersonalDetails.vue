@@ -92,6 +92,10 @@
             today: { 
                 type: String, 
                 required: true
+            },
+            base_url: {
+                type: String,
+                required: true
             }
         },
         data(): {
@@ -178,7 +182,7 @@
                 } else if (this.password.oldPassword === this.password.newPassword) {
                     this.errorText.password = "Current and New passwords are the same"
                 } else {
-                    let response: Response = await fetch(`/api/user/${this.user.id}/password/${this.password.oldPassword}/`, {
+                    let response: Response = await fetch(`${this.base_url}/api/user/${this.user.id}/password/${this.password.oldPassword}/`, {
                         method: 'GET', 
                         credentials: 'include', 
                         headers: { 
@@ -234,7 +238,7 @@
                             file.append('profile_picture', '')
                         }
                         field = 'pic'
-                        response = await fetch(`/api/user/${this.user.id}/${field}/`, {
+                        response = await fetch(`${this.base_url}/api/user/${this.user.id}/${field}/`, {
                             method:'POST', 
                             credentials: 'include', 
                             headers: { 
@@ -266,7 +270,7 @@
                             this.reset('password')
                             this.validPassword = false
                         }
-                        response = await fetch(`/api/user/${this.user.id}/${field}/`, {
+                        response = await fetch(`${this.base_url}/api/user/${this.user.id}/${field}/`, {
                             method: 'PUT', 
                             credentials: 'include', 
                             headers: { 
