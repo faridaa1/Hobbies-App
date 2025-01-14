@@ -24,7 +24,7 @@
         </div>
         <div class="d-flex gap-2 justify-content-center">
             <button type="button" class="btn btn-secondary" v-if="friendIndex > 0" @click="prevPage">Previous</button>
-            <button type="button" class="btn btn-secondary" v-if="friendIndex + 10 < friends.length"
+            <button type="button" class="btn btn-secondary" v-if="friendIndex + pageSize < friends.length"
                 @click="nextPage">Next</button>
         </div>
     </div>
@@ -43,8 +43,8 @@ export default defineComponent({
             required: true
         }
     },
-    data(): { friendIndex: number } {
-        return { friendIndex: 0 }
+    data(): { friendIndex: number, pageSize: number } {
+        return { friendIndex: 0, pageSize: 5 }
     },
     computed: {
         ...mapStores(useUserStore),
@@ -56,15 +56,15 @@ export default defineComponent({
             }
             return []
         }, displayedFriends(): Friendship[] {
-            return this.friends.slice(this.friendIndex, this.friendIndex + 10)
+            return this.friends.slice(this.friendIndex, this.friendIndex + this.pageSize)
         }
     },
     methods: {
         prevPage(): void {
-            this.friendIndex -= 10
+            this.friendIndex -= this.pageSize
         },
         nextPage(): void {
-            this.friendIndex += 10
+            this.friendIndex += this.pageSize
         },
         async handleResponse(isAccepted: boolean, id: number): Promise<void> {
             if (this.userStore.csrf !== '') {
@@ -83,7 +83,7 @@ export default defineComponent({
                 }
                 this.userStore.updateFriendship(id, isAccepted)
                 if (this.displayedFriends.length === 0 && this.friends.length !== 0) {
-                    this.friendIndex -= 10
+                    this.friendIndex -= this.pageSize
                 }
             }
         }

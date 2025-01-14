@@ -3,15 +3,23 @@
     <h1>Users</h1>
 
     <!-- Age Filter -->
-    <div class="filters mb-4 mt-2 d-flex flex-column gap-4">
-      <label for="age-filter" class="fs-5">Filter by Age</label>
-      <FilterButton :minAge="min" :maxAge="max" @changeMinAge="changeMinAge" @changeMaxAge="changeMaxAge" @applyFilter="applyFilter" @clearFilter="clearFilter"/>
+    <div class="filters mb-4">
+      <label for="age-filter" class="mb-2">Filter by Age:</label>
+      <div class="age-range d-flex align-items-center mb-3">
+        <span class="me-2">Min: </span>
+        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" min="0"/>
+        <span class="me-2">Max: </span>
+        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" min="0" />
+      </div>
+      <p class="text-danger" v-if="inputError">Minimum age cannot be greater than maximum age</p>
+      <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
+      <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
     </div>
 
     <!-- User List -->
     <div class="user-list">
       <ul class="list-group">
-        <li v-for="user in paginatedUsers" :key="user.email"
+        <li v-for="user in filteredUsers" :key="user.email"
           class="list-group-item d-flex justify-content-between align-items-center">
           <div class="d-flex gap-3">
             <img v-if="user.profile_picture" :src="user.profile_picture"
@@ -48,7 +56,6 @@ import { MatchesUser } from "../../types";
 import { useUserStore } from "../../stores/user";
 import { mapState } from "pinia";
 import FriendRequestButton from "./FriendRequestButton.vue";
-import FilterButton from "./FilterButton.vue";
 
 export default defineComponent({
   data(): {
@@ -60,7 +67,8 @@ export default defineComponent({
     pageSize: number,
     min: number,
     max: number,
-    base_url: string
+    base_url: string,
+    inputError: boolean
   } {
     return {
       users: [], // All users fetched from the API
@@ -71,11 +79,12 @@ export default defineComponent({
       filteredUsers: [], // Filtered users based on age
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
-      base_url: window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+      base_url: window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk',
+      inputError: false
     };
   },
   components: {
-    FriendRequestButton, FilterButton
+    FriendRequestButton
   },
   watch: {
     user(): void {
@@ -94,11 +103,6 @@ export default defineComponent({
     totalPages(): number {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
     },
-    paginatedUsers(): MatchesUser[] {
-      const start: number = (this.currentPage - 1) * this.pageSize;
-      const end: number = start + this.pageSize;
-      return this.filteredUsers.slice(start, end);
-    },
   },
   methods: {
     changeMinAge(newMin: number): void {
@@ -107,9 +111,18 @@ export default defineComponent({
     changeMaxAge(newMax: number): void {
       this.maxAge = newMax
     },
-    fetchUsers(): void {
-      // Fetch users from the API
-      fetch(`${this.base_url}/api/potential-matches/`,
+    applyFilter(): void {
+      //Check if either minAge or maxAge is negative 
+      if (this.minAge < 0 || this.maxAge < 0) {
+          alert("Age cannot be less than 0"); // Display alert
+          return; // Stop further execution
+      } else if (this.minAge > this.maxAge) {
+          this.inputError = true
+          return
+      } else {
+          this.inputError = false
+      }
+      fetch(`${this.base_url}/api/potential-matches/${this.minAge}/${this.maxAge}`,
         {
           method: 'GET',
           headers: {
@@ -126,18 +139,11 @@ export default defineComponent({
           }));
           this.filteredUsers = this.users; // Initialize with all users
         })
-        .catch((error) => console.error("Error fetching users:", error));
-    },
-    applyFilter(): void {
-      // Filter users by age range and remove currently logged in user
-      this.filteredUsers = this.users.filter(
-        (user) =>
-          user.age >= this.minAge &&
-          user.age <= this.maxAge &&
-          user.email !== this.user.email
-      );
+        .catch((error) => console.error("Error fetching users:", error));      
       this.currentPage = 1; // Reset to the first page after filtering
     },
+    
+
     clearFilter(): void {
       // Reset age filter and show all users
       this.minAge = this.min; // Reset to default minimum age
@@ -159,9 +165,6 @@ export default defineComponent({
       return this.filteredUsers.filter(user => user.email !== this.user.email)
     }
   },
-  created(): void {
-    this.fetchUsers(); // Fetch users when the component is created
-  },
   async mounted(): Promise<void> {
     let response: Response = await fetch(`${this.base_url}/api/min-max-age/`, {
         method: 'GET',
@@ -174,6 +177,7 @@ export default defineComponent({
       this.min = data.min_age
       this.maxAge = data.max_age
       this.max = data.max_age
+      this.applyFilter()
     }
   }, 
 });
@@ -182,6 +186,10 @@ export default defineComponent({
 <style scoped>
 .potential-matches {
   padding: 20px;
+}
+
+.filters input {
+  width: 100px;
 }
 
 .user-list {
