@@ -7,9 +7,9 @@
       <label for="age-filter" class="mb-2">Filter by Age:</label>
       <div class="age-range d-flex align-items-center mb-3">
         <span class="me-2">Min: </span>
-        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" />
+        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" min="0"/>
         <span class="me-2">Max: </span>
-        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" />
+        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" min="0" />
       </div>
       <p class="text-danger" v-if="inputError">Minimum age cannot be greater than maximum age</p>
       <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
@@ -136,8 +136,29 @@ export default defineComponent({
           this.filteredUsers = this.users; // Initialize with all users
         })
         .catch((error) => console.error("Error fetching users:", error));
-        this.currentPage = 1; // Reset to the first page after filtering
     },
+    applyFilter(): void {
+      //Check if either minAge or maxAge is negative 
+      if (this.minAge < 0 || this.maxAge < 0) {
+          alert("Age cannot be less than 0"); // Display alert
+          return; // Stop further execution
+      } else if (this.minAge > this.maxAge) {
+          this.inputError = true
+          return
+      } else {
+          this.inputError = false
+      }
+      // Filter users by age range and remove currently logged in user
+      this.filteredUsers = this.users.filter(
+        (user) =>
+          user.age >= this.minAge &&
+          user.age <= this.maxAge &&
+          user.email !== this.user.email
+      );
+      this.currentPage = 1; // Reset to the first page after filtering
+    },
+    
+
     clearFilter(): void {
       // Reset age filter and show all users
       this.minAge = this.min; // Reset to default minimum age
