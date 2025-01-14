@@ -282,23 +282,18 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             expected_conditions.visibility_of_element_located((By.NAME, "signout"))
         ).click()
         
-        # sign in as other user 
-        email = WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.NAME, "email"))
-        )
-        email.click()
-        
         # setting password of test user (set in fixtures) manually so it can be hashed using set_password
         user = CustomUser.objects.get(pk=3)
         user.set_password("testing123") # so it can be hashed
         user.save()
 
-        # get test user email
-        with open('api/fixtures/users.json', 'r') as file:
-            email_address = "bobb@gmail.com"
+        # sign in as other user 
+        email = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.visibility_of_element_located((By.NAME, "email"))
+        )
+        email.click()
+        email_address = "bobb@gmail.com"
         email.send_keys(email_address)
-
-        # enter test user password
         password = self.selenium.find_element(By.NAME, "password")
         password.click()
         password.send_keys("testing123")
@@ -310,7 +305,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.ID, "friend-requests-received-tab"))
         ).click()
-        
+
         # accept friend request
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "accept-request"))
