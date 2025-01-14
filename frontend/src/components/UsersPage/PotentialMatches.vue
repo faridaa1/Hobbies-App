@@ -29,7 +29,7 @@
     </div>
 
     <!-- Pagination Controls -->
-    <div class="pagination-controls mt-4 d-flex justify-content-center">
+    <div v-if="totalPages >= currentPage" class="pagination-controls mt-4 d-flex justify-content-center">
       <button class="btn btn-secondary me-2" :disabled="currentPage === 1" @click="prevPage">
         Previous
       </button>
@@ -38,6 +38,7 @@
         Next
       </button>
     </div>
+    <span v-else>No users found matching this filter</span>
   </div>
 </template>
 
