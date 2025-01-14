@@ -3,9 +3,16 @@
     <h1>Users</h1>
 
     <!-- Age Filter -->
-    <div class="filters mb-4 mt-2 d-flex flex-column gap-4">
-      <label for="age-filter" class="fs-5">Filter by Age</label>
-      <FilterButton :minAge="min" :maxAge="max" @changeMinAge="changeMinAge" @changeMaxAge="changeMaxAge" @applyFilter="applyFilter" @clearFilter="clearFilter"/>
+    <div class="filters mb-4">
+      <label for="age-filter" class="mb-2">Filter by Age:</label>
+      <div class="age-range d-flex align-items-center mb-3">
+        <span class="me-2">Min: </span>
+        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" />
+        <span class="me-2">Max: </span>
+        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" />
+      </div>
+      <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
+      <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
     </div>
 
     <!-- User List -->
@@ -48,7 +55,6 @@ import { MatchesUser } from "../../types";
 import { useUserStore } from "../../stores/user";
 import { mapState } from "pinia";
 import FriendRequestButton from "./FriendRequestButton.vue";
-import FilterButton from "./FilterButton.vue";
 
 export default defineComponent({
   data(): {
@@ -75,7 +81,7 @@ export default defineComponent({
     };
   },
   components: {
-    FriendRequestButton, FilterButton
+    FriendRequestButton
   },
   watch: {
     user(): void {
@@ -182,6 +188,10 @@ export default defineComponent({
 <style scoped>
 .potential-matches {
   padding: 20px;
+}
+
+.filters input {
+  width: 100px;
 }
 
 .user-list {
