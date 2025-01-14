@@ -26,7 +26,7 @@ def valid_signup_data() -> dict:
     }
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
-    port = 8001
+    port = 8000
     fixtures = ['hobbies.json', 'users.json']
     
 
