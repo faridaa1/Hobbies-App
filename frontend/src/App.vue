@@ -38,7 +38,7 @@ export default defineComponent({
         });
         let userData: { user: CustomUser | string } = await userResponse.json();
         if (typeof userData.user === "string") {
-            if (!window.location.href.includes('login')) {
+            if (!window.location.href.includes('login') && !window.location.href.includes('signup')) {
                 window.location.href = userData.user
             }
             return
