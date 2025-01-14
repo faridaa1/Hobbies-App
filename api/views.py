@@ -4,16 +4,16 @@ from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth import authenticate
-from django.conf import settings
 from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
 from django.db.models import Count, Q, Min, Max
+from django.db.models import QuerySet
 
 
-def calculate_age(dob):
+def calculate_age(dob: datetime.date) -> int:
     """Calculate age from date"""
-    today = date.today()
+    today: datetime.date = date.today()
     return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
 
@@ -21,14 +21,15 @@ def main_spa(request: HttpRequest) -> HttpResponse:
     """View for main page"""
     return render(request, 'api/spa/index.html', {})
 
+
 def signup(request: HttpRequest) -> HttpResponse:
     """View for user signup (using ssr)"""
     if request.method == "POST":
         # Create SignupForm instance and populate w/ form data
-        form = SignupForm(request.POST, request.FILES)
+        form: SignupForm = SignupForm(request.POST, request.FILES)
         if form.is_valid():
             # Create user from valid form
-            data = form.cleaned_data
+            data: dict[str: any] = form.cleaned_data
             CustomUser.objects.create_user(
                 username=data['email'],
                 password=data['password'],
@@ -37,13 +38,13 @@ def signup(request: HttpRequest) -> HttpResponse:
                 date_of_birth=data['date_of_birth'],
                 profile_picture=data['profile_picture']
             )
-            user = authenticate(  # verifies details
+            user: CustomUser | None = authenticate(  # verifies details
                 request, username=data['email'], password=data['password'])
             if user is not None:
                 auth.login(request, user)  # logs in user and saves id in session
             return redirect('/profile/')
     else:
-        form = SignupForm()
+        form: SignupForm = SignupForm()
 
     return render(request, 'api/spa/signup.html', {"form": form})
 
@@ -75,7 +76,8 @@ def logout(request: HttpRequest) -> JsonResponse:
         auth.logout(request)
     except:
         pass
-    return JsonResponse({'login page': '/login/'})
+    base_url: str = 'http://localhost:8000' if 'localhost' in request.get_host()  else 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+    return JsonResponse({'login page': f'{base_url}/login/'})
 
 
 def users_api_view(request: HttpRequest) -> JsonResponse:
@@ -104,9 +106,8 @@ def hobbies_api_view(request: HttpRequest) -> JsonResponse:
     
 def all_users_api_view(request: HttpRequest) -> JsonResponse:
     """API view to return all users with calculated age."""
-
-    users = CustomUser.objects.filter(is_active=True).exclude(is_staff=True)  # Exclude staff users
-    user_data = [
+    users: QuerySet[CustomUser] = CustomUser.objects.filter(is_active=True).exclude(is_staff=True)  # Exclude staff users
+    user_data: dict[str, any] = [
         {
             "username": user.username,
             "name": user.name,
@@ -129,11 +130,11 @@ def potential_matches_api_view(request: HttpRequest) -> JsonResponse:
         return JsonResponse({"error": "User not authenticated"}, status=401)
 
     try:
-        logged_in_user = request.user
-        user_hobbies = set(logged_in_user.hobbies.values_list("id", flat=True))
+        logged_in_user: CustomUser = request.user
+        user_hobbies: set[int] = set(logged_in_user.hobbies.values_list("id", flat=True))
 
         # Get other users with the number of shared hobbies
-        potential_matches = (
+        potential_matches: QuerySet[CustomUser] = (
             CustomUser.objects.exclude(id=logged_in_user.id)
             .annotate(
                 common_hobbies_count=Count(
@@ -144,7 +145,7 @@ def potential_matches_api_view(request: HttpRequest) -> JsonResponse:
         )
 
         # Prepare the data to send to the frontend
-        matches_data = [
+        matches_data: dict[str, any] = [
             {
                 "id": user.id,
                 "name": user.name,
@@ -171,7 +172,8 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
         })
     
     # redirect unauthenticated user to login page
-    return JsonResponse({'user' : '/login/'})
+    base_url: str = 'http://localhost:8000' if 'localhost' in request.get_host()  else 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+    return JsonResponse({'user' : f'{base_url}/login/'})
 
 
 def check_password_api_view(request: HttpRequest, id: int, password: str) -> JsonResponse:
@@ -210,7 +212,7 @@ def profile_api_view(request: HttpRequest, id: int, field: str) -> JsonResponse:
         elif request.method == 'POST':
             if field == 'pic': 
                 user.profile_picture = request.FILES.get('profile_picture') 
-            user.save()
+                user.save()
             return JsonResponse(user.as_dict())
     except:
         pass
@@ -266,10 +268,10 @@ def user_hobbies_api_view(request: HttpRequest, id: int) -> JsonResponse:
 def friendship_api_view(request: HttpRequest, from_id: int, to_username: str) -> JsonResponse:
     """Defining POST request handling for Friendship."""
     try:
-        from_user = CustomUser.objects.get(pk=from_id)
-        to_user = CustomUser.objects.get(username=to_username)
+        from_user: CustomUser = CustomUser.objects.get(pk=from_id)
+        to_user: CustomUser = CustomUser.objects.get(username=to_username)
         if request.method == 'POST':
-            friendship = Friendship.objects.create(user1=from_user, user2=to_user,status='Pending')
+            friendship: Friendship = Friendship.objects.create(user1=from_user, user2=to_user,status='Pending')
             return JsonResponse({'friendship': friendship.as_dict(current_user=from_user)})
         else:
             return JsonResponse({}, status=405)
@@ -280,7 +282,7 @@ def friendship_api_view(request: HttpRequest, from_id: int, to_username: str) ->
 def friendship_update_api_view(request: HttpRequest, id: int) -> JsonResponse:
     """Defines DELETE and PUT request handling for a friendship"""
     try:
-        friendship = Friendship.objects.get(pk=id)
+        friendship: Friendship = Friendship.objects.get(pk=id)
         if request.method == 'DELETE':
             friendship.delete()
             return JsonResponse({}, status=204)
@@ -300,29 +302,27 @@ def friendship_update_api_view(request: HttpRequest, id: int) -> JsonResponse:
     except:
         return JsonResponse({}, status=500)
     
+
 def min_max_view(request: HttpRequest) -> JsonResponse:
     """Defines GET request handling for minimum and maximum age of all users"""
     try:
         if request.method == 'GET':
-            min_age = CustomUser.objects.aggregate(Min('date_of_birth'))
-            max_age = CustomUser.objects.aggregate(Max('date_of_birth'))
-
-            print(min_age)
-            print(max_age)
+            min_age: dict[str, datetime.date | None] = CustomUser.objects.aggregate(Min('date_of_birth'))
+            max_age: dict[str, datetime.date | None] = CustomUser.objects.aggregate(Max('date_of_birth'))
 
             if min_age['date_of_birth__min'] is not None:
-                min_age = calculate_age(min_age['date_of_birth__min'])
+                minimum_age:int = calculate_age(min_age['date_of_birth__min'])
             else:
                 # Otherwise min_age would be a dictionary
-                min_age = 0
+                minimum_age:int = 0
 
             if max_age['date_of_birth__max'] is not None:
-                max_age = calculate_age(max_age['date_of_birth__max'])
+                maximum_age:int = calculate_age(max_age['date_of_birth__max'])
             else: 
-                max_age = 0
+                maximum_age:int = 0
 
             # max_age returns nearest year so need to swap
-            return JsonResponse({'min_age': max_age, 'max_age': min_age})
+            return JsonResponse({'min_age': maximum_age, 'max_age': minimum_age})
         else:
             return JsonResponse({}, status=405)
     except:

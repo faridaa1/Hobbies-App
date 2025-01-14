@@ -3,9 +3,16 @@
     <h1>Users</h1>
 
     <!-- Age Filter -->
-    <div class="filters mb-4 mt-2 d-flex flex-column gap-4">
-      <label for="age-filter" class="fs-5">Filter by Age</label>
-      <FilterButton :minAge="min" :maxAge="max" @changeMinAge="changeMinAge" @changeMaxAge="changeMaxAge" @applyFilter="applyFilter" @clearFilter="clearFilter"/>
+    <div class="filters mb-4">
+      <label for="age-filter">Filter by Age:</label>
+      <div class="age-range d-flex align-items-center mb-3">
+        <span class="me-2">Min: </span>
+        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" />
+        <span class="me-2">Max: </span>
+        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" />
+      </div>
+      <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
+      <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
     </div>
 
     <!-- User List -->
@@ -23,13 +30,13 @@
               <div>Hobbies: {{ user.hobbies.length ? user.hobbies.join(', ') : "No hobbies listed" }}</div>
             </div>
           </div>
-          <FriendRequestButton :otherUser="user" />
+          <FriendRequestButton :otherUser="user" :base_url="base_url" />
         </li>
       </ul>
     </div>
 
     <!-- Pagination Controls -->
-    <div v-if="totalPages >= currentPage" class="pagination-controls mt-4 d-flex justify-content-center">
+    <div class="pagination-controls mt-4 d-flex justify-content-center">
       <button class="btn btn-secondary me-2" :disabled="currentPage === 1" @click="prevPage">
         Previous
       </button>
@@ -38,7 +45,6 @@
         Next
       </button>
     </div>
-    <span v-else>No users found matching this filter</span>
   </div>
 </template>
 
@@ -48,32 +54,29 @@ import { MatchesUser } from "../../types";
 import { useUserStore } from "../../stores/user";
 import { mapState } from "pinia";
 import FriendRequestButton from "./FriendRequestButton.vue";
-import FilterButton from "./FilterButton.vue";
 
 export default defineComponent({
   data(): {
-    users: MatchesUser[],
-    minAge: number,
-    maxAge: number,
-    filteredUsers: MatchesUser[],
-    currentPage: number,
-    pageSize: number,
-    min: number,
-    max: number
-  } {
+      users: MatchesUser[],
+      minAge: number,
+      maxAge: number,
+      filteredUsers: MatchesUser[],
+      currentPage: number,
+      pageSize: number,
+      base_url: string
+    } {
     return {
       users: [], // All users fetched from the API
-      min: 0,
-      max: 0,
-      minAge: 0, // Default minimum age
-      maxAge: 0, // Default maximum age
+      minAge: 18, // Default minimum age
+      maxAge: 100, // Default maximum age
       filteredUsers: [], // Filtered users based on age
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
+      base_url: window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
     };
   },
   components: {
-    FriendRequestButton, FilterButton
+    FriendRequestButton
   },
   watch: {
     user(): void {
@@ -85,7 +88,7 @@ export default defineComponent({
       if (newFiltered.length === this.filteredUsers.length - 1) { // Don't want endless calls when filtered changes
         this.filteredUsers = newFiltered;
       }
-    }, 
+    }
   },
   computed: {
     ...mapState(useUserStore, ['user', 'csrf']),
@@ -99,15 +102,9 @@ export default defineComponent({
     },
   },
   methods: {
-    changeMinAge(newMin: number): void {
-      this.minAge = newMin
-    },
-    changeMaxAge(newMax: number): void {
-      this.maxAge = newMax
-    },
     fetchUsers(): void {
       // Fetch users from the API
-      fetch("/api/potential-matches/",
+      fetch(`${this.base_url}/api/potential-matches/`,
         {
           method: 'GET',
           headers: {
@@ -160,26 +157,16 @@ export default defineComponent({
   created(): void {
     this.fetchUsers(); // Fetch users when the component is created
   },
-  async mounted(): Promise<void> {
-    let response: Response = await fetch("/api/min-max-age/", {
-        method: 'GET',
-        headers: { "X-CSRFToken": this.csrf, },
-        credentials: 'include'
-    })
-    if (response.ok) {
-      let data: {'min_age': number, 'max_age': number} = await response.json()
-      this.minAge = data.min_age
-      this.min = data.min_age
-      this.maxAge = data.max_age
-      this.max = data.max_age
-    }
-  }, 
 });
 </script>
 
 <style scoped>
 .potential-matches {
   padding: 20px;
+}
+
+.filters input {
+  width: 100px;
 }
 
 .user-list {
