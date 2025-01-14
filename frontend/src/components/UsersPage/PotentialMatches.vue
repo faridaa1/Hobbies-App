@@ -112,6 +112,12 @@ export default defineComponent({
       this.maxAge = newMax
     },
     applyFilter(): void {
+      if (this.minAge > this.maxAge) {
+        this.inputError = true
+        return
+      } else {
+        this.inputError = false
+      }
       fetch(`${this.base_url}/api/potential-matches/${this.minAge}/${this.maxAge}`,
         {
           method: 'GET',
@@ -130,22 +136,7 @@ export default defineComponent({
           this.filteredUsers = this.users; // Initialize with all users
         })
         .catch((error) => console.error("Error fetching users:", error));
-    },
-    applyFilter(): void {
-      if (this.minAge > this.maxAge) {
-        this.inputError = true
-        return
-      } else {
-        this.inputError = false
-      }
-      // Filter users by age range and remove currently logged in user
-      this.filteredUsers = this.users.filter(
-        (user) =>
-          user.age >= this.minAge &&
-          user.age <= this.maxAge &&
-          user.email !== this.user.email
-      );
-      this.currentPage = 1; // Reset to the first page after filtering
+        this.currentPage = 1; // Reset to the first page after filtering
     },
     clearFilter(): void {
       // Reset age filter and show all users
