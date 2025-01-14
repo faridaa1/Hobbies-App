@@ -6,25 +6,25 @@
     <link rel="icon" type="image/svg+xml" href="/static/api/spa/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECS639 Web Programming - Group CW</title>
-    {% block header_css %} {% endblock %}
-  <script type="module" crossorigin src="/static/api/spa/assets/index-X9Kx02g5.js"></script>
+    <!-- {% block header_css %} {% endblock %} -->
+  <script type="module" crossorigin src="/static/api/spa/assets/index-C_Xu9KcS.js"></script>
   <link rel="stylesheet" crossorigin href="/static/api/spa/assets/index-ubFb19pp.css">
 </head>
 
 <body>
   <div id="app">
   </div>
-  <div class="content">
+  <!-- <div class="content">
     {% block content %}
     {% endblock %}
     {% block js %}
     {% endblock %}
-  </div>
+  </div> -->
   <div id="home" class="fs-2 d-flex flex-column vh-100 align-items-center justify-content-center">
     <p>Welcome to our Hobbies Web App!</p>
     <div>
-      <button class="btn btn-primary fs-4 me-3" onclick="window.location = '/login/'"> Log In </button>
-      <button class="btn btn-primary fs-4" onclick="window.location = '/signup/'"> Sign Up </button>
+      <button class="btn btn-primary fs-4 me-3" id="login-btn"> Log In </button>
+      <button class="btn btn-primary fs-4" id="signup-btn"> Sign Up </button>
     </div>
   </div>
 </body>
@@ -32,6 +32,15 @@
 </html>
 
 <script>
+    // If running locally, signup and login need to have localhost in url when redirecting user
+    document.getElementById('login-btn').addEventListener('click', (event) => {
+      window.location.replace(`${window.location.href.includes('localhost') ? 'http://localhost:8000/login/' : '/login/'}`)
+    })
+
+    document.getElementById('signup-btn').addEventListener('click', (event) => {
+      window.location.replace(`${window.location.href.includes('localhost') ? 'http://localhost:8000/signup/' : '/signup/'}`)
+    })
+
     if (window.location.pathname === '/profile/' || window.location.pathname === '/users/') {
         document.getElementById('app').style.display = 'block'
     } else {
