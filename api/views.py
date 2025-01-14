@@ -10,7 +10,8 @@ from datetime import date
 from django.db.models import Count, Q, Min, Max
 from django.db.models import QuerySet
 
-def calculate_age(dob) -> int:
+
+def calculate_age(dob: datetime.date) -> int:
     """Calculate age from date"""
     today: datetime.date = date.today()
     return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
