@@ -9,9 +9,15 @@ from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
 from django.db.models import Count, Q, Min, Max
 from django.db.models import QuerySet
+import os
 
 
-def calculate_age(dob: datetime.date) -> int:
+PRODUCTION_ENV = os.getenv('PRODUCTION', 'False').lower()
+DJANGO_BASE_URL = 'http://localhost:8000' if PRODUCTION_ENV == 'false' else ''
+VUE_BASE_URL = 'http://localhost:5173' if PRODUCTION_ENV == 'false' else ''
+
+
+def calculate_age(dob: date) -> int:
     """Calculate age from date"""
     today: datetime.date = date.today()
     return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
@@ -24,6 +30,7 @@ def main_spa(request: HttpRequest) -> HttpResponse:
 
 def signup(request: HttpRequest) -> HttpResponse:
     """View for user signup (using ssr)"""
+    print(PRODUCTION_ENV, DJANGO_BASE_URL)
     if request.method == "POST":
         # Create SignupForm instance and populate w/ form data
         form: SignupForm = SignupForm(request.POST, request.FILES)
@@ -42,7 +49,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 request, username=data['email'], password=data['password'])
             if user is not None:
                 auth.login(request, user)  # logs in user and saves id in session
-            return redirect('/profile/')
+            return redirect(f'{VUE_BASE_URL}/profile/')
     else:
         form: SignupForm = SignupForm()
 
@@ -61,7 +68,7 @@ def login(request: HttpRequest) -> HttpResponse:
 
             if user is not None:
                 auth.login(request, user)
-                return redirect('/profile/')
+                return redirect(f'{VUE_BASE_URL}/profile/')
             else:
                 form.add_error(None, "Invalid email or password")
     else:
