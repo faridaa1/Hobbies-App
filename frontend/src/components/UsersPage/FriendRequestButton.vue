@@ -6,6 +6,7 @@
         Send Request
     </button>
 </template>
+
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { MatchesUser, Friendship } from '../../types';

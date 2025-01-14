@@ -66,14 +66,14 @@ class Friendship(models.Model):
     user1 = models.ForeignKey(CustomUser, related_name="sent_requests", on_delete=models.CASCADE)
     user2 = models.ForeignKey(CustomUser, related_name="received_requests", on_delete=models.CASCADE)
 
-    def clean(self):
+    def clean(self) -> None:
         """Preventing self-friendships and reverse friendships (duplicate)."""
         if self.user1 == self.user2:
             raise ValidationError("You cannot be friends with yourself")
         if Friendship.objects.filter(user1=self.user2, user2=self.user1).exists():
             raise ValidationError("This friendship already exists")
         
-    STATUS = [
+    STATUS: list[tuple[str, str]] = [
         ('Pending', 'Pending'),
         ('Accepted', 'Accepted'),
     ]
@@ -115,7 +115,7 @@ class UserHobby(models.Model):
     hobby = models.ForeignKey(Hobby, on_delete=models.CASCADE)
 
     """Choice field representing the User's skill level in the Hobby."""
-    HOBBY_LEVEL = [
+    HOBBY_LEVEL: list[tuple[str, str]] = [
         ('Beginner', 'Beginner'),
         ('Intermediate', 'Intermediate'),
         ('Advanced', 'Advanced')

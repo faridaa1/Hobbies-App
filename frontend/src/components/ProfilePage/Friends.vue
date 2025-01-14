@@ -42,7 +42,6 @@ export default defineComponent({
         },
         nextPage(): void {
             this.friendIndex += 10
-
         },
         async removeFriend(id: number): Promise<void> {
             if (useUserStore().csrf !== '') {

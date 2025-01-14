@@ -50,129 +50,129 @@ import FriendRequestButton from "./FriendRequestButton.vue";
 import FilterButton from "./FilterButton.vue";
 
 export default defineComponent({
-  data(): {
-    users: MatchesUser[],
-    minAge: number,
-    maxAge: number,
-    filteredUsers: MatchesUser[],
-    currentPage: number,
-    pageSize: number,
-    min: number,
-    max: number
-  } {
-    return {
-      users: [], // All users fetched from the API
-      min: 0,
-      max: 0,
-      minAge: 0, // Default minimum age
-      maxAge: 0, // Default maximum age
-      filteredUsers: [], // Filtered users based on age
-      currentPage: 1, // Current page
-      pageSize: 5, // Number of users per page
-    };
-  },
-  components: {
-    FriendRequestButton, FilterButton
-  },
-  watch: {
-    user(): void {
-      // User undefined until pinia store is installed
-      this.filteredUsers = this.removeUserFiltered();
+    data(): {
+        users: MatchesUser[],
+      minAge: number,
+      maxAge: number,
+      filteredUsers: MatchesUser[],
+      currentPage: number,
+      pageSize: number,
+      min: number,
+      max: number
+    } {
+      return {
+        users: [], // All users fetched from the API
+        min: 0,
+        max: 0,
+        minAge: 0, // Default minimum age
+        maxAge: 0, // Default maximum age
+        filteredUsers: [], // Filtered users based on age
+        currentPage: 1, // Current page
+        pageSize: 5, // Number of users per page
+      };
     },
-    filteredUsers(): void {
-      const newFiltered = this.removeUserFiltered();
-      if (newFiltered.length === this.filteredUsers.length - 1) { // Don't want endless calls when filtered changes
-        this.filteredUsers = newFiltered;
+    components: {
+      FriendRequestButton, FilterButton
+    },
+    watch: {
+      user(): void {
+        // User undefined until pinia store is installed
+        this.filteredUsers = this.removeUserFiltered();
+      },
+      filteredUsers(): void {
+        const newFiltered: MatchesUser[] = this.removeUserFiltered();
+        if (newFiltered.length === this.filteredUsers.length - 1) { // Don't want endless calls when filtered changes
+          this.filteredUsers = newFiltered;
+        }
+      }, 
+    },
+    computed: {
+      ...mapState(useUserStore, ['user', 'csrf']),
+      totalPages(): number {
+        return Math.ceil(this.filteredUsers.length / this.pageSize);
+      },
+      paginatedUsers(): MatchesUser[] {
+        const start: number = (this.currentPage - 1) * this.pageSize;
+        const end: number = start + this.pageSize;
+        return this.filteredUsers.slice(start, end);
+      },
+    },
+    methods: {
+      changeMinAge(newMin: number): void {
+        this.minAge = newMin
+      },
+      changeMaxAge(newMax: number): void {
+        this.maxAge = newMax
+      },
+      fetchUsers(): void {
+        // Fetch users from the API
+        fetch("/api/potential-matches/",
+          {
+            method: 'GET',
+            headers: {
+              "X-CSRFToken": this.csrf,
+            },
+            credentials: 'include'
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            this.users = data.matches.map((user: MatchesUser) => ({
+              ...user,
+              hobbies: user.hobbies || [], // Ensure hobbies is an array
+            }));
+            this.filteredUsers = this.users; // Initialize with all users
+          })
+          .catch((error) => console.error("Error fetching users:", error));
+      },
+      applyFilter(): void {
+        // Filter users by age range and remove currently logged in user
+        this.filteredUsers = this.users.filter(
+          (user) =>
+            user.age >= this.minAge &&
+            user.age <= this.maxAge &&
+            user.email !== this.user.email
+        );
+        this.currentPage = 1; // Reset to the first page after filtering
+      },
+      clearFilter(min: number, max: number): void {
+        // Reset age filter and show all users
+        this.minAge = min; // Reset to default minimum age
+        this.maxAge = max; // Reset to default maximum age
+        this.filteredUsers = this.users; // Show all users
+        this.currentPage = 1; // Reset to the first page
+      },
+      prevPage(): void {
+        if (this.currentPage > 1) {
+          this.currentPage--;
+        }
+      },
+      nextPage(): void {
+        if (this.currentPage < this.totalPages) {
+          this.currentPage++;
+        }
+      },
+      removeUserFiltered(): MatchesUser[] {
+        return this.filteredUsers.filter(user => user.email !== this.user.email)
+      }
+    },
+    created(): void {
+      this.fetchUsers(); // Fetch users when the component is created
+    },
+    async mounted(): Promise<void> {
+      let response: Response = await fetch("/api/min-max-age/", {
+          method: 'GET',
+          headers: { "X-CSRFToken": this.csrf, },
+          credentials: 'include'
+      })
+      if (response.ok) {
+        let data: {'min_age': number, 'max_age': number} = await response.json()
+        this.minAge = data.min_age
+        this.min = data.min_age
+        this.maxAge = data.max_age
+        this.max = data.max_age
       }
     }, 
-  },
-  computed: {
-    ...mapState(useUserStore, ['user', 'csrf']),
-    totalPages(): number {
-      return Math.ceil(this.filteredUsers.length / this.pageSize);
-    },
-    paginatedUsers(): MatchesUser[] {
-      const start: number = (this.currentPage - 1) * this.pageSize;
-      const end: number = start + this.pageSize;
-      return this.filteredUsers.slice(start, end);
-    },
-  },
-  methods: {
-    changeMinAge(newMin: number): void {
-      this.minAge = newMin
-    },
-    changeMaxAge(newMax: number): void {
-      this.maxAge = newMax
-    },
-    fetchUsers(): void {
-      // Fetch users from the API
-      fetch("/api/potential-matches/",
-        {
-          method: 'GET',
-          headers: {
-            "X-CSRFToken": this.csrf,
-          },
-          credentials: 'include'
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          this.users = data.matches.map((user: MatchesUser) => ({
-            ...user,
-            hobbies: user.hobbies || [], // Ensure hobbies is an array
-          }));
-          this.filteredUsers = this.users; // Initialize with all users
-        })
-        .catch((error) => console.error("Error fetching users:", error));
-    },
-    applyFilter(): void {
-      // Filter users by age range and remove currently logged in user
-      this.filteredUsers = this.users.filter(
-        (user) =>
-          user.age >= this.minAge &&
-          user.age <= this.maxAge &&
-          user.email !== this.user.email
-      );
-      this.currentPage = 1; // Reset to the first page after filtering
-    },
-    clearFilter(min: number, max: number): void {
-      // Reset age filter and show all users
-      this.minAge = min; // Reset to default minimum age
-      this.maxAge = max; // Reset to default maximum age
-      this.filteredUsers = this.users; // Show all users
-      this.currentPage = 1; // Reset to the first page
-    },
-    prevPage(): void {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
-    },
-    nextPage(): void {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
-    },
-    removeUserFiltered(): MatchesUser[] {
-      return this.filteredUsers.filter(user => user.email !== this.user.email)
-    }
-  },
-  created(): void {
-    this.fetchUsers(); // Fetch users when the component is created
-  },
-  async mounted(): Promise<void> {
-    let response: Response = await fetch("/api/min-max-age/", {
-        method: 'GET',
-        headers: { "X-CSRFToken": this.csrf, },
-        credentials: 'include'
-    })
-    if (response.ok) {
-      let data: {'min_age': number, 'max_age': number} = await response.json()
-      this.minAge = data.min_age
-      this.min = data.min_age
-      this.maxAge = data.max_age
-      this.max = data.max_age
-    }
-  }, 
 });
 </script>
 

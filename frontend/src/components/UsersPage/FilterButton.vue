@@ -107,9 +107,9 @@ export default defineComponent({
                 let elementB: HTMLElement | null = document.getElementById(range === 'min' ? 'max_age' : 'min_age')
                 if (element && elementB) {
                     element.style.backgroundColor = 'darkblue'
-                    let elementVal = range === 'min' ? element.style.left : element.style.right
+                    let elementVal: string = range === 'min' ? element.style.left : element.style.right
                     let currentPos: number = parseFloat(elementVal.replace("pxrem","")) || 0
-                    let startMousePosition = range === 'min' ? this.currentMinMousePosition : this.currentMaxMousePosition
+                    let startMousePosition: number = range === 'min' ? this.currentMinMousePosition : this.currentMaxMousePosition
                     if (startMousePosition < event.clientX) {
                         if (range === 'min' && this.min < this.max) {
                             element.style.left = (currentPos + this.scaleFactor)+"rem"
@@ -205,6 +205,5 @@ export default defineComponent({
         position: absolute;
         margin-top: 1.7rem;
     }
-
 </style>
   
