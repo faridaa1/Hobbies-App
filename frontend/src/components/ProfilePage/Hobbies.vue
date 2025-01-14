@@ -81,7 +81,6 @@
             },
             nextPage() : void {
                 this.hobbyIndex += 10
-
             },
             async deleteHobby(userHobby: UserHobby): Promise<void> {
                 if (useUserStore().csrf !== '') {
