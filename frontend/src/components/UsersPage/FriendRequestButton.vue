@@ -6,7 +6,6 @@
         Send Request
     </button>
 </template>
-
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { MatchesUser, Friendship } from '../../types';
@@ -18,7 +17,11 @@ export default defineComponent({
         otherUser: {
             type: Object as PropType<MatchesUser>,
             required: true
-        },
+        }, 
+        base_url: {
+            type: String,
+            required: true
+        }
     },
     computed: {
         ...mapStores(useUserStore),
@@ -41,7 +44,7 @@ export default defineComponent({
     methods: {
         async sendRequest(username: string): Promise<void> {
             try {
-                const req: Response = await fetch(`/api/user/${this.userStore.user.id}/friendship/${username}/`, {
+                const req: Response = await fetch(`${this.base_url}/api/user/${this.userStore.user.id}/friendship/${username}/`, {
                     method: 'POST',
                     credentials: 'include',
                     headers: {

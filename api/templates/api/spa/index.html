@@ -7,31 +7,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECS639 Web Programming - Group CW</title>
     {% block header_css %} {% endblock %}
-  <script type="module" crossorigin src="/static/api/spa/assets/index-DJqUgp77.js"></script>
-  <link rel="stylesheet" crossorigin href="/static/api/spa/assets/index-BT0Cxfu7.css">
+  <script type="module" crossorigin src="/static/api/spa/assets/index-D6Sgj1RZ.js"></script>
+  <link rel="stylesheet" crossorigin href="/static/api/spa/assets/index-DX5gxvmm.css">
 </head>
 
 <body>
-  {% if request.path == '/profile/' or request.path == '/users/' %}
   <div id="app">
-
   </div>
-  {% endif %}
   <div class="content">
     {% block content %}
     {% endblock %}
     {% block js %}
     {% endblock %}
   </div>
-  {% if request.path != '/profile/' and request.path != '/users/' and request.path != '/login/' and request.path != '/signup/' %}
-  <div class="fs-2 d-flex flex-column vh-100 align-items-center justify-content-center">
+  <div id="home" class="fs-2 d-flex flex-column vh-100 align-items-center justify-content-center">
     <p>Welcome to our Hobbies Web App!</p>
     <div>
       <button class="btn btn-primary fs-4 me-3" onclick="window.location = '/login/'"> Log In </button>
       <button class="btn btn-primary fs-4" onclick="window.location = '/signup/'"> Sign Up </button>
     </div>
   </div>
-  {% endif %}
 </body>
 
 </html>
+
+<script>
+    if (window.location.pathname === '/profile/' || window.location.pathname === '/users/') {
+        document.getElementById('app').style.display = 'block'
+    } else {
+        document.getElementById('app').style.display = 'none'
+    }
+    if (window.location.pathname !== '/profile/' && window.location.pathname !== '/users/' && window.location.pathname !== '/login/' && window.location.pathname !== '/signup/') {
+        document.getElementById('home').style.display = 'block'
+    } else {
+        document.getElementById('home').style.setProperty('display', 'none', 'important')
+    }
+</script>

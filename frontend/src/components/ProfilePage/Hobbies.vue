@@ -19,7 +19,7 @@
         <div class="modal fade" :id="'addHobby'">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <AddHobby :today=today />
+                    <AddHobby :today=today :base_url="base_url" />
                 </div>
             </div>
         </div>
@@ -62,6 +62,10 @@
             today: {
                 type: String,
                 required: true
+            }, 
+            base_url: {
+                type: String,
+                required: true
             }
         },
         components: { AddHobby },
@@ -80,7 +84,7 @@
             },
             async deleteHobby(userHobby: UserHobby): Promise<void> {
                 if (useUserStore().csrf !== '') {
-                    let response: Response = await fetch(`/api/user/hobbies/${useUserStore().user.id}&${userHobby.hobby.hobby_id}/`, {
+                    let response: Response = await fetch(`${this.base_url}/api/user/hobbies/${useUserStore().user.id}&${userHobby.hobby.hobby_id}/`, {
                         method:'DELETE', 
                         credentials: 'include', 
                         headers: { 
