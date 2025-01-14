@@ -1,7 +1,10 @@
 # Group members
-list of group members, 
-What each member was assigned to do, and what they actually did in terms of contributing to the final deliverable
-
+| Member | What they were assigned | What they actually did |
+| --- |---|--- |
+| M   |      |     |
+| Farida Addo| Create hobby model <br> Create friendship model <br> Profile page <br> Selenoum tests 3 & 6 | Create hobby model <br> Create friendship model <br> Profile page <br> Selenium tests 1, 2, 3, 5 & 6 <br>  Deployment <br> Test users and hobbies for deployment <br>      |
+| C     |        |       |
+| C     |        |       |
 # URL of deployed application 
 https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk
 
