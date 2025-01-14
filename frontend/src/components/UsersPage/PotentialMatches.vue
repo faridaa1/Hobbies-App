@@ -7,12 +7,12 @@
       <label for="age-filter" class="mb-2">Filter by Age:</label>
       <div class="age-range d-flex align-items-center mb-3">
         <span class="me-2">Min: </span>
-        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" min="0"/>
+        <input name="age_min" type="number" v-model="minAge" placeholder="Min Age" class="me-2" min="0"/>
         <span class="me-2">Max: </span>
-        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" min="0" />
+        <input name="age_max" type="number" v-model="maxAge" placeholder="Max Age" class="me-2" min="0" />
       </div>
       <p class="text-danger" v-if="inputError">Minimum age cannot be greater than maximum age</p>
-      <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
+      <button name="apply_filter" @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
       <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
     </div>
 
@@ -22,7 +22,7 @@
         <li v-for="user in paginatedUsers" :key="user.email"
           class="list-group-item d-flex justify-content-between align-items-center">
           <div class="d-flex gap-3">
-            <img v-if="user.profile_picture" :src="user.profile_picture"
+            <img v-if="user.profile_picture" :src="`${base_url}${user.profile_picture}`"
               class="rounded-circle" style="width: 70px; height:70px; object-fit: cover;">
             <i v-if="!user.profile_picture" class="bi bi-person-circle p-0"
               style="font-size: 70px; line-height: 0"></i>

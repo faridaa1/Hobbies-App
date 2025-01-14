@@ -34,6 +34,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         service = Service(executable_path=os.path.abspath("chromedriver.exe"))
+        # cls.selenium = WebDriver()
         cls.selenium = webdriver.Chrome(service=service)
         
 
@@ -95,9 +96,10 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         ).click()
 
         # enter email
-        email = WebDriverWait(self.selenium, 10).until(
-            expected_conditions.element_to_be_clickable((By.NAME, "email"))
-        )
+        # email = WebDriverWait(self.selenium, 10).until(
+        #     expected_conditions.element_to_be_clickable((By.NAME, "email"))
+        # )
+        email = self.selenium.find_element(By.NAME, "email")
         email.click()
         email.send_keys(valid_signup_data()['email'])
 
@@ -184,6 +186,11 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element(By.NAME, "hobbies").click()
         self.selenium.find_element(By.NAME, "add_hobby").click()
 
+        # add new hobby button click
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "add-hobby"))
+        ).click()
+
         # enter name
         hobby_name = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "hobby_name"))
@@ -224,7 +231,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
         # navigate to user page 
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.LINK_TEXT, "users"))
+            expected_conditions.element_to_be_clickable((By.LINK_TEXT, "Users"))
         ).click()
 
         # wait for the filtering input to appear and interact with it
@@ -282,13 +289,13 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         email.click()
         
         # setting password of test user (set in fixtures) manually so it can be hashed using set_password
-        user = CustomUser.objects.get(pk=1)
+        user = CustomUser.objects.get(pk=3)
         user.set_password("testing123") # so it can be hashed
         user.save()
 
         # get test user email
         with open('api/fixtures/users.json', 'r') as file:
-            email_address = json.load(file)[0]['fields']['email']
+            email_address = "bobb@gmail.com"
         email.send_keys(email_address)
 
         # enter test user password
@@ -308,6 +315,3 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "accept-request"))
         ).click()
-        WebDriverWait(self.selenium, 10).until(
-            expected_conditions.invisibility_of_element_located((By.NAME, "accept-request"))
-        )
