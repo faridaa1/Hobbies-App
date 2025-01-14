@@ -30,7 +30,7 @@
               <div>Hobbies: {{ user.hobbies.length ? user.hobbies.join(', ') : "No hobbies listed" }}</div>
             </div>
           </div>
-          <FriendRequestButton :otherUser="user" />
+          <FriendRequestButton :otherUser="user" :base_url="base_url" />
         </li>
       </ul>
     </div>
@@ -56,14 +56,23 @@ import { mapState } from "pinia";
 import FriendRequestButton from "./FriendRequestButton.vue";
 
 export default defineComponent({
-  data() {
+  data(): {
+      users: MatchesUser[],
+      minAge: number,
+      maxAge: number,
+      filteredUsers: MatchesUser[],
+      currentPage: number,
+      pageSize: number,
+      base_url: string
+    } {
     return {
-      users: [] as MatchesUser[], // All users fetched from the API
+      users: [], // All users fetched from the API
       minAge: 18, // Default minimum age
       maxAge: 100, // Default maximum age
-      filteredUsers: [] as MatchesUser[], // Filtered users based on age
+      filteredUsers: [], // Filtered users based on age
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
+      base_url: window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
     };
   },
   components: {
@@ -95,7 +104,7 @@ export default defineComponent({
   methods: {
     fetchUsers(): void {
       // Fetch users from the API
-      fetch("/api/potential-matches/",
+      fetch(`${this.base_url}/api/potential-matches/`,
         {
           method: 'GET',
           headers: {

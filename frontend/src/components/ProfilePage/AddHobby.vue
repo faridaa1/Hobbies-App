@@ -67,6 +67,10 @@
             today: {
                 type: String,
                 required: true
+            },
+            base_url: {
+                type: String,
+                required: true
             }
         },
         data(): {
@@ -192,7 +196,7 @@
                     this.data.newHobby.hobby_id = -1
                 }
                 if (useUserStore().csrf !== '') {
-                    let response: Response = await fetch(`/api/user/hobbies/${this.user.id}/`, {
+                    let response: Response = await fetch(`${this.base_url}/api/user/hobbies/${this.user.id}/`, {
                         method:'POST', 
                         credentials: 'include', 
                         headers: { 

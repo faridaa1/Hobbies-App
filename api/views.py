@@ -75,7 +75,8 @@ def logout(request: HttpRequest) -> JsonResponse:
         auth.logout(request)
     except:
         pass
-    return JsonResponse({'login page': '/login/'})
+    base_url: str = 'http://localhost:8000' if 'localhost' in request.get_host()  else 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+    return JsonResponse({'login page': f'{base_url}/login/'})
 
 
 def users_api_view(request: HttpRequest) -> JsonResponse:
@@ -171,7 +172,8 @@ def user_api_view(request: HttpRequest) -> JsonResponse:
         })
     
     # redirect unauthenticated user to login page
-    return JsonResponse({'user' : '/login/'})
+    base_url: str = 'http://localhost:8000' if 'localhost' in request.get_host()  else 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+    return JsonResponse({'user' : f'{base_url}/login/'})
 
 
 def check_password_api_view(request: HttpRequest, id: int, password: str) -> JsonResponse:
