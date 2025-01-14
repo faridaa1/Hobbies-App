@@ -11,6 +11,7 @@
         <span class="me-2">Max: </span>
         <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" />
       </div>
+      <p class="text-danger" v-if="inputError">Minimum age cannot be greater than maximum age</p>
       <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
       <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
     </div>
@@ -66,7 +67,8 @@ export default defineComponent({
     pageSize: number,
     min: number,
     max: number,
-    base_url: string
+    base_url: string,
+    inputError: boolean
   } {
     return {
       users: [], // All users fetched from the API
@@ -77,7 +79,8 @@ export default defineComponent({
       filteredUsers: [], // Filtered users based on age
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
-      base_url: window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+      base_url: window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk',
+      inputError: false
     };
   },
   components: {
@@ -127,6 +130,21 @@ export default defineComponent({
           this.filteredUsers = this.users; // Initialize with all users
         })
         .catch((error) => console.error("Error fetching users:", error));
+    },
+    applyFilter(): void {
+      if (this.minAge > this.maxAge) {
+        this.inputError = true
+        return
+      } else {
+        this.inputError = false
+      }
+      // Filter users by age range and remove currently logged in user
+      this.filteredUsers = this.users.filter(
+        (user) =>
+          user.age >= this.minAge &&
+          user.age <= this.maxAge &&
+          user.email !== this.user.email
+      );
       this.currentPage = 1; // Reset to the first page after filtering
     },
     clearFilter(): void {
