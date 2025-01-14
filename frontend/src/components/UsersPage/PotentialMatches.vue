@@ -136,10 +136,10 @@ export default defineComponent({
       );
       this.currentPage = 1; // Reset to the first page after filtering
     },
-    clearFilter(min: number, max: number): void {
+    clearFilter(): void {
       // Reset age filter and show all users
-      this.minAge = min; // Reset to default minimum age
-      this.maxAge = max; // Reset to default maximum age
+      this.minAge = this.min; // Reset to default minimum age
+      this.maxAge = this.max; // Reset to default maximum age
       this.filteredUsers = this.users; // Show all users
       this.currentPage = 1; // Reset to the first page
     },
