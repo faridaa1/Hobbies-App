@@ -23,7 +23,7 @@
               <div>Hobbies: {{ user.hobbies.length ? user.hobbies.join(', ') : "No hobbies listed" }}</div>
             </div>
           </div>
-          <FriendRequestButton :otherUser="user" />
+          <FriendRequestButton :otherUser="user" :base_url="base_url" />
         </li>
       </ul>
     </div>
@@ -59,7 +59,8 @@ export default defineComponent({
     currentPage: number,
     pageSize: number,
     min: number,
-    max: number
+    max: number,
+    base_url: string
   } {
     return {
       users: [], // All users fetched from the API
@@ -70,6 +71,7 @@ export default defineComponent({
       filteredUsers: [], // Filtered users based on age
       currentPage: 1, // Current page
       pageSize: 5, // Number of users per page
+      base_url: window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
     };
   },
   components: {
