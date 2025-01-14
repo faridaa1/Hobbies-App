@@ -7,12 +7,12 @@
       <label for="age-filter" class="mb-2">Filter by Age:</label>
       <div class="age-range d-flex align-items-center mb-3">
         <span class="me-2">Min: </span>
-        <input type="number" v-model="minAge" placeholder="Min Age" class="me-2" />
+        <input name="age_min" type="number" v-model="minAge" placeholder="Min Age" class="me-2" min="0"/>
         <span class="me-2">Max: </span>
-        <input type="number" v-model="maxAge" placeholder="Max Age" class="me-2" />
+        <input name="age_max" type="number" v-model="maxAge" placeholder="Max Age" class="me-2" min="0" />
       </div>
       <p class="text-danger" v-if="inputError">Minimum age cannot be greater than maximum age</p>
-      <button @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
+      <button name="apply_filter" @click="applyFilter" class="btn btn-primary me-2">Apply Filter</button>
       <button @click="clearFilter" class="btn btn-danger">Clear Filter</button>
     </div>
 
@@ -22,7 +22,7 @@
         <li v-for="user in paginatedUsers" :key="user.email"
           class="list-group-item d-flex justify-content-between align-items-center">
           <div class="d-flex gap-3">
-            <img v-if="user.profile_picture" :src="user.profile_picture"
+            <img v-if="user.profile_picture" :src="`${base_url}${user.profile_picture}`"
               class="rounded-circle" style="width: 70px; height:70px; object-fit: cover;">
             <i v-if="!user.profile_picture" class="bi bi-person-circle p-0"
               style="font-size: 70px; line-height: 0"></i>
@@ -102,8 +102,7 @@ export default defineComponent({
     ...mapState(useUserStore, ['user', 'csrf']),
     totalPages(): number {
       return Math.ceil(this.filteredUsers.length / this.pageSize);
-    },
-    paginatedUsers(): MatchesUser[] {
+    }, paginatedUsers(): MatchesUser[] {
       const start: number = (this.currentPage - 1) * this.pageSize;
       const end: number = start + this.pageSize;
       return this.filteredUsers.slice(start, end);
@@ -116,9 +115,18 @@ export default defineComponent({
     changeMaxAge(newMax: number): void {
       this.maxAge = newMax
     },
-    fetchUsers(): void {
-      // Fetch users from the API
-      fetch(`${this.base_url}/api/potential-matches/`,
+    async applyFilter(): Promise<void> {
+      //Check if either minAge or maxAge is negative 
+      if (this.minAge < 0 || this.maxAge < 0) {
+          alert("Age cannot be less than 0"); // Display alert
+          return; // Stop further execution
+      } else if (this.minAge > this.maxAge) {
+          this.inputError = true
+          return
+      } else {
+          this.inputError = false
+      }
+      await fetch(`${this.base_url}/api/potential-matches/${this.minAge}/${this.maxAge}`,
         {
           method: 'GET',
           headers: {
@@ -135,22 +143,7 @@ export default defineComponent({
           }));
           this.filteredUsers = this.users; // Initialize with all users
         })
-        .catch((error) => console.error("Error fetching users:", error));
-    },
-    applyFilter(): void {
-      if (this.minAge > this.maxAge) {
-        this.inputError = true
-        return
-      } else {
-        this.inputError = false
-      }
-      // Filter users by age range and remove currently logged in user
-      this.filteredUsers = this.users.filter(
-        (user) =>
-          user.age >= this.minAge &&
-          user.age <= this.maxAge &&
-          user.email !== this.user.email
-      );
+        .catch((error) => console.error("Error fetching users:", error));      
       this.currentPage = 1; // Reset to the first page after filtering
     },
     clearFilter(): void {
@@ -174,9 +167,6 @@ export default defineComponent({
       return this.filteredUsers.filter(user => user.email !== this.user.email)
     }
   },
-  created(): void {
-    this.fetchUsers(); // Fetch users when the component is created
-  },
   async mounted(): Promise<void> {
     let response: Response = await fetch(`${this.base_url}/api/min-max-age/`, {
         method: 'GET',
@@ -189,6 +179,7 @@ export default defineComponent({
       this.min = data.min_age
       this.maxAge = data.max_age
       this.max = data.max_age
+      this.applyFilter()
     }
   }, 
 });

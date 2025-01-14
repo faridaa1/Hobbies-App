@@ -46,7 +46,7 @@
                     <span class="text-danger">*</span> - Required field
                 </div>
             <div class="mt-2" v-if="filteredHobbies.length > 0">
-                <button type="button" class="btn btn-secondary" @click="updateHobbySelected">
+                <button name="add-hobby" type="button" class="btn btn-secondary" @click="updateHobbySelected">
                     {{ hobbySelected ? 'Add a New Hobby Instead' : 'Select a Hobby Instead' }}
                 </button>
             </div>

@@ -96,11 +96,9 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         ).click()
 
         # enter email
-        # enter email
-        # email = WebDriverWait(self.selenium, 10).until(
-        #     expected_conditions.element_to_be_clickable((By.NAME, "email"))
-        # )
-        email = self.selenium.find_element(By.NAME, "email")
+        email = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "email"))
+        )
         email.click()
         email.send_keys(valid_signup_data()['email'])
 
@@ -232,7 +230,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
         # navigate to user page 
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.LINK_TEXT, "Users"))
+            expected_conditions.element_to_be_clickable((By.LINK_TEXT, "Users"))
         ).click()
 
         # wait for the filtering input to appear and interact with it
