@@ -140,16 +140,13 @@ export default defineComponent({
     applyFilter(): void {
       //Check if either minAge or maxAge is negative 
       if (this.minAge < 0 || this.maxAge < 0) {
-        this.inputError = true; // Show error message
         alert("Age cannot be less than 0"); // Optional: Display alert
         return; // Stop further execution
-      }
-
-      if (this.minAge > this.maxAge) {
-        this.inputError = true
-        return
+      } else if (this.minAge > this.maxAge) {
+          this.inputError = true
+          return
       } else {
-        this.inputError = false
+          this.inputError = false
       }
       // Filter users by age range and remove currently logged in user
       this.filteredUsers = this.users.filter(
