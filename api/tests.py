@@ -1,6 +1,8 @@
 import datetime, os, json
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
@@ -24,25 +26,27 @@ def valid_signup_data() -> dict:
     }
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
-    port = 8000
-    fixtures = ['users.json']
+    port = 8001
+    fixtures = ['hobbies.json', 'users.json']
     
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.selenium = WebDriver()
+        service = Service(executable_path=os.path.abspath("chromedriver.exe"))
+        cls.selenium = webdriver.Chrome(service=service)
         
 
     @classmethod 
     def tearDownClass(cls):
-        # cls.selenium.quit()
+        cls.selenium.quit()
         super().tearDownClass()
     
     def test_app(self):
         self.signup()
         self.login()
         self.profile()
+        self.age_filter()
         self.send_friend_request()
         self.accept_friend_request()
 
@@ -91,7 +95,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
         # enter email
         email = WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.NAME, "email"))
+            expected_conditions.element_to_be_clickable((By.NAME, "email"))
         )
         email.click()
         email.send_keys(valid_signup_data()['email'])
@@ -123,7 +127,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         profile_pic = self.selenium.find_element(By.NAME, "profile_pic")
         profile_pic.send_keys(valid_signup_data()['file_path2'])
         WebDriverWait(self.selenium, 10).until(
-           lambda driver: driver.find_element(By.CSS_SELECTOR, "img.rounded-circle").get_attribute("src") != old_src)
+            lambda driver: driver.find_element(By.CSS_SELECTOR, "img.rounded-circle").get_attribute("src") != old_src)
         
         # edit name
         self.selenium.find_element(By.NAME, "name_edit").click()
@@ -212,6 +216,40 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "delete_hobby"))
         ).click()
+
+    
+    def age_filter(self):
+        """Test the users page with age filtering"""
+
+        # navigate to user page 
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.visibility_of_element_located((By.LINK_TEXT, "users"))
+        ).click()
+
+        # wait for the filtering input to appear and interact with it
+        age_filter_min = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.visibility_of_element_located((By.NAME, "age_min"))
+        )
+        age_filter_max = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.visibility_of_element_located((By.NAME, "age_max"))
+        )
+
+        # set the age rank filter
+        age_filter_min.click()
+        age_filter_min.clear()
+        age_filter_min.send_keys("18")
+
+        age_filter_max.click()
+        age_filter_max.clear()
+        age_filter_max.send_keys("30")
+
+        # submit filter
+        self.selenium.find_element(By.NAME, "apply_filter").click()
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.presence_of_element_located((By.CLASS_NAME, "user-list"))
+        )
+
+        # display users
 
 
     def send_friend_request(self):

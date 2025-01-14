@@ -1,0 +1,44 @@
+[
+    {
+        "model": "api.hobby",
+        "pk": 1,
+        "fields": {
+            "name": "Reading"
+        }
+    },
+    {
+        "model": "api.hobby",
+        "pk": 2,
+        "fields": {
+            "name": "Hiking"
+        }
+    },
+    {
+        "model": "api.hobby",
+        "pk": 3,
+        "fields": {
+            "name": "Art"
+        }
+    },
+    {
+        "model": "api.hobby",
+        "pk": 4,
+        "fields": {
+            "name": "Music"
+        }
+    },
+    {
+        "model": "api.hobby",
+        "pk": 5,
+        "fields": {
+            "name": "Boxing"
+        }
+    },
+    {
+        "model": "api.hobby",
+        "pk": 6,
+        "fields": {
+            "name": "Golf"
+        }
+    }
+]
