@@ -30,7 +30,9 @@ import { useUsersStore } from "./stores/users";
 export default defineComponent({
     components: { RouterView },
     async mounted(): Promise<void> {
-        let userResponse: Response = await fetch("/api/user/", {
+        const base_url = window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+
+        let userResponse: Response = await fetch(`${base_url}/api/user/`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -43,7 +45,7 @@ export default defineComponent({
         }
         let user: CustomUser = userData.user;
 
-        let usersResponse: Response = await fetch("/api/all-users/", {
+        let usersResponse: Response = await fetch(`${base_url}/api/all-users/`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -51,7 +53,7 @@ export default defineComponent({
         let users: CustomUser[] = usersData.users;
         useUsersStore().saveUsers(users)
 
-        let hobbiesResponse: Response = await fetch("/api/hobbies/", {
+        let hobbiesResponse: Response = await fetch(`${base_url}/api/hobbies/`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -59,7 +61,7 @@ export default defineComponent({
         let hobbies: Hobby[] = hobbiesData.hobbies;
         useHobbiesStore().setHobbies(hobbies)
 
-        let userHobbies: Response = await fetch(`/api/user/hobbies/${user.id}/`, {
+        let userHobbies: Response = await fetch(`${base_url}/api/user/hobbies/${user.id}/`, {
             method: 'GET',
             credentials: 'include',
         })
@@ -78,7 +80,8 @@ export default defineComponent({
     },
     methods: {
         async signout(): Promise<void> {
-            let logoutPageResponse: Response = await fetch("/logout/", {
+            const base_url = window.location.href.includes('localhost') ? 'http://localhost:8000' : 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+            let logoutPageResponse: Response = await fetch(`${base_url}/logout/`, {
                 credentials: 'include',
             })
             let logoutPage: { 'login page': string } = await logoutPageResponse.json()
