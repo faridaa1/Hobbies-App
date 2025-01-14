@@ -13,6 +13,7 @@ import os
 
 
 PRODUCTION_ENV = os.getenv('PRODUCTION', 'False').lower()
+# in build only need the path, in dev need whole url
 DJANGO_BASE_URL = 'http://localhost:8000' if PRODUCTION_ENV == 'false' else ''
 VUE_BASE_URL = 'http://localhost:5173' if PRODUCTION_ENV == 'false' else ''
 
@@ -82,8 +83,11 @@ def logout(request: HttpRequest) -> JsonResponse:
     try:
         auth.logout(request)
     except:
-        pass
-    base_url: str = 'http://localhost:8000' if 'localhost' in request.get_host()  else 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+        pass 
+    if 'localhost' in request.get_host():
+        base_url: str = 'http://localhost:8000'
+    else:
+        base_url: str = 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
     return JsonResponse({'login page': f'{base_url}/login/'})
 
 
