@@ -1,8 +1,7 @@
 import datetime, os, time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
 from api.models import CustomUser
@@ -32,9 +31,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        service = Service(executable_path=os.path.abspath("chromedriver.exe"))
-        # cls.selenium = WebDriver()
-        cls.selenium = webdriver.Chrome(service=service)
+        cls.selenium = WebDriver()
         
  
     @classmethod 
