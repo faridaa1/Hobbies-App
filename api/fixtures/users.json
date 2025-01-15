@@ -68,5 +68,19 @@
             "hobbies": [3],
             "friends": []   
         }
+    },
+
+    {
+        "model": "api.CustomUser",
+        "pk": 6,
+        "fields": {
+            "name": "Hermione Granger",
+            "username": "hgranger@ministryofmagic.in",
+            "email": "hgranger@ministryofmagic.in",
+            "date_of_birth": "1979-09-19",
+            "profile_picture": "",
+            "hobbies": [3],
+            "friends": []   
+        }
     }
 ]

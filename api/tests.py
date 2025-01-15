@@ -48,7 +48,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.signup()
         #self.login()
         #self.profile()
-        #self.age_filter()
+        self.age_filter()
         self.send_friend_request()
         self.accept_friend_request()
 
@@ -268,7 +268,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             age = int(user.find_element(By.CLASS_NAME, "user-age").text)
             self.assertGreaterEqual(age, 18, f"User age {age} is less than 18.")
             self.assertLessEqual(age, 30, f"User age {age} is greater than 30.")
-
+            
 
     def send_friend_request(self):
         """Testing sending a friend request"""
