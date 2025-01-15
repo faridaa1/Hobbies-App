@@ -274,11 +274,6 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
     def send_friend_request(self):
         """Testing sending a friend request"""
-        # navigate to users page
-        WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.LINK_TEXT, "Users"))
-        ).click()
-
         # send friend request
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "send-request"))
