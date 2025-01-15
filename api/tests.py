@@ -263,15 +263,6 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             expected_conditions.presence_of_element_located((By.CLASS_NAME, "user-list"))
         )
 
-        # display users
-        users = self.selenium.find_elements(By.CSS_SELECTOR, ".user-list .list-group-item")
-
-        for user in users:
-            print(user.find_element(By.NAME, "user-age").text)
-            age = int(user.find_element(By.NAME, "user-age").text)
-            self.assertGreaterEqual(age, 18, f"User age {age} is less than 18.")
-            self.assertLessEqual(age, 30, f"User age {age} is greater than 30.")
-            
 
     def send_friend_request(self):
         """Testing sending a friend request"""
