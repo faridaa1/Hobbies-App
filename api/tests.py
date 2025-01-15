@@ -16,7 +16,7 @@ def valid_signup_data() -> dict:
     return {
         'username': 'test_email@test.com',
         'name': 'test name',
-        'email': 'test_email@test.com',
+        'email': 'testemail@test.com',
         'password': 'test_password',
         'date_of_birth': datetime.date.today(),
         # 'file_path': file_path,
@@ -142,8 +142,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element(By.NAME, "email_edit").click()
         email = self.selenium.find_element(By.NAME, "email")
         email.click()
-        email_address = valid_signup_data()['email']+".uk"
         email.clear()
+        email_address = valid_signup_data()['email']+".uk"
         email.send_keys(email_address)
         self.selenium.find_element(By.NAME, "email_check").click()
         WebDriverWait(self.selenium, 10).until(
