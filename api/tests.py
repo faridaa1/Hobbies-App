@@ -40,7 +40,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
     @classmethod 
     def tearDownClass(cls):
-        # cls.selenium.quit()
+        cls.selenium.quit()
         super().tearDownClass()
     
     
