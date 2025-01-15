@@ -3,7 +3,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.webdriver import WebDriver
+# from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
 from api.models import CustomUser
@@ -96,12 +96,14 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         ).click()
 
         # enter email
-        # email = WebDriverWait(self.selenium, 10).until(
-        #     expected_conditions.element_to_be_clickable((By.NAME, "email"))
-        # )
-        email = self.selenium.find_element(By.NAME, "email")
-        email.click()
-        email.send_keys(valid_signup_data()['email'])
+        try:
+            email = self.selenium.find_element(By.NAME, "email")
+            email.click()
+            email.send_keys(valid_signup_data()['email'])
+        except:
+            email = self.selenium.find_element(By.NAME, "email")
+            email.click()
+            email.send_keys(valid_signup_data()['email'])
 
         # enter password
         password = self.selenium.find_element(By.NAME, "password")
