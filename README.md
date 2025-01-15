@@ -5,7 +5,7 @@
 | M           |                                                                                                                                         |                                                                                                                                                                      |
 | Farida Addo | Create hobby model <br> Create friendship model <br> Profile page <br> Selenium tests 3 & 6                                             | Create hobby model <br> Create friendship model <br> Profile page <br> Selenium tests 1, 2, 3, 5 & 6 <br> Deployment <br> Test users and hobbies for deployment <br> |
 | Chenjing He | Create many to many relationship model for User and Hobby <br> Create Django superuser <br> Create User login page <br> Selenium test 2 | Create many to many relationship model for User and Hobby <br> Create Django superuser <br> Create User login page <br> Selenium test 4                              |
-| C           |                                                                                                                                         |                                                                                                                                                                      |
+| Chikara Marie Mbakwe | Create User signup page <br> Allow users to send & accept friend requests <br> Selenium tests 1 & 5 | Create User model <br> Create User Signup Form <br> Allow users to send & accept friend requests |
 
 # URL of deployed application
 
@@ -35,8 +35,8 @@ Password: ro.burnett123
 
 ### User 4
 
-Username: <br>
-Password:
+Username: bob.builder@gmail.com<br>
+Password: builder.bob1
 
 ### User 5
 
