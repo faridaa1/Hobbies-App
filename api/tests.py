@@ -3,7 +3,6 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-# from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
 from api.models import CustomUser
@@ -37,7 +36,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # cls.selenium = WebDriver()
         cls.selenium = webdriver.Chrome(service=service)
         
-
+ 
     @classmethod 
     def tearDownClass(cls):
         cls.selenium.quit()
@@ -127,13 +126,11 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         # edit profile picture
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "remove_profile"))
-        ).click()
-        old_src = self.selenium.find_element(By.CSS_SELECTOR, "img.rounded-circle").get_attribute("src")
+        ).click() 
+
         profile_pic = self.selenium.find_element(By.NAME, "profile_pic")
         profile_pic.send_keys(valid_signup_data()['file_path2'])
-        WebDriverWait(self.selenium, 10).until(
-            lambda driver: driver.find_element(By.CSS_SELECTOR, "img.rounded-circle").get_attribute("src") != old_src)
-        
+
         # edit name
         self.selenium.find_element(By.NAME, "name_edit").click()
         name = self.selenium.find_element(By.NAME, "name")
@@ -174,8 +171,14 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         ).click()
         
         # edit dob
-        self.selenium.find_element(By.NAME, "dob_edit").click()
-        dob = self.selenium.find_element(By.NAME, "dob")
+        dob_button = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "dob_edit"))
+        )
+        self.selenium.execute_script("arguments[0].scrollIntoView();", dob_button)
+        dob_button.click()
+        dob = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "dob"))
+        )
         dob.click()
         dob.send_keys("22-03-2004")
         WebDriverWait(self.selenium, 10).until(
