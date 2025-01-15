@@ -2,16 +2,16 @@
     <div class="fs-5 mt-4 d-flex flex-row border rounded p-3 ps-5 align-items-center gap-5 w-100">
         <div class="d-flex fs-5 gap-4 flex-column align-items-center w-100">
             <div class="position-relative">
-                <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`${base_url}${user.profile_picture}`">
+                <!-- <img v-if="user.profile_picture" style="width: 200px; height:200px; object-fit: cover;" class="rounded-circle" :src="`${base_url}${user.profile_picture}`"> -->
                 <i v-if="!user.profile_picture" class="bi bi-person-circle" style="font-size: 200px; line-height: 0;"></i>
-                <button name="remove_profile" type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="updatePicture($event)"><i class="bi bi-x fs-1"></i></button>
+                <!-- <button name="remove_profile" type="button" class="text-danger border-0 bg-transparent position-absolute top-0" style="right: -0.5rem" v-if="user.profile_picture" @click="updatePicture($event)"><i class="bi bi-x fs-1"></i></button> -->
             </div>
-            <div class="d-flex align-items-center">
+            <!-- <div class="d-flex align-items-center">
                 <input name="profile_pic" class="d-none" type="file" accept=".png" @change="(event) => { isEditingProfilePicture=true; updateProfile(event); }" id="file">
                 <label for="file" class="btn btn-primary">Select</label>
                 <span v-if="user.profile_picture" class="ms-2 text-success">File Selected</span>
                 <span v-if="!user.profile_picture" class="ms-2 text-danger">No File Selected</span>
-            </div>
+            </div> -->
         </div>
         <div class="d-flex flex-column w-100">
             <div class="d-flex flex-column gap-2">

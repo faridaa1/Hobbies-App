@@ -7,9 +7,9 @@
         </div>
         <div class="fs-4 mt-4 d-flex flex-row align-items-center gap-5 w-100" v-for="friend in displayedFriends">
             <div class="d-flex gap-5 flex-row w-100 rounded p-2 align-items-center">
-                <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;"
-                    class="rounded-circle" :src="`${base_url}${friend.user_profile_picture}`">
-                <i v-if="!friend.user_profile_picture" class="bi bi-person-circle p-0"
+                <!-- <img v-if="friend.user_profile_picture" style="width: 70px; height:70px; object-fit: cover;" -->
+                    <!-- class="rounded-circle" :src="`${base_url}${friend.user_profile_picture}`"> -->
+                <i class="bi bi-person-circle p-0"
                     style="font-size: 70px; line-height: 0"></i>
                 <div class="p-2 rounded w-100">{{ friend.user_name }}</div>
             </div>

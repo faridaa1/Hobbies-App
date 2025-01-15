@@ -22,7 +22,8 @@ class SignupForm(ModelForm):
         model: CustomUser = CustomUser
         fields: list[str] = [
             'name', 'email', 'password',
-            'date_of_birth', 'profile_picture'
+            'date_of_birth', 
+            # 'profile_picture'
         ]
         field_classes: dict[str, any] = {
             "password": PasswordField,
@@ -30,7 +31,7 @@ class SignupForm(ModelForm):
         }
         labels: dict[str, str] = {
             'name': 'Full Name',
-            'profile_picture': 'Profile picture (*.png)'
+            # 'profile_picture': 'Profile picture (*.png)'
         }
 
     def __init__(self, *args, **kwargs):
