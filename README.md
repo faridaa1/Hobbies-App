@@ -32,3 +32,8 @@ Password:
 ### User 5
 Username: <br>
 Password: 
+
+# Running Selenium tests
+1. Ensure port 8000 is free
+2. Ensure port 5173 is running
+Note: Rerun tests if error occurs - code logic works but the errors aren't consistent, so are hard to pinpoint and fix
