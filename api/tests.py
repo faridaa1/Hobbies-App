@@ -174,9 +174,11 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         ).click()
         
         # edit dob
-        WebDriverWait(self.selenium, 10).until(
+        dob_button = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "dob_edit"))
-        ).click()
+        )
+        self.selenium.execute_script("arguments[0].scrollIntoView();", dob_button)
+        dob_button.click()
         dob = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "dob"))
         )
