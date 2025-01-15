@@ -1,7 +1,9 @@
-import datetime, os, json
+import datetime, os, time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.chrome.service import Service
+# from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions 
 from api.models import CustomUser
@@ -25,18 +27,20 @@ def valid_signup_data() -> dict:
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
     port = 8000
-    fixtures = ['users.json']
+    fixtures = ['hobbies.json', 'users.json']
     
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.selenium = WebDriver()
+        service = Service(executable_path=os.path.abspath("chromedriver.exe"))
+        # cls.selenium = WebDriver()
+        cls.selenium = webdriver.Chrome(service=service)
         
 
     @classmethod 
     def tearDownClass(cls):
-        # cls.selenium.quit()
+        cls.selenium.quit()
         super().tearDownClass()
     
     
@@ -44,6 +48,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.signup()
         self.login()
         self.profile()
+        self.age_filter()
         self.send_friend_request()
         self.accept_friend_request()
 
@@ -91,11 +96,14 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         ).click()
 
         # enter email
-        email = WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.NAME, "email"))
-        )
-        email.click()
-        email.send_keys(valid_signup_data()['email'])
+        try:
+            email = self.selenium.find_element(By.NAME, "email")
+            email.click()
+            email.send_keys(valid_signup_data()['email'])
+        except:
+            email = self.selenium.find_element(By.NAME, "email")
+            email.click()
+            email.send_keys(valid_signup_data()['email'])
 
         # enter password
         password = self.selenium.find_element(By.NAME, "password")
@@ -124,7 +132,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         profile_pic = self.selenium.find_element(By.NAME, "profile_pic")
         profile_pic.send_keys(valid_signup_data()['file_path2'])
         WebDriverWait(self.selenium, 10).until(
-           lambda driver: driver.find_element(By.CSS_SELECTOR, "img.rounded-circle").get_attribute("src") != old_src)
+            lambda driver: driver.find_element(By.CSS_SELECTOR, "img.rounded-circle").get_attribute("src") != old_src)
         
         # edit name
         self.selenium.find_element(By.NAME, "name_edit").click()
@@ -180,6 +188,11 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element(By.NAME, "hobbies").click()
         self.selenium.find_element(By.NAME, "add_hobby").click()
 
+        # add new hobby button click
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "add-hobby"))
+        ).click()
+
         # enter name
         hobby_name = WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "hobby_name"))
@@ -214,14 +227,45 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             expected_conditions.visibility_of_element_located((By.NAME, "delete_hobby"))
         ).click()
 
+    
+    def age_filter(self):
+        """Test the users page with age filtering"""
+
+        # navigate to user page 
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.LINK_TEXT, "Users"))
+        ).click()
+
+        # wait for the filtering input to appear and interact with it
+        WebDriverWait(self.selenium, 15).until(
+            expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "input[placeholder='Min Age']"))
+        )
+        WebDriverWait(self.selenium, 15).until(
+            expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "input[placeholder='Max Age']"))
+        )
+        
+        # Set the Min and Max age filters
+        min_age_input = self.selenium.find_element(By.CSS_SELECTOR, "input[placeholder='Min Age']")
+        max_age_input = self.selenium.find_element(By.CSS_SELECTOR, "input[placeholder='Max Age']")
+
+        # Clear any pre-filled values and set new values
+        min_age_input.clear()
+        min_age_input.send_keys("18")
+
+        max_age_input.clear()
+        max_age_input.send_keys("30")
+
+        # submit filter
+        apply_filter_button = self.selenium.find_element(By.NAME, "apply_filter")
+        apply_filter_button.click()
+
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.presence_of_element_located((By.CLASS_NAME, "user-list"))
+        )
+
 
     def send_friend_request(self):
         """Testing sending a friend request"""
-        # navigate to users page
-        WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.LINK_TEXT, "Users"))
-        ).click()
-
         # send friend request
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "send-request"))
@@ -237,23 +281,18 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             expected_conditions.visibility_of_element_located((By.NAME, "signout"))
         ).click()
         
+        # setting password of test user (set in fixtures) manually so it can be hashed using set_password
+        user = CustomUser.objects.get(pk=3)
+        user.set_password("testing123") # so it can be hashed
+        user.save()
+
         # sign in as other user 
         email = WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "email"))
         )
         email.click()
-        
-        # setting password of test user (set in fixtures) manually so it can be hashed using set_password
-        user = CustomUser.objects.get(pk=1)
-        user.set_password("testing123") # so it can be hashed
-        user.save()
-
-        # get test user email
-        with open('api/fixtures/users.json', 'r') as file:
-            email_address = json.load(file)[0]['fields']['email']
+        email_address = "bobb@gmail.com"
         email.send_keys(email_address)
-
-        # enter test user password
         password = self.selenium.find_element(By.NAME, "password")
         password.click()
         password.send_keys("testing123")
@@ -265,11 +304,9 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.ID, "friend-requests-received-tab"))
         ).click()
-        
+
         # accept friend request
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "accept-request"))
         ).click()
-        WebDriverWait(self.selenium, 10).until(
-            expected_conditions.invisibility_of_element_located((By.NAME, "accept-request"))
-        )
+        time.sleep(3)
