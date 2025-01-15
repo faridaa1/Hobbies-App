@@ -171,8 +171,12 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         ).click()
         
         # edit dob
-        self.selenium.find_element(By.NAME, "dob_edit").click()
-        dob = self.selenium.find_element(By.NAME, "dob")
+        WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "dob_edit"))
+        ).click()
+        dob = WebDriverWait(self.selenium, 10).until(
+            expected_conditions.element_to_be_clickable((By.NAME, "dob"))
+        )
         dob.click()
         dob.send_keys("22-03-2004")
         WebDriverWait(self.selenium, 10).until(
