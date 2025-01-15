@@ -40,7 +40,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
 
     @classmethod 
     def tearDownClass(cls):
-        cls.selenium.quit()
+        # cls.selenium.quit()
         super().tearDownClass()
     
     
@@ -256,7 +256,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         max_age_input.send_keys("30")
 
         # submit filter
-        apply_filter_button = self.selenium.find_element(By.CLASS_NAME, "btn-primary")
+        apply_filter_button = self.selenium.find_element(By.NAME, "apply_filter")
         apply_filter_button.click()
 
         WebDriverWait(self.selenium, 10).until(
@@ -267,7 +267,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         users = self.selenium.find_elements(By.CSS_SELECTOR, ".user-list .list-group-item")
 
         for user in users:
-            age = int(user.find_element(By.CLASS_NAME, "user-age").text)
+            print(user.find_element(By.NAME, "user-age").text)
+            age = int(user.find_element(By.NAME, "user-age").text)
             self.assertGreaterEqual(age, 18, f"User age {age} is less than 18.")
             self.assertLessEqual(age, 30, f"User age {age} is greater than 30.")
             

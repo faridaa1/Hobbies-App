@@ -27,7 +27,7 @@
             <i v-if="!user.profile_picture" class="bi bi-person-circle p-0"
               style="font-size: 70px; line-height: 0"></i>
             <div class="d-flex flex-column gap-2 justify-content-center">
-              <div><strong>{{ user.name }}</strong> ({{ user.age }} years old)</div>
+              <div><strong>{{ user.name }}</strong> (<span  name="user-age">{{ user.age }}</span> years old)</div>
               <div>Hobbies: {{ user.hobbies.length ? user.hobbies.join(', ') : "No hobbies listed" }}</div>
             </div>
           </div>
