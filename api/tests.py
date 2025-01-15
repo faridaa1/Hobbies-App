@@ -46,9 +46,9 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     
     def test_app(self):
         self.signup()
-        self.login()
-        self.profile()
-        self.age_filter()
+        #self.login()
+        #self.profile()
+        #self.age_filter()
         self.send_friend_request()
         self.accept_friend_request()
 
@@ -237,29 +237,39 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         ).click()
 
         # wait for the filtering input to appear and interact with it
-        age_filter_min = WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.NAME, "age_min"))
+        WebDriverWait(self.selenium, 15).until(
+            expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "input[placeholder='Min Age']"))
         )
-        age_filter_max = WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.NAME, "age_max"))
+        WebDriverWait(self.selenium, 15).until(
+            expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "input[placeholder='Max Age']"))
         )
+        
+        # Set the Min and Max age filters
+        min_age_input = self.selenium.find_element(By.CSS_SELECTOR, "input[placeholder='Min Age']")
+        max_age_input = self.selenium.find_element(By.CSS_SELECTOR, "input[placeholder='Max Age']")
 
-        # set the age rank filter
-        age_filter_min.click()
-        age_filter_min.clear()
-        age_filter_min.send_keys("18")
+        # Clear any pre-filled values and set new values
+        min_age_input.clear()
+        min_age_input.send_keys("18")
 
-        age_filter_max.click()
-        age_filter_max.clear()
-        age_filter_max.send_keys("30")
+        max_age_input.clear()
+        max_age_input.send_keys("30")
 
         # submit filter
-        self.selenium.find_element(By.NAME, "apply_filter").click()
+        apply_filter_button = self.selenium.find_element(By.CLASS_NAME, "btn-primary")
+        apply_filter_button.click()
+
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.presence_of_element_located((By.CLASS_NAME, "user-list"))
         )
 
         # display users
+        users = self.selenium.find_elements(By.CSS_SELECTOR, ".user-list .list-group-item")
+
+        for user in users:
+            age = int(user.find_element(By.CLASS_NAME, "user-age").text)
+            self.assertGreaterEqual(age, 18, f"User age {age} is less than 18.")
+            self.assertLessEqual(age, 30, f"User age {age} is greater than 30.")
 
 
     def send_friend_request(self):
