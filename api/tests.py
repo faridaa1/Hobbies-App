@@ -1,4 +1,4 @@
-import datetime, os, json
+import datetime, os, time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -322,3 +322,4 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.visibility_of_element_located((By.NAME, "accept-request"))
         ).click()
+        time.sleep(3)
