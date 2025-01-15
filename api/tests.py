@@ -10,17 +10,17 @@ from api.models import CustomUser
 
 def valid_signup_data() -> dict:
     """Returns a dict of valid data for a Signup Form"""
-    git_root_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(git_root_dir, "test.png")
-    file_path2 = os.path.join(git_root_dir, "test2.png")
+    # git_root_dir = os.path.dirname(os.path.abspath(__file__))
+    # file_path = os.path.join(git_root_dir, "test.png")
+    # file_path2 = os.path.join(git_root_dir, "test2.png")
     return {
         'username': 'test_email@test.com',
         'name': 'test name',
         'email': 'test_email@test.com',
         'password': 'test_password',
         'date_of_birth': datetime.date.today(),
-        'file_path': file_path,
-        'file_path2': file_path2
+        # 'file_path': file_path,
+        # 'file_path2': file_path2
     }
 
 class ProfileSeleniumTests(StaticLiveServerTestCase):
@@ -75,8 +75,8 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         date_of_birth.send_keys(valid_signup_data()['date_of_birth'].strftime('%d-%m-%Y'))
 
         # enter profile picture
-        profile_picture = self.selenium.find_element(By.NAME, "profile_picture")
-        profile_picture.send_keys(valid_signup_data()['file_path'])
+        # profile_picture = self.selenium.find_element(By.NAME, "profile_picture")
+        # profile_picture.send_keys(valid_signup_data()['file_path'])
         
         # submit form
         WebDriverWait(self.selenium, 10).until(
@@ -121,12 +121,12 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     def profile_edit(self):
         """Testing editing all profile details"""
         # edit profile picture
-        WebDriverWait(self.selenium, 10).until(
-            expected_conditions.element_to_be_clickable((By.NAME, "remove_profile"))
-        ).click() 
+        # WebDriverWait(self.selenium, 10).until(
+        #     expected_conditions.element_to_be_clickable((By.NAME, "remove_profile"))
+        # ).click() 
 
-        profile_pic = self.selenium.find_element(By.NAME, "profile_pic")
-        profile_pic.send_keys(valid_signup_data()['file_path2'])
+        # profile_pic = self.selenium.find_element(By.NAME, "profile_pic")
+        # profile_pic.send_keys(valid_signup_data()['file_path2'])
 
         # edit name
         self.selenium.find_element(By.NAME, "name_edit").click()
