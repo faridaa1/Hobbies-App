@@ -40,7 +40,7 @@ export default defineComponent({
         }
     },
     data(): { friendIndex: number, pageSize: number  } {
-        return { friendIndex: 0, pageSize: 0 }
+        return { friendIndex: 0, pageSize: 5 }
     },
     methods: {
         prevPage(): void {
