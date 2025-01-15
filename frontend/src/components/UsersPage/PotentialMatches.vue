@@ -152,6 +152,7 @@ export default defineComponent({
       this.maxAge = this.max; // Reset to default maximum age
       this.filteredUsers = this.users; // Show all users
       this.currentPage = 1; // Reset to the first page
+      this.applyFilter()
     },
     prevPage(): void {
       if (this.currentPage > 1) {
