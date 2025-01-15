@@ -68,13 +68,13 @@ class SignupForm(ModelForm):
             raise ValidationError("Your birthday cannot be past today")
         return dob
 
-    def clean_profile_picture(self):
-        """Cleans profile picture field - checks that it's a png"""
-        pic: str = self.cleaned_data['profile_picture']
-        if pic:
-            if pic.image.format != 'PNG':
-                raise ValidationError('You can only upload .png files')
-        return pic
+    # def clean_profile_picture(self):
+    #     """Cleans profile picture field - checks that it's a png"""
+    #     pic: str = self.cleaned_data['profile_picture']
+    #     if pic:
+    #         if pic.image.format != 'PNG':
+    #             raise ValidationError('You can only upload .png files')
+    #     return pic
     
 
 class LoginForm(forms.Form):

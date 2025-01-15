@@ -88,7 +88,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         """Testing login"""
         # sign out
         WebDriverWait(self.selenium, 10).until(
-            expected_conditions.visibility_of_element_located((By.NAME, "signout"))
+            expected_conditions.element_to_be_clickable((By.NAME, "signout"))
         ).click()
 
         # enter email
