@@ -46,9 +46,9 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
     
     def test_app(self):
         self.signup()
-        #self.login()
-        #self.profile()
-        #self.age_filter()
+        self.login()
+        self.profile()
+        self.age_filter()
         self.send_friend_request()
         self.accept_friend_request()
 
