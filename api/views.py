@@ -7,12 +7,13 @@ from django.contrib.auth import authenticate
 from .forms import SignupForm, LoginForm
 from .models import CustomUser, Friendship, Hobby, UserHobby
 from datetime import date
-from django.db.models import Count, Q, Min, Max
+from django.db.models import Count, Q, Min, Max, F
 from django.db.models import QuerySet
 import os
 
 
 PRODUCTION_ENV = os.getenv('PRODUCTION', 'False').lower()
+# in build only need the path, in dev need whole url
 DJANGO_BASE_URL = 'http://localhost:8000' if PRODUCTION_ENV == 'false' else ''
 VUE_BASE_URL = 'http://localhost:5173' if PRODUCTION_ENV == 'false' else ''
 
@@ -82,8 +83,11 @@ def logout(request: HttpRequest) -> JsonResponse:
     try:
         auth.logout(request)
     except:
-        pass
-    base_url: str = 'http://localhost:8000' if 'localhost' in request.get_host()  else 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
+        pass 
+    if 'localhost' in request.get_host():
+        base_url: str = 'http://localhost:8000'
+    else:
+        base_url: str = 'https://group20-web-apps-ec22476.apps.a.comp-teach.qmul.ac.uk'
     return JsonResponse({'login page': f'{base_url}/login/'})
 
 
@@ -129,7 +133,7 @@ def all_users_api_view(request: HttpRequest) -> JsonResponse:
     return JsonResponse(user_data, safe=False)
 
 
-def potential_matches_api_view(request: HttpRequest) -> JsonResponse:
+def potential_matches_api_view(request: HttpRequest, min: int, max: int) -> JsonResponse:
     """
     Returns a list of users sorted by the number of shared hobbies with the logged-in user.
     """
@@ -139,6 +143,7 @@ def potential_matches_api_view(request: HttpRequest) -> JsonResponse:
     try:
         logged_in_user: CustomUser = request.user
         user_hobbies: set[int] = set(logged_in_user.hobbies.values_list("id", flat=True))
+        today: datetime.date = date.today()
 
         # Get other users with the number of shared hobbies
         potential_matches: QuerySet[CustomUser] = (
@@ -162,7 +167,8 @@ def potential_matches_api_view(request: HttpRequest) -> JsonResponse:
                 "profile_picture": user.profile_picture.url if user.profile_picture else None,
                 "age": calculate_age(user.date_of_birth)
             }
-            for user in potential_matches
+            for user in potential_matches 
+            if calculate_age(user.date_of_birth) >= min and calculate_age(user.date_of_birth) <= max
         ]
 
         return JsonResponse({"matches": matches_data}, safe=False, status=200)

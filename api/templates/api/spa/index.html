@@ -7,13 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECS639 Web Programming - Group CW</title>
     {% block header_css %} {% endblock %}
-  <script type="module" crossorigin src="/static/api/spa/assets/index-CbLdFPVX.js"></script>
-  <link rel="stylesheet" crossorigin href="/static/api/spa/assets/index-ChpR87Ia.css">
+  <script type="module" crossorigin src="/static/api/spa/assets/index-BWYcweyn.js"></script>
+  <link rel="stylesheet" crossorigin href="/static/api/spa/assets/index-5hV9Owr_.css">
 </head>
 
 <body>
-  <div id="app">
-
+  <div id="app">
   </div>
   <div class="content">
     {% block content %}
@@ -33,23 +32,23 @@
 </html>
 
 <script>
-  // If running locally, signup and login need to have localhost in url when redirecting user
-  document.getElementById('login-btn').addEventListener('click', (event) => {
-    window.location.replace(`${window.location.href.includes('localhost') ? 'http://localhost:8000/login/' : '/login/'}`)
-  })
+    // If running locally, signup and login need to have localhost in url when redirecting user
+    document.getElementById('login-btn').addEventListener('click', (event) => {
+      window.location.replace(`${window.location.href.includes('localhost') ? 'http://localhost:8000/login/' : '/login/'}`)
+    })
 
-  document.getElementById('signup-btn').addEventListener('click', (event) => {
-    window.location.replace(`${window.location.href.includes('localhost') ? 'http://localhost:8000/signup/' : '/signup/'}`)
-  })
+    document.getElementById('signup-btn').addEventListener('click', (event) => {
+      window.location.replace(`${window.location.href.includes('localhost') ? 'http://localhost:8000/signup/' : '/signup/'}`)
+    })
 
-  if (window.location.pathname === '/profile/' || window.location.pathname === '/users/') {
-    document.getElementById('app').style.display = 'block'
-  } else {
-    document.getElementById('app').style.display = 'none'
-  }
-  if (window.location.pathname !== '/profile/' && window.location.pathname !== '/users/' && window.location.pathname !== '/login/' && window.location.pathname !== '/signup/') {
-    document.getElementById('home').style.display = 'block'
-  } else {
-    document.getElementById('home').style.setProperty('display', 'none', 'important')
-  }
+    if (window.location.pathname === '/profile/' || window.location.pathname === '/users/') {
+        document.getElementById('app').style.display = 'block'
+    } else {
+        document.getElementById('app').style.display = 'none'
+    }
+    if (window.location.pathname !== '/profile/' && window.location.pathname !== '/users/' && window.location.pathname !== '/login/' && window.location.pathname !== '/signup/') {
+        document.getElementById('home').style.display = 'block'
+    } else {
+        document.getElementById('home').style.setProperty('display', 'none', 'important')
+    }
 </script>
