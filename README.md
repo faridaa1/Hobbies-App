@@ -40,8 +40,8 @@ Password: builder.bob1
 
 ### User 5
 
-Username: <br>
-Password:
+Username: ashleyflowers@gmail.com<br>
+Password: podcast123
 
 # Running Selenium tests
 
