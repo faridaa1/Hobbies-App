@@ -34,7 +34,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Debug is true if in not in production env, false if it is
-DEBUG = True if os.getenv('PRODUCTION', 'True').lower() == 'false' else False 
+DEBUG = True if os.getenv('PRODUCTION', 'False').lower() == 'false' else False 
 
 ALLOWED_HOSTS = ['*']
 
