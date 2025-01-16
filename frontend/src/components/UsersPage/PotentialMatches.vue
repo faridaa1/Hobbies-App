@@ -22,9 +22,9 @@
         <li v-for="user in paginatedUsers" :key="user.email"
           class="list-group-item d-flex justify-content-between align-items-center">
           <div class="d-flex gap-3">
-            <img v-if="user.profile_picture" :src="`${base_url}${user.profile_picture}`"
-              class="rounded-circle" style="width: 70px; height:70px; object-fit: cover;">
-            <i v-if="!user.profile_picture" class="bi bi-person-circle p-0"
+            <!-- <img v-if="user.profile_picture" :src="`${base_url}${user.profile_picture}`"
+              class="rounded-circle" style="width: 70px; height:70px; object-fit: cover;"> -->
+            <i class="bi bi-person-circle p-0"
               style="font-size: 70px; line-height: 0"></i>
             <div class="d-flex flex-column gap-2 justify-content-center">
               <div><strong>{{ user.name }}</strong> (<span  name="user-age">{{ user.age }}</span> years old)</div>
