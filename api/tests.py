@@ -147,10 +147,12 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
             ).click()
             email.click()
             email.clear()
+            email.clear()
             email.send_keys("testing123@gmail.com")
         except:
             email = self.selenium.find_element(By.NAME, "email")
             email.click()
+            email.clear()
             email.clear()
             email.send_keys("testing123@gmail.com")
         self.selenium.find_element(By.NAME, "email_check").click()
