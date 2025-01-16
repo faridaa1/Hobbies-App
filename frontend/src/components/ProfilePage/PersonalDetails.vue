@@ -301,12 +301,19 @@
         },
         computed: {
             user(): CustomUser {
-                let user:CustomUser = useUserStore().user
+                let user: CustomUser = useUserStore().user
                 this.name = user.name
                 this.dob = user.date_of_birth
                 this.email = user.email
                 return user;
             },
+        },
+        watch: {
+            user(newUser: CustomUser) {
+                this.name = newUser.name
+                this.dob = newUser.date_of_birth
+                this.email = newUser.email
+            }
         }
     })
 </script>
