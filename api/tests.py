@@ -142,7 +142,9 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element(By.NAME, "email_edit").click()
         email = self.selenium.find_element(By.NAME, "email")
         email.click()
-        email.send_keys(".uk")
+        email.clear()
+        email.clear()
+        email.send_keys("testing123@gmail.com")
         self.selenium.find_element(By.NAME, "email_check").click()
         try:
             WebDriverWait(self.selenium, 10).until(
