@@ -44,7 +44,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 email=data['email'],
                 name=data['name'],
                 date_of_birth=data['date_of_birth'],
-                profile_picture=data['profile_picture']
+                # profile_picture=data['profile_picture']
             )
             user: CustomUser | None = authenticate(  # verifies details
                 request, username=data['email'], password=data['password'])

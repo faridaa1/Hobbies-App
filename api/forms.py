@@ -22,7 +22,8 @@ class SignupForm(ModelForm):
         model: CustomUser = CustomUser
         fields: list[str] = [
             'name', 'email', 'password',
-            'date_of_birth', 'profile_picture'
+            'date_of_birth', 
+            # 'profile_picture'
         ]
         field_classes: dict[str, any] = {
             "password": PasswordField,
@@ -30,7 +31,7 @@ class SignupForm(ModelForm):
         }
         labels: dict[str, str] = {
             'name': 'Full Name',
-            'profile_picture': 'Profile picture (*.png)'
+            # 'profile_picture': 'Profile picture (*.png)'
         }
 
     def __init__(self, *args, **kwargs):
@@ -67,13 +68,13 @@ class SignupForm(ModelForm):
             raise ValidationError("Your birthday cannot be past today")
         return dob
 
-    def clean_profile_picture(self):
-        """Cleans profile picture field - checks that it's a png"""
-        pic: str = self.cleaned_data['profile_picture']
-        if pic:
-            if pic.image.format != 'PNG':
-                raise ValidationError('You can only upload .png files')
-        return pic
+    # def clean_profile_picture(self):
+    #     """Cleans profile picture field - checks that it's a png"""
+    #     pic: str = self.cleaned_data['profile_picture']
+    #     if pic:
+    #         if pic.image.format != 'PNG':
+    #             raise ValidationError('You can only upload .png files')
+    #     return pic
     
 
 class LoginForm(forms.Form):
