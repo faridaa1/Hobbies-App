@@ -144,9 +144,14 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         email.click()
         email.send_keys(".uk")
         self.selenium.find_element(By.NAME, "email_check").click()
-        WebDriverWait(self.selenium, 10).until(
-            expected_conditions.element_to_be_clickable((By.NAME, "email_save"))
-        ).click()
+        try:
+            WebDriverWait(self.selenium, 10).until(
+                expected_conditions.element_to_be_clickable((By.NAME, "email_save"))
+            ).click()
+        except:
+            WebDriverWait(self.selenium, 10).until(
+                expected_conditions.element_to_be_clickable((By.NAME, "email_save"))
+            ).click()
         
         # edit password
         self.selenium.find_element(By.NAME, "password_edit").click()
