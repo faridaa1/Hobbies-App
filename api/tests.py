@@ -140,6 +140,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         
         # edit email
         self.selenium.find_element(By.NAME, "email_edit").click()
+        time.sleep(2) # sometimes email doesn't change
         try:
             email = WebDriverWait(self.selenium, 10).until(
                 expected_conditions.element_to_be_clickable((By.NAME, "email"))
