@@ -142,9 +142,7 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element(By.NAME, "email_edit").click()
         email = self.selenium.find_element(By.NAME, "email")
         email.click()
-        email.clear()
-        email_address = valid_signup_data()['email']+".uk"
-        email.send_keys(email_address)
+        email.send_keys(".uk")
         self.selenium.find_element(By.NAME, "email_check").click()
         WebDriverWait(self.selenium, 10).until(
             expected_conditions.element_to_be_clickable((By.NAME, "email_save"))
