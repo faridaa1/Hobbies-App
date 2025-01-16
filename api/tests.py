@@ -140,11 +140,18 @@ class ProfileSeleniumTests(StaticLiveServerTestCase):
         
         # edit email
         self.selenium.find_element(By.NAME, "email_edit").click()
-        email = self.selenium.find_element(By.NAME, "email")
-        email.click()
-        email.clear()
-        email.clear()
-        email.send_keys("testing123@gmail.com")
+        try:
+            email = WebDriverWait(self.selenium, 10).until(
+                expected_conditions.element_to_be_clickable((By.NAME, "email"))
+            ).click()
+            email.click()
+            email.clear()
+            email.send_keys("testing123@gmail.com")
+        except:
+            email = self.selenium.find_element(By.NAME, "email")
+            email.click()
+            email.clear()
+            email.send_keys("testing123@gmail.com")
         self.selenium.find_element(By.NAME, "email_check").click()
         try:
             WebDriverWait(self.selenium, 10).until(
